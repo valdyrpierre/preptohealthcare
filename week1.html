@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 - History of Nursing Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        .question-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            list-style: none;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .score {
+            font-size: 3em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .feedback {
+            font-size: 1.3em;
+            color: #333;
+            margin: 15px 0;
+        }
+        
+        .reset-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+ <header>
+    <h1>📚 Week 1 Quiz</h1>
+    <p class="subtitle">History of Nursing</p>
+ </header>
+ 
+ <main>
+    <form id="quizForm">
+        <!-- Question 1 -->
+        <div class="question-card">
+            <div class="question-number">Question 1</div>
+            <div class="question-text">Who is known as the founder of modern nursing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q1" value="a" id="q1a">
+                    <label for="q1a">Clara Barton</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q1" value="b" id="q1b">
+                    <label for="q1b">Florence Nightingale</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q1" value="c" id="q1c">
+                    <label for="q1c">Dorothea Dix</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q1" value="d" id="q1d">
+                    <label for="q1d">Mary Seacole</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question-card">
+            <div class="question-number">Question 2</div>
+            <div class="question-text">During which war did Florence Nightingale decrease the mortality rate by half?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q2" value="a" id="q2a">
+                    <label for="q2a">World War I</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q2" value="b" id="q2b">
+                    <label for="q2b">American Civil War</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q2" value="c" id="q2c">
+                    <label for="q2c">Crimean War (1854)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q2" value="d" id="q2d">
+                    <label for="q2d">Spanish-American War</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question-card">
+            <div class="question-number">Question 3</div>
+            <div class="question-text">What famous book did Florence Nightingale publish?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q3" value="a" id="q3a">
+                    <label for="q3a">The Art of Nursing</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q3" value="b" id="q3b">
+                    <label for="q3b">Notes on Nursing</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q3" value="c" id="q3c">
+                    <label for="q3c">Modern Nursing Practices</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q3" value="d" id="q3d">
+                    <label for="q3d">Healing Through Care</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question-card">
+            <div class="question-number">Question 4</div>
+            <div class="question-text">According to Florence Nightingale, what is essential for healing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q4" value="a" id="q4a">
+                    <label for="q4a">Advanced medical equipment</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q4" value="b" id="q4b">
+                    <label for="q4b">A healthy environment</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q4" value="c" id="q4c">
+                    <label for="q4c">Multiple doctors</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q4" value="d" id="q4d">
+                    <label for="q4d">Extended hospital stays</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question-card">
+            <div class="question-number">Question 5</div>
+            <div class="question-text">What training institution did Florence Nightingale establish?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q5" value="a" id="q5a">
+                    <label for="q5a">The Royal Nursing Academy</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q5" value="b" id="q5b">
+                    <label for="q5b">Nightingale Training School for Nurses</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q5" value="c" id="q5c">
+                    <label for="q5c">London School of Nursing</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q5" value="d" id="q5d">
+                    <label for="q5d">British Medical College</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="question-card">
+            <div class="question-number">Question 6</div>
+            <div class="question-text">Besides nursing, Florence Nightingale was also known as a:</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q6" value="a" id="q6a">
+                    <label for="q6a">Physician</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q6" value="b" id="q6b">
+                    <label for="q6b">Statistician</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q6" value="c" id="q6c">
+                    <label for="q6c">Surgeon</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q6" value="d" id="q6d">
+                    <label for="q6d">Pharmacist</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="question-card">
+            <div class="question-number">Question 7</div>
+            <div class="question-text">Who established the Nurse Corps of the United States Army during the American Civil War?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q7" value="a" id="q7a">
+                    <label for="q7a">Florence Nightingale</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q7" value="b" id="q7b">
+                    <label for="q7b">Clara Barton</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q7" value="c" id="q7c">
+                    <label for="q7c">Dorothea Dix</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q7" value="d" id="q7d">
+                    <label for="q7d">Mary Breckinridge</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="question-card">
+            <div class="question-number">Question 8</div>
+            <div class="question-text">Who founded the American Red Cross?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q8" value="a" id="q8a">
+                    <label for="q8a">Dorothea Dix</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q8" value="b" id="q8b">
+                    <label for="q8b">Clara Barton</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q8" value="c" id="q8c">
+                    <label for="q8c">Florence Nightingale</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q8" value="d" id="q8d">
+                    <label for="q8d">Harriet Tubman</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="question-card">
+            <div class="question-number">Question 9</div>
+            <div class="question-text">During what years did the American Civil War take place?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q9" value="a" id="q9a">
+                    <label for="q9a">1854-1858</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q9" value="b" id="q9b">
+                    <label for="q9b">1861-1865</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q9" value="c" id="q9c">
+                    <label for="q9c">1870-1874</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q9" value="d" id="q9d">
+                    <label for="q9d">1850-1854</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="question-card">
+            <div class="question-number">Question 10</div>
+            <div class="question-text">By how much did Florence Nightingale decrease the mortality rate during the Crimean War?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q10" value="a" id="q10a">
+                    <label for="q10a">One quarter</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q10" value="b" id="q10b">
+                    <label for="q10b">One third</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q10" value="c" id="q10c">
+                    <label for="q10c">Half</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q10" value="d" id="q10d">
+                    <label for="q10d">Two thirds</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 11 -->
+        <div class="question-card">
+            <div class="question-number">Question 11</div>
+            <div class="question-text">During World War I, what significant change occurred in nursing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q11" value="a" id="q11a">
+                    <label for="q11a">Nurses were sent overseas to care for patients</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q11" value="b" id="q11b">
+                    <label for="q11b">Nursing schools were established</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q11" value="c" id="q11c">
+                    <label for="q11c">Men were allowed to become nurses</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q11" value="d" id="q11d">
+                    <label for="q11d">Nursing uniforms were standardized</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 12 -->
+        <div class="question-card">
+            <div class="question-number">Question 12</div>
+            <div class="question-text">During World War II, what important advancement occurred in nursing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q12" value="a" id="q12a">
+                    <label for="q12a">Nursing salaries increased dramatically</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q12" value="b" id="q12b">
+                    <label for="q12b">Black nurses were accepted into the nursing service</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q12" value="c" id="q12c">
+                    <label for="q12c">Nursing became a four-year degree</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q12" value="d" id="q12d">
+                    <label for="q12d">The first nursing textbook was published</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 13 -->
+        <div class="question-card">
+            <div class="question-number">Question 13</div>
+            <div class="question-text">Who was the first African American nurse to graduate from a school of nursing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q13" value="a" id="q13a">
+                    <label for="q13a">Clara Barton</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q13" value="b" id="q13b">
+                    <label for="q13b">Dorothea Dix</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q13" value="c" id="q13c">
+                    <label for="q13c">Mary Mahoney</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q13" value="d" id="q13d">
+                    <label for="q13d">Harriet Tubman</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 14 -->
+        <div class="question-card">
+            <div class="question-number">Question 14</div>
+            <div class="question-text">Which of the following is NOT one of the major professional nursing organizations mentioned?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q14" value="a" id="q14a">
+                    <label for="q14a">American Nurses Association (ANA)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q14" value="b" id="q14b">
+                    <label for="q14b">National League for Nursing (NLN)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q14" value="c" id="q14c">
+                    <label for="q14c">American Medical Association (AMA)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q14" value="d" id="q14d">
+                    <label for="q14d">American Association of Colleges of Nursing (AACN)</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 15 -->
+        <div class="question-card">
+            <div class="question-number">Question 15</div>
+            <div class="question-text">According to Gallup's annual ranking, how many consecutive years have nurses led in honesty and ethics?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q15" value="a" id="q15a">
+                    <label for="q15a">10 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q15" value="b" id="q15b">
+                    <label for="q15b">15 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q15" value="c" id="q15c">
+                    <label for="q15c">20 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q15" value="d" id="q15d">
+                    <label for="q15d">25 years</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 16 -->
+        <div class="question-card">
+            <div class="question-number">Question 16</div>
+            <div class="question-text">Which of the following is NOT a characteristic that makes nursing a profession?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q16" value="a" id="q16a">
+                    <label for="q16a">Specific body of knowledge</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q16" value="b" id="q16b">
+                    <label for="q16b">High salary requirements</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q16" value="c" id="q16c">
+                    <label for="q16c">Ongoing research</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q16" value="d" id="q16d">
+                    <label for="q16d">Autonomy and self-regulation</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 17 -->
+        <div class="question-card">
+            <div class="question-number">Question 17</div>
+            <div class="question-text">How many years does a Diploma nursing program typically take?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q17" value="a" id="q17a">
+                    <label for="q17a">2 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q17" value="b" id="q17b">
+                    <label for="q17b">3 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q17" value="c" id="q17c">
+                    <label for="q17c">4 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q17" value="d" id="q17d">
+                    <label for="q17d">5 years</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 18 -->
+        <div class="question-card">
+            <div class="question-number">Question 18</div>
+            <div class="question-text">Which nursing degree focuses on "the art and science" of nursing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q18" value="a" id="q18a">
+                    <label for="q18a">Diploma</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q18" value="b" id="q18b">
+                    <label for="q18b">Associates Degree in Nursing (ADN)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q18" value="c" id="q18c">
+                    <label for="q18c">Baccalaureate (BS)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q18" value="d" id="q18d">
+                    <label for="q18d">Master's Degree</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 19 -->
+        <div class="question-card">
+            <div class="question-number">Question 19</div>
+            <div class="question-text">In 1965, what did the ANA propose as the minimum preparation for professional nursing practice?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q19" value="a" id="q19a">
+                    <label for="q19a">Diploma</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q19" value="b" id="q19b">
+                    <label for="q19b">Associate's Degree (AD)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q19" value="c" id="q19c">
+                    <label for="q19c">Bachelor of Science (BS)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q19" value="d" id="q19d">
+                    <label for="q19d">Master's Degree</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 20 -->
+        <div class="question-card">
+            <div class="question-number">Question 20</div>
+            <div class="question-text">What is a requirement for nurses to maintain their professional competence?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q20" value="a" id="q20a">
+                    <label for="q20a">Annual salary increases</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q20" value="b" id="q20b">
+                    <label for="q20b">Continuing education (mandatory)</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q20" value="c" id="q20c">
+                    <label for="q20c">Changing specialties every 5 years</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q20" value="d" id="q20d">
+                    <label for="q20d">Working in multiple hospitals</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 21 -->
+        <div class="question-card">
+            <div class="question-number">Question 21</div>
+            <div class="question-text">How many primary responsibilities of nursing are there?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q21" value="a" id="q21a">
+                    <label for="q21a">2</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q21" value="b" id="q21b">
+                    <label for="q21b">3</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q21" value="c" id="q21c">
+                    <label for="q21c">4</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q21" value="d" id="q21d">
+                    <label for="q21d">5</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 22 -->
+        <div class="question-card">
+            <div class="question-number">Question 22</div>
+            <div class="question-text">Which of the following is NOT one of the four responsibilities of nursing?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q22" value="a" id="q22a">
+                    <label for="q22a">Promote health</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q22" value="b" id="q22b">
+                    <label for="q22b">Prescribe medications</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q22" value="c" id="q22c">
+                    <label for="q22c">Prevent illness</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q22" value="d" id="q22d">
+                    <label for="q22d">Restore health</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 23 -->
+        <div class="question-card">
+            <div class="question-number">Question 23</div>
+            <div class="question-text">Which nursing responsibility involves helping patients recover from illness or injury?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q23" value="a" id="q23a">
+                    <label for="q23a">Promote health</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q23" value="b" id="q23b">
+                    <label for="q23b">Prevent illness</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q23" value="c" id="q23c">
+                    <label for="q23c">Restore health</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q23" value="d" id="q23d">
+                    <label for="q23d">Alleviate suffering</label>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Question 24 -->
+        <div class="question-card">
+            <div class="question-number">Question 24</div>
+            <div class="question-text">Which nursing responsibility focuses on providing comfort and relief to patients experiencing pain or distress?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q24" value="a" id="q24a">
+                    <label for="q24a">Promote health</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q24" value="b" id="q24b">
+                    <label for="q24b">Prevent illness</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q24" value="c" id="q24c">
+                    <label for="q24c">Restore health</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q24" value="d" id="q24d">
+                    <label for="q24d">Alleviate suffering</label>
+                </li>
+            </ul>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Quiz</button>
+    </form>
+
+    <div class="result" id="result">
+        <h2>Quiz Results</h2>
+        <div class="score" id="score"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="reset-btn" onclick="location.reload()">Retake Quiz</button>
+    </div>
+ </main>
+
+ <script>
+    const correctAnswers = {
+        q1: 'b',
+        q2: 'c',
+        q3: 'b',
+        q4: 'b',
+        q5: 'b',
+        q6: 'b',
+        q7: 'c',
+        q8: 'b',
+        q9: 'b',
+        q10: 'c',
+        q11: 'a',
+        q12: 'b',
+        q13: 'c',
+        q14: 'c',
+        q15: 'c',
+        q16: 'b',
+        q17: 'b',
+        q18: 'c',
+        q19: 'c',
+        q20: 'b',
+        q21: 'c',
+        q22: 'b',
+        q23: 'c',
+        q24: 'd'
+    };
+
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let score = 0;
+        const totalQuestions = Object.keys(correctAnswers).length;
+        
+        // Check each answer
+        for (let question in correctAnswers) {
+            const selectedAnswer = document.querySelector(`input[name="${question}"]:checked`);
+            const options = document.querySelectorAll(`input[name="${question}"]`);
+            
+            options.forEach(option => {
+                const parent = option.parentElement;
+                parent.classList.remove('correct', 'incorrect');
+                
+                if (option.value === correctAnswers[question]) {
+                    parent.classList.add('correct');
+                }
+                
+                if (selectedAnswer && option === selectedAnswer && option.value !== correctAnswers[question]) {
+                    parent.classList.add('incorrect');
+                }
+            });
+            
+            if (selectedAnswer && selectedAnswer.value === correctAnswers[question]) {
+                score++;
+            }
+        }
+        
+        // Display results
+        const percentage = (score / totalQuestions * 100).toFixed(0);
+        document.getElementById('score').textContent = `${score} / ${totalQuestions} (${percentage}%)`;
+        
+        let feedback = '';
+        if (percentage >= 90) {
+            feedback = '🎉 Outstanding! You have excellent knowledge of nursing history!';
+        } else if (percentage >= 80) {
+            feedback = '👏 Great job! You have a solid understanding of the material!';
+        } else if (percentage >= 70) {
+            feedback = '👍 Good work! Review the material to improve your score.';
+        } else if (percentage >= 60) {
+            feedback = '📚 Not bad, but consider reviewing your notes more carefully.';
+        } else {
+            feedback = '📖 Keep studying! Review your notes and try again.';
+        }
+        
+        document.getElementById('feedback').textContent = feedback;
+        document.getElementById('result').classList.add('show');
+        
+        // Scroll to results
+        document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Disable form
+        const inputs = document.querySelectorAll('input[type="radio"]');
+        inputs.forEach(input => input.disabled = true);
+        
+        // Hide submit button
+        document.querySelector('.submit-btn').style.display = 'none';
+    });
+
+    // Add click event to option divs
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function() {
+            const radio = this.querySelector('input[type="radio"]');
+            if (!radio.disabled) {
+                radio.checked = true;
+            }
+        });
+    });
+ </script>
+</body>
+</html>
