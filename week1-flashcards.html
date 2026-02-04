@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 Flashcards - History of Nursing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .flashcard-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 700px;
+            height: 450px;
+            margin: 20px 0;
+        }
+        
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .card-front {
+            background: white;
+            color: #333;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .card-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+            font-weight: bold;
+        }
+        
+        .card-content {
+            font-size: 1.8em;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        
+        .card-back .card-content {
+            font-size: 1.5em;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            align-items: center;
+        }
+        
+        .btn {
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn:disabled:hover {
+            transform: none;
+        }
+        
+        .counter {
+            background: white;
+            color: #667eea;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .shuffle-btn {
+            background: #28a745;
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .shuffle-btn:hover {
+            background: #218838;
+        }
+        
+        .hint {
+            background: rgba(255,255,255,0.95);
+            color: #666;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 700px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            max-width: 700px;
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: white;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="week1.html" class="nav-btn">📝 Quiz</a>
+            <a href="week1-flashcards.html" class="nav-btn active">🎴 Flashcards</a>
+            <a href="week1-matching-game.html" class="nav-btn">🎯 Matching</a>
+            <a href="week1-jeopardy.html" class="nav-btn">🎮 Jeopardy</a>
+            <a href="week1-memory-game.html" class="nav-btn">🧠 Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>🎴 Week 1 Flashcards</h1>
+        <p class="subtitle">History of Nursing - Click cards to flip</p>
+    </header>
+
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <div class="card-face card-front">
+                <div class="card-label">Question</div>
+                <div class="card-content" id="question"></div>
+            </div>
+            <div class="card-face card-back">
+                <div class="card-label">Answer</div>
+                <div class="card-content" id="answer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="previousCard()">← Previous</button>
+        <div class="counter" id="counter">1 / 30</div>
+        <button class="btn" id="nextBtn" onclick="nextCard()">Next →</button>
+    </div>
+
+    <button class="btn shuffle-btn" onclick="shuffleCards()">🔀 Shuffle Cards</button>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="hint">💡 Tip: Click on the card to flip it and reveal the answer!</div>
+
+    <script>
+        const flashcards = [
+            {
+                question: "Who is known as the founder of modern nursing?",
+                answer: "Florence Nightingale"
+            },
+            {
+                question: "During which war did Florence Nightingale reduce mortality rates by half?",
+                answer: "Crimean War (1854)"
+            },
+            {
+                question: "What was Florence Nightingale's famous belief about healing?",
+                answer: "A healthy environment is essential for healing"
+            },
+            {
+                question: "What book did Florence Nightingale publish?",
+                answer: "Notes on Nursing"
+            },
+            {
+                question: "What training institution did Florence Nightingale establish?",
+                answer: "Nightingale Training School for Nurses"
+            },
+            {
+                question: "Besides nursing, what other field was Florence Nightingale known for?",
+                answer: "Statistician"
+            },
+            {
+                question: "When did the American Civil War take place?",
+                answer: "1861-1865"
+            },
+            {
+                question: "Who established the Nurse Corps of the United States Army?",
+                answer: "Dorothea Dix"
+            },
+            {
+                question: "Who founded the American Red Cross?",
+                answer: "Clara Barton"
+            },
+            {
+                question: "What happened during World War I regarding nursing?",
+                answer: "Nurses were sent overseas to care for patients"
+            },
+            {
+                question: "What significant change occurred in nursing during World War II?",
+                answer: "Black nurses were accepted into the nursing service"
+            },
+            {
+                question: "Who was the first African American nurse to graduate from a school of nursing?",
+                answer: "Mary Mahoney"
+            },
+            {
+                question: "Name the three major professional nursing organizations.",
+                answer: "American Nurses Association (ANA), National League for Nursing (NLN), and American Association of Colleges of Nursing (AACN)"
+            },
+            {
+                question: "How many consecutive years have nurses led Gallup's ranking for honesty and ethics?",
+                answer: "20 years"
+            },
+            {
+                question: "What makes nursing a profession? (Name at least 3 characteristics)",
+                answer: "Specific body of knowledge, set of values and skills, professional organization that sets standards, ongoing research, autonomy and self-regulation"
+            },
+            {
+                question: "How long is a Diploma nursing program and what is its focus?",
+                answer: "3 years, focused on learning clinical skills in a hospital setting"
+            },
+            {
+                question: "How long is an Associate's Degree in Nursing (ADN) and what is its focus?",
+                answer: "2 years, focused on clinical skills in the community"
+            },
+            {
+                question: "How long is a Baccalaureate (BS) nursing program and what is its focus?",
+                answer: "4 years, focused on the art and science of nursing"
+            },
+            {
+                question: "What did the ANA propose in 1965 regarding professional nursing preparation?",
+                answer: "Minimum preparation for professional practice as BS and minimum preparation for technical practice as AD"
+            },
+            {
+                question: "What is required for nurses to maintain their professional competence?",
+                answer: "Continuing education is mandatory; nurses must be life-long learners"
+            },
+            {
+                question: "What are the four responsibilities of nursing?",
+                answer: "1. Promote health\n2. Prevent illness\n3. Restore health\n4. Alleviate suffering"
+            },
+            {
+                question: "What does 'Promote health' mean in nursing?",
+                answer: "Encouraging healthy behaviors and lifestyle choices to maintain wellness"
+            },
+            {
+                question: "What does 'Prevent illness' mean in nursing?",
+                answer: "Taking actions to stop diseases and health problems before they occur"
+            },
+            {
+                question: "What does 'Restore health' mean in nursing?",
+                answer: "Helping patients recover from illness or injury and return to optimal health"
+            },
+            {
+                question: "What does 'Alleviate suffering' mean in nursing?",
+                answer: "Providing comfort and relief to patients experiencing pain or distress"
+            },
+            {
+                question: "What were the main developments in nursing during the early 20th century?",
+                answer: "Formation of professional organizations (ANA, NLN, AACN) and development of nursing journals"
+            },
+            {
+                question: "How many entry points does nursing have in the U.S.?",
+                answer: "Three: Diploma, Associate's Degree (ADN), and Baccalaureate (BS)"
+            },
+            {
+                question: "What is the primary difference between a BS and an ADN in nursing?",
+                answer: "BS focuses on art and science (4 years), while ADN focuses on clinical skills in the community (2 years)"
+            },
+            {
+                question: "What role did Clara Barton play in the American Civil War?",
+                answer: "She founded the American Red Cross"
+            },
+            {
+                question: "What was Florence Nightingale's contribution to healthcare data?",
+                answer: "She was a statistician who used data to demonstrate the impact of sanitary conditions on patient mortality"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        function displayCard() {
+            const card = flashcards[currentIndex];
+            document.getElementById('question').textContent = card.question;
+            document.getElementById('answer').textContent = card.answer;
+            document.getElementById('counter').textContent = `${currentIndex + 1} / ${flashcards.length}`;
+            
+            // Update progress bar
+            const progress = ((currentIndex + 1) / flashcards.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Update button states
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === flashcards.length - 1;
+            
+            // Reset flip
+            if (isFlipped) {
+                document.getElementById('flashcard').classList.remove('flipped');
+                isFlipped = false;
+            }
+        }
+
+        function nextCard() {
+            if (currentIndex < flashcards.length - 1) {
+                currentIndex++;
+                displayCard();
+            }
+        }
+
+        function previousCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayCard();
+            }
+        }
+
+        function shuffleCards() {
+            for (let i = flashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+            }
+            currentIndex = 0;
+            displayCard();
+        }
+
+        // Flip card on click
+        document.getElementById('flashcard').addEventListener('click', function() {
+            this.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                nextCard();
+            } else if (e.key === 'ArrowLeft') {
+                previousCard();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                document.getElementById('flashcard').classList.toggle('flipped');
+                isFlipped = !isFlipped;
+            }
+        });
+
+        // Initialize
+        displayCard();
+    </script>
+</body>
+</html>

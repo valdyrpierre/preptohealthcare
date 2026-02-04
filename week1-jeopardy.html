@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1 Jeopardy Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #060CE9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 3em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .score-display {
+            background: white;
+            color: #060CE9;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .game-board {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: black;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .category {
+            background: #060CE9;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-radius: 5px;
+            text-transform: uppercase;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        
+        .question-tile {
+            background: #060CE9;
+            color: #D69F4C;
+            padding: 40px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #060CE9;
+        }
+        
+        .question-tile:hover {
+            background: #0505B8;
+            transform: scale(1.05);
+            border-color: #D69F4C;
+        }
+        
+        .question-tile.answered {
+            background: #1a1a1a;
+            color: #333;
+            cursor: default;
+        }
+        
+        .question-tile.answered:hover {
+            transform: none;
+            border-color: #1a1a1a;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #060CE9;
+            padding: 50px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            border: 5px solid #D69F4C;
+        }
+        
+        .modal-value {
+            color: #D69F4C;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .modal-question {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .modal-answer {
+            color: #90EE90;
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .modal-answer.show {
+            display: block;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-reveal {
+            background: #D69F4C;
+            color: #060CE9;
+        }
+        
+        .btn-correct {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-incorrect {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-close {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .reset-btn {
+            background: white;
+            color: #060CE9;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="week1.html" class="nav-btn">📝 Quiz</a>
+            <a href="week1-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+            <a href="week1-matching-game.html" class="nav-btn">🎯 Matching</a>
+            <a href="week1-jeopardy.html" class="nav-btn active">🎮 Jeopardy</a>
+            <a href="week1-memory-game.html" class="nav-btn">🧠 Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>🎮 NURSING JEOPARDY!</h1>
+        <div class="score-display">Score: $<span id="score">0</span></div>
+    </header>
+
+    <div class="game-board">
+        <div class="categories">
+            <div class="category">Nursing Pioneers</div>
+            <div class="category">Wars & Nursing</div>
+            <div class="category">Education</div>
+            <div class="category">Organizations</div>
+            <div class="category">Responsibilities</div>
+        </div>
+        
+        <div class="questions-grid" id="questionsGrid"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-value" id="modalValue"></div>
+            <div class="modal-question" id="modalQuestion"></div>
+            <div class="modal-answer" id="modalAnswer"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-reveal" id="revealBtn" onclick="revealAnswer()">Reveal Answer</button>
+                <button class="btn btn-correct" id="correctBtn" onclick="markCorrect()" style="display:none;">✓ Correct</button>
+                <button class="btn btn-incorrect" id="incorrectBtn" onclick="markIncorrect()" style="display:none;">✗ Incorrect</button>
+                <button class="btn btn-close" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categories = [
+            {
+                name: "Nursing Pioneers",
+                questions: [
+                    { value: 100, question: "This person is known as the founder of modern nursing", answer: "Who is Florence Nightingale?" },
+                    { value: 200, question: "This nurse founded the American Red Cross", answer: "Who is Clara Barton?" },
+                    { value: 300, question: "This person established the Nurse Corps of the United States Army", answer: "Who is Dorothea Dix?" },
+                    { value: 400, question: "She was the first African American nurse to graduate from a school of nursing", answer: "Who is Mary Mahoney?" },
+                    { value: 500, question: "Besides nursing, Florence Nightingale was also known as this profession", answer: "What is a statistician?" }
+                ]
+            },
+            {
+                name: "Wars & Nursing",
+                questions: [
+                    { value: 100, question: "Florence Nightingale decreased mortality rates by half during this war", answer: "What is the Crimean War?" },
+                    { value: 200, question: "These years mark the American Civil War", answer: "What is 1861-1865?" },
+                    { value: 300, question: "During this war, nurses were sent overseas to care for patients", answer: "What is World War I?" },
+                    { value: 400, question: "During this war, Black nurses were accepted into the nursing service", answer: "What is World War II?" },
+                    { value: 500, question: "The year of the Crimean War", answer: "What is 1854?" }
+                ]
+            },
+            {
+                name: "Education",
+                questions: [
+                    { value: 100, question: "The number of entry points for nursing in the U.S.", answer: "What is three?" },
+                    { value: 200, question: "This degree takes 4 years and focuses on the art and science of nursing", answer: "What is a Baccalaureate (BS)?" },
+                    { value: 300, question: "This degree takes 2 years and focuses on clinical skills in the community", answer: "What is an Associate's Degree (ADN)?" },
+                    { value: 400, question: "In 1965, the ANA proposed this as minimum preparation for professional practice", answer: "What is a Bachelor of Science (BS)?" },
+                    { value: 500, question: "This is mandatory for nurses to maintain professional competence", answer: "What is continuing education?" }
+                ]
+            },
+            {
+                name: "Organizations",
+                questions: [
+                    { value: 100, question: "These are the initials for the American Nurses Association", answer: "What is ANA?" },
+                    { value: 200, question: "These are the initials for the National League for Nursing", answer: "What is NLN?" },
+                    { value: 300, question: "These are the initials for the American Association of Colleges of Nursing", answer: "What is AACN?" },
+                    { value: 400, question: "For this many consecutive years, nurses have led Gallup's ranking for honesty and ethics", answer: "What is 20 years?" },
+                    { value: 500, question: "The book published by Florence Nightingale", answer: "What is Notes on Nursing?" }
+                ]
+            },
+            {
+                name: "Responsibilities",
+                questions: [
+                    { value: 100, question: "The number of primary responsibilities of nursing", answer: "What is four?" },
+                    { value: 200, question: "This responsibility involves encouraging healthy behaviors and lifestyle choices", answer: "What is promote health?" },
+                    { value: 300, question: "This responsibility involves taking actions to stop diseases before they occur", answer: "What is prevent illness?" },
+                    { value: 400, question: "This responsibility involves helping patients recover from illness or injury", answer: "What is restore health?" },
+                    { value: 500, question: "This responsibility involves providing comfort and relief from pain or distress", answer: "What is alleviate suffering?" }
+                ]
+            }
+        ];
+
+        let score = 0;
+        let currentQuestion = null;
+        let answeredQuestions = new Set();
+
+        function initGame() {
+            const grid = document.getElementById('questionsGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 5; i++) {
+                categories.forEach((category, catIndex) => {
+                    const tile = document.createElement('div');
+                    tile.className = 'question-tile';
+                    tile.textContent = `$${category.questions[i].value}`;
+                    tile.dataset.category = catIndex;
+                    tile.dataset.question = i;
+                    tile.onclick = () => openQuestion(catIndex, i, tile);
+                    grid.appendChild(tile);
+                });
+            }
+            
+            score = 0;
+            answeredQuestions.clear();
+            updateScore();
+        }
+
+        function openQuestion(catIndex, qIndex, tile) {
+            if (tile.classList.contains('answered')) return;
+            
+            currentQuestion = {
+                category: catIndex,
+                index: qIndex,
+                tile: tile,
+                data: categories[catIndex].questions[qIndex]
+            };
+            
+            document.getElementById('modalValue').textContent = `$${currentQuestion.data.value}`;
+            document.getElementById('modalQuestion').textContent = currentQuestion.data.question;
+            document.getElementById('modalAnswer').textContent = currentQuestion.data.answer;
+            document.getElementById('modalAnswer').classList.remove('show');
+            
+            document.getElementById('revealBtn').style.display = 'inline-block';
+            document.getElementById('correctBtn').style.display = 'none';
+            document.getElementById('incorrectBtn').style.display = 'none';
+            
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function revealAnswer() {
+            document.getElementById('modalAnswer').classList.add('show');
+            document.getElementById('revealBtn').style.display = 'none';
+            document.getElementById('correctBtn').style.display = 'inline-block';
+            document.getElementById('incorrectBtn').style.display = 'inline-block';
+        }
+
+        function markCorrect() {
+            score += currentQuestion.data.value;
+            updateScore();
+            currentQuestion.tile.classList.add('answered');
+            answeredQuestions.add(`${currentQuestion.category}-${currentQuestion.index}`);
+            closeModal();
+        }
+
+        function markIncorrect() {
+            score -= currentQuestion.data.value;
+            updateScore();
+            currentQuestion.tile.classList.add('answered');
+            answeredQuestions.add(`${currentQuestion.category}-${currentQuestion.index}`);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize game
+        initGame();
+    </script>
+</body>
+</html>
