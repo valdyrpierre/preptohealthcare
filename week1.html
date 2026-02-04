@@ -175,9 +175,58 @@
         .reset-btn:hover {
             transform: scale(1.05);
         }
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #28a745;
+        }
     </style>
 </head>
 <body>
+ <nav class="nav-bar">
+    <div class="nav-container">
+        <a href="week1.html" class="nav-btn active">📝 Quiz</a>
+        <a href="week1-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+        <a href="week1-matching-game.html" class="nav-btn">🎯 Matching</a>
+        <a href="week1-jeopardy.html" class="nav-btn">🎮 Jeopardy</a>
+        <a href="week1-memory-game.html" class="nav-btn">🧠 Memory</a>
+    </div>
+ </nav>
+ 
  <header>
     <h1>📚 Week 1 Quiz</h1>
     <p class="subtitle">History of Nursing</p>
@@ -761,6 +810,30 @@
             </ul>
         </div>
 
+        <!-- Question 25 -->
+        <div class="question-card">
+            <div class="question-number">Question 25</div>
+            <div class="question-text">What are the 4 responsibilities of nursing IN ORDER?</div>
+            <ul class="options">
+                <li class="option">
+                    <input type="radio" name="q25" value="a" id="q25a">
+                    <label for="q25a">Prevent illness, Promote health, Restore health, Alleviate suffering</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q25" value="b" id="q25b">
+                    <label for="q25b">Promote health, Prevent illness, Restore health, Alleviate suffering</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q25" value="c" id="q25c">
+                    <label for="q25c">Restore health, Prevent illness, Promote health, Alleviate suffering</label>
+                </li>
+                <li class="option">
+                    <input type="radio" name="q25" value="d" id="q25d">
+                    <label for="q25d">Alleviate suffering, Promote health, Prevent illness, Restore health</label>
+                </li>
+            </ul>
+        </div>
+
         <button type="submit" class="submit-btn">Submit Quiz</button>
     </form>
 
@@ -797,7 +870,8 @@
         q21: 'c',
         q22: 'b',
         q23: 'c',
-        q24: 'd'
+        q24: 'd',
+        q25: 'b'
     };
 
     document.getElementById('quizForm').addEventListener('submit', function(e) {
