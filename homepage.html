@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my valintines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+            75% {
+                transform: scale(1.05);
+            }
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffc3a0 25%, #ff6b9d 50%, #c06c84 75%, #ff6b9d 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: 'Georgia', serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        header h1 {
+            font-size: 4rem;
+            color: white;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 107, 157, 0.8),
+                0 0 30px rgba(255, 107, 157, 0.6),
+                3px 3px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        header img {
+            max-width: 400px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.5),
+                0 0 50px rgba(255, 107, 157, 0.4);
+            border: 5px solid rgba(255, 255, 255, 0.5);
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .love_letter {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 
+                0 0 40px rgba(255, 107, 157, 0.6),
+                0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 182, 193, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love_letter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 182, 193, 0.3),
+                transparent
+            );
+            animation: shimmer 4s infinite;
+        }
+
+        .love_letter h2 {
+            color: #d63384;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .love_letter p {
+            color: #6c5b7b;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .will-you-by {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .will-you-by h2 {
+            color: white;
+            font-size: 3rem;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 107, 157, 0.8),
+                3px 3px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        .will-you-by img {
+            max-width: 500px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.5),
+                0 0 50px rgba(255, 107, 157, 0.4);
+            border: 5px solid rgba(255, 255, 255, 0.5);
+        }
+
+        main > button {
+            padding: 20px 60px;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 20px 15px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        main > button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.5),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+
+        main > button:hover::before {
+            left: 100%;
+        }
+
+        main > button:first-of-type {
+            background: linear-gradient(135deg, #ff6b9d, #ff1744);
+            color: white;
+        }
+
+        main > button:first-of-type:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 0 30px rgba(255, 107, 157, 0.8),
+                0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        main > button:last-of-type {
+            background: linear-gradient(135deg, #c06c84, #6c5b7b);
+            color: white;
+        }
+
+        main > button:last-of-type:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 30px rgba(192, 108, 132, 0.8),
+                0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        button a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        main > div {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+                padding: 0 10px;
+            }
+
+            header img {
+                max-width: 90%;
+            }
+
+            main {
+                padding: 0 15px;
+            }
+
+            .love_letter {
+                padding: 25px 20px;
+            }
+
+            .love_letter h2 {
+                font-size: 1.8rem;
+            }
+
+            .love_letter p {
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+
+            .will-you-by h2 {
+                font-size: 2rem;
+                padding: 0 10px;
+            }
+
+            .will-you-by img {
+                max-width: 90%;
+            }
+
+            main > button {
+                padding: 18px 40px;
+                font-size: 1.4rem;
+                margin: 15px 8px;
+                width: calc(50% - 16px);
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .love_letter h2 {
+                font-size: 1.5rem;
+            }
+
+            .love_letter p {
+                font-size: 1rem;
+            }
+
+            .will-you-by h2 {
+                font-size: 1.6rem;
+            }
+
+            main > button {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            main > div {
+                width: 100%;
+                padding: 0 20px;
+            }
+        }
+
+        /* Falling Hearts */
+        .falling-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            top: -50px;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                top: 100vh;
+                transform: translateX(50px) rotate(360deg);
+            }
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                top: 100vh;
+                transform: translateX(100px) rotateZ(720deg);
+            }
+        }
+
+        /* Countdown Timer */
+        .countdown-timer {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 
+                0 0 30px rgba(255, 107, 157, 0.6),
+                0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            font-size: 1.2rem;
+            color: #d63384;
+            font-weight: bold;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Hidden Message */
+        .hidden-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 107, 157, 0.8);
+            z-index: 10001;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+            border: 3px solid #ff6b9d;
+        }
+
+        .hidden-message.show {
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .hidden-message p {
+            font-size: 1.5rem;
+            color: #d63384;
+            margin: 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Share Button */
+        .share-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #ff6b9d, #ff1744);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.8);
+        }
+
+        /* Floating Stars */
+        .floating-star {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            font-size: 1.5rem;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        header h1 {
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .countdown-timer {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+                top: 10px;
+            }
+
+            .hidden-message {
+                padding: 30px 25px;
+                width: 90%;
+            }
+
+            .hidden-message p {
+                font-size: 1.2rem;
+            }
+
+            .share-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-hearts" id="fallingHearts"></div>
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <div class="countdown-timer">
+        <div id="countdown"></div>
+    </div>
+
+    <div class="hidden-message" id="hiddenMessage">
+        <p id="messageText"></p>
+    </div>
+
+    <button class="share-btn" onclick="shareIt()">📤 Share</button>
+
+    <header> 
+        <h1 onclick="revealMessage()">💕 My Valentine 💕</h1>
+        <img src="black-and-white-swan-heart-geraint-rowland (1).jpg" alt="">
+    </header>
+    </header>
+
+    <main>
+          <section class="will-you-by my-valentines">
+        <h2>💖 Will You Be My Valentine? 💖</h2>
+        <img src="will-you-be-my-valentine-happy-valentine-s-day-vector.jpg" alt="">
+          </section>
+          <div>
+          <button><a href="iloveyou.html">Yes ❤️</a></button>
+          <button><a href="are-you-sure.html">No</a></button>
+          </div>
+    </main>
+
+    <script>
+        // Falling Hearts Animation
+        function createFallingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💕';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            heart.style.fontSize = (Math.random() * 15 + 20) + 'px';
+            document.getElementById('fallingHearts').appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 7000);
+        }
+        
+        setInterval(createFallingHeart, 300);
+
+        // Confetti Effect
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffc3a0', '#c06c84', '#fff', '#ffb6c1'];
+            const container = document.getElementById('confettiContainer');
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDelay = '0s';
+                    container.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 10);
+            }
+        }
+
+        // Countdown Timer
+        function updateCountdown() {
+            const valentine = new Date('February 14, 2026 00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = valentine - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            if (distance > 0) {
+                document.getElementById('countdown').innerHTML = 
+                    `💖 ${days}d ${hours}h ${minutes}m ${seconds}s until Valentine's Day 💖`;
+            } else {
+                document.getElementById('countdown').innerHTML = "💕 Happy Valentine's Day! 💕";
+            }
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Hidden Messages
+        const messages = [
+            "You make every day feel like Valentine's Day! 💕",
+            "My heart beats only for you! ❤️",
+            "You're my forever Valentine! 💖",
+            "Every moment with you is magical! ✨",
+            "You're the love of my life! 💗",
+            "I'm so lucky to have you! 🍀"
+        ];
+        
+        let messageIndex = 0;
+        
+        function revealMessage() {
+            const messageEl = document.getElementById('hiddenMessage');
+            const textEl = document.getElementById('messageText');
+            textEl.textContent = messages[messageIndex];
+            messageEl.classList.add('show');
+            
+            messageIndex = (messageIndex + 1) % messages.length;
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Share Function
+        function shareIt() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Valentine',
+                    text: 'Will you be my Valentine? ❤️'
+                });
+            } else {
+                alert('💕 Screenshot this page to share!');
+            }
+        }
+
+        // Add confetti to Yes button
+        document.querySelector('button a[href="iloveyou.html"]').parentElement.addEventListener('click', function(e) {
+            createConfetti();
+        });
+
+        // Floating Stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'floating-star';
+            star.innerHTML = '✨';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(star);
+            
+            setTimeout(() => star.remove(), 5000);
+        }
+        
+        setInterval(createStar, 1000);
+    </script>
+</body>
+</html>

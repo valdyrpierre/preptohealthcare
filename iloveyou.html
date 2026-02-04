@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Love You</title>
+    <style>
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(5deg);
+            }
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffc3a0 25%, #ff6b9d 50%, #c06c84 75%, #ff6b9d 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: 'Georgia', serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+            pointer-events: none;
+        }
+
+        .message {
+            text-align: center;
+            color: white;
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 60px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 60px rgba(255, 107, 157, 0.8),
+                0 0 100px rgba(255, 255, 255, 0.5),
+                inset 0 0 40px rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .love_letter {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 
+                0 0 40px rgba(255, 107, 157, 0.6),
+                0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 182, 193, 0.8);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .love_letter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 182, 193, 0.3),
+                transparent
+            );
+            animation: shimmer 4s infinite;
+        }
+
+        .love_letter h2 {
+            color: #d63384;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .love_letter p {
+            color: #6c5b7b;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 6rem;
+            margin: 0;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 1),
+                0 0 40px rgba(255, 107, 157, 0.8),
+                0 0 60px rgba(255, 107, 157, 0.6),
+                3px 3px 15px rgba(0, 0, 0, 0.4);
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+
+        .hearts {
+            font-size: 4rem;
+            margin: 30px 0;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.8));
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .sparkle::before,
+        .sparkle::after {
+            content: '✨';
+            position: absolute;
+            font-size: 2rem;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .sparkle::before {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0.5s;
+        }
+
+        .sparkle::after {
+            top: 30%;
+            right: 10%;
+            animation-delay: 1s;
+        }
+
+        @media (max-width: 768px) {
+            .message {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            h1 {
+                font-size: 3.5rem;
+                letter-spacing: 3px;
+            }
+
+            .hearts {
+                font-size: 2.5rem;
+                margin: 20px 0;
+            }
+
+            .love_letter {
+                padding: 30px 25px;
+                margin: 30px 15px;
+            }
+
+            .love_letter h2 {
+                font-size: 2rem;
+            }
+
+            .love_letter p {
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message {
+                padding: 30px 20px;
+                margin: 15px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+
+            .hearts {
+                font-size: 2rem;
+                margin: 15px 0;
+            }
+
+            .sparkle::before,
+            .sparkle::after {
+                font-size: 1.5rem;
+            }
+
+            .love_letter {
+                padding: 25px 20px;
+                margin: 20px 10px;
+            }
+
+            .love_letter h2 {
+                font-size: 1.5rem;
+            }
+
+            .love_letter p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Falling Hearts */
+        .falling-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart-fall {
+            position: absolute;
+            top: -50px;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                top: 100vh;
+                transform: translateX(50px) rotate(360deg);
+            }
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                top: 100vh;
+                transform: translateX(100px) rotateZ(720deg);
+            }
+        }
+
+        /* Floating Stars */
+        .floating-star {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            font-size: 1.5rem;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Hidden Message */
+        .hidden-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 107, 157, 0.8);
+            z-index: 10001;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+            border: 3px solid #ff6b9d;
+        }
+
+        .hidden-message.show {
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .hidden-message p {
+            font-size: 1.5rem;
+            color: #d63384;
+            margin: 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Share Button */
+        .share-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #ff6b9d, #ff1744);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.8);
+        }
+
+        /* Home Button */
+        .home-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #d63384;
+            border: 2px solid #ff6b9d;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+        }
+
+        .message {
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .hidden-message {
+                padding: 30px 25px;
+                width: 90%;
+            }
+
+            .hidden-message p {
+                font-size: 1.2rem;
+            }
+
+            .share-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            .home-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-hearts" id="fallingHearts"></div>
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <a href="homepage.html" class="home-btn">🏠 Home</a>
+    <button class="share-btn" onclick="shareIt()">📤 Share</button>
+
+    <div class="hidden-message" id="hiddenMessage">
+        <p id="messageText"></p>
+    </div>
+
+    <div class="message" onclick="revealMessage()">
+        <div class="hearts">❤️ 💕 ❤️</div>
+        <h1>I LOVE YOU !!!</h1>
+        <div class="hearts">💕 ❤️ 💕</div>
+    </div>
+
+    <section class="love_letter">
+        <h2>Dear Wifey,</h2>
+        <p>This is our second Valentine's Day together. I love you more each day.</p>
+        <p>I know you will be on vacation so we are celebrating early.</p>
+        <p>I am thankful for you every day, that you are in my life.</p>
+        <p>You are my best friend, my partner in crime, and the love of my life.</p>
+        <p>I am grateful for every moment we share together.</p>
+        <p>Grateful for every way you help me grow and support me.</p>
+        <p>I love you more than words can express.</p>
+        <p>Happy Valentine's Day my love.</p>
+        <p>Forever and always,</p>
+        <p>Your Husband.</p>
+    </section>
+
+    <script>
+        // Auto-trigger confetti on page load
+        window.addEventListener('load', () => {
+            setTimeout(createConfetti, 500);
+        });
+
+        // Falling Hearts
+        function createFallingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-fall';
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💕';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            heart.style.fontSize = (Math.random() * 15 + 20) + 'px';
+            document.getElementById('fallingHearts').appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 7000);
+        }
+        
+        setInterval(createFallingHeart, 300);
+
+        // Confetti Effect
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffc3a0', '#c06c84', '#fff', '#ffb6c1'];
+            const container = document.getElementById('confettiContainer');
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    container.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 10);
+            }
+        }
+
+        // Hidden Messages
+        const messages = [
+            "You're my everything! 💕",
+            "Forever and always! ❤️",
+            "You make my heart sing! 🎵",
+            "My one and only! 💖",
+            "You're my dream come true! ✨",
+            "Together forever! 💑"
+        ];
+        
+        let messageIndex = 0;
+        
+        function revealMessage() {
+            const messageEl = document.getElementById('hiddenMessage');
+            const textEl = document.getElementById('messageText');
+            textEl.textContent = messages[messageIndex];
+            messageEl.classList.add('show');
+            
+            messageIndex = (messageIndex + 1) % messages.length;
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Share Function
+        function shareIt() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'I Love You',
+                    text: 'I LOVE YOU!!! ❤️💕'
+                });
+            } else {
+                alert('💕 Screenshot this page to share!');
+            }
+        }
+
+        // Floating Stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'floating-star';
+            star.innerHTML = '✨';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(star);
+            
+            setTimeout(() => star.remove(), 5000);
+        }
+        
+        setInterval(createStar, 1000);
+    </script>
+</body>
+</html>

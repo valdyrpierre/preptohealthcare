@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>are you sure </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1);
+            }
+            75% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffc3a0 25%, #ff6b9d 50%, #c06c84 75%, #ff6b9d 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: 'Georgia', serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 4rem;
+            margin-bottom: 50px;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 107, 157, 0.8),
+                0 0 30px rgba(255, 107, 157, 0.6),
+                3px 3px 10px rgba(0, 0, 0, 0.3);
+            animation: heartbeat 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        main {
+            display: flex;
+            gap: 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        button {
+            padding: 25px 60px;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.5),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        #yes-btn {
+            background: linear-gradient(135deg, #ff6b9d, #ff1744);
+            color: white;
+            position: absolute;
+            left: 50px;
+            transition: all 0.2s ease;
+            transform-origin: center;
+        }
+
+        #yes-btn.shrink {
+            animation: shrinkButton 0.3s ease forwards;
+        }
+
+        @keyframes shrinkButton {
+            to {
+                transform: scale(0.8);
+            }
+        }
+
+        #no-btn {
+            background: linear-gradient(135deg, #c06c84, #6c5b7b);
+            color: white;
+        }
+
+        #no-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 
+                0 0 40px rgba(192, 108, 132, 0.9),
+                0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+                padding: 0 20px;
+            }
+
+            button {
+                padding: 20px 40px;
+                font-size: 1.4rem;
+            }
+
+            main {
+                gap: 30px;
+            }
+
+            #yes-btn {
+                left: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+                padding: 0 15px;
+                text-align: center;
+            }
+
+            button {
+                padding: 18px 35px;
+                font-size: 1.2rem;
+            }
+
+            main {
+                gap: 20px;
+            }
+
+            #yes-btn {
+                left: 20px;
+            }
+        }
+
+        /* Falling Hearts */
+        .falling-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            top: -50px;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                top: 100vh;
+                transform: translateX(50px) rotate(360deg);
+            }
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                top: 100vh;
+                transform: translateX(100px) rotateZ(720deg);
+            }
+        }
+
+        /* Floating Stars */
+        .floating-star {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            font-size: 1.5rem;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Home Button */
+        .home-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #d63384;
+            border: 2px solid #ff6b9d;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+        }
+
+        @media (max-width: 480px) {
+            .home-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="falling-hearts" id="fallingHearts"></div>
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <a href="homepage.html" class="home-btn">🏠 Home</a>
+
+    <header> 
+        <h1>Are You Sure?</h1>
+    </header>
+
+    <main>
+          <button id="yes-btn" onclick="window.location.href='iloveyou.html'">Yes</button>
+          <button id="no-btn"><a href="homepage.html">No</a></button>
+    </main>
+
+    <script>
+        const yesBtn = document.getElementById('yes-btn');
+        let shrinkCount = 0;
+        
+        yesBtn.addEventListener('mouseenter', () => {
+            const randomX = Math.random() * (window.innerWidth - 200);
+            const randomY = Math.random() * (window.innerHeight - 100);
+            
+            yesBtn.style.position = 'fixed';
+            yesBtn.style.left = randomX + 'px';
+            yesBtn.style.top = randomY + 'px';
+            
+            // Shrink the button each time
+            shrinkCount++;
+            const newScale = Math.max(0.3, 1 - (shrinkCount * 0.1));
+            yesBtn.style.transform = `scale(${newScale})`;
+        });
+
+        // Falling Hearts
+        function createFallingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💕';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            heart.style.fontSize = (Math.random() * 15 + 20) + 'px';
+            document.getElementById('fallingHearts').appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 7000);
+        }
+        
+        setInterval(createFallingHeart, 300);
+
+        // Confetti Effect
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffc3a0', '#c06c84', '#fff', '#ffb6c1'];
+            const container = document.getElementById('confettiContainer');
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    container.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 10);
+            }
+        }
+
+        // Add confetti to No button
+        document.getElementById('no-btn').addEventListener('click', function(e) {
+            createConfetti();
+        });
+
+        // Floating Stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'floating-star';
+            star.innerHTML = '✨';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(star);
+            
+            setTimeout(() => star.remove(), 5000);
+        }
+        
+        setInterval(createStar, 1000);
+    </script>
+</body>
+</html>
