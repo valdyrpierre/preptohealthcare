@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Week 1 Jeopardy Game</title>
+    <title>Week 1 Jeopardy Game - Nursing + Medical Terminology</title>
     <style>
         * {
             margin: 0;
@@ -42,19 +42,21 @@
         }
         
         .game-board {
-            max-width: 1400px;
+            max-width: 1800px;
             margin: 0 auto;
             background: black;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow-x: auto;
         }
         
         .categories {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(10, minmax(140px, 1fr));
             gap: 10px;
             margin-bottom: 10px;
+            min-width: 1600px;
         }
         
         .category {
@@ -74,8 +76,9 @@
         
         .questions-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(10, minmax(140px, 1fr));
             gap: 10px;
+            min-width: 1600px;
         }
         
         .question-tile {
@@ -105,6 +108,13 @@
         
         .question-tile.answered:hover {
             transform: none;
+            border-color: #1a1a1a;
+        }
+
+        .question-tile.empty {
+            background: #1a1a1a;
+            color: #333;
+            cursor: default;
             border-color: #1a1a1a;
         }
         
@@ -275,7 +285,7 @@
     </nav>
 
     <header>
-        <h1>🎮 NURSING JEOPARDY!</h1>
+        <h1>🎮 NURSING + MEDICAL TERMINOLOGY JEOPARDY!</h1>
         <div class="score-display">Score: $<span id="score">0</span></div>
     </header>
 
@@ -286,6 +296,11 @@
             <div class="category">Education</div>
             <div class="category">Organizations</div>
             <div class="category">Responsibilities</div>
+            <div class="category">Prefixes</div>
+            <div class="category">Word Parts</div>
+            <div class="category">Combining Forms</div>
+            <div class="category">Word Roots</div>
+            <div class="category">Medical Terms</div>
         </div>
         
         <div class="questions-grid" id="questionsGrid"></div>
@@ -358,6 +373,57 @@
                     { value: 400, question: "This responsibility involves helping patients recover from illness or injury", answer: "What is restore health?" },
                     { value: 500, question: "List all 4 nursing responsibilities in the correct order", answer: "What is: 1. Promote health, 2. Prevent illness, 3. Restore health, 4. Alleviate suffering?" }
                 ]
+            },
+            {
+                name: "Prefixes",
+                questions: [
+                    { value: 100, question: "Prefix meaning within", answer: "What is intra-?" },
+                    { value: 200, question: "Prefix meaning around, surrounding", answer: "What is peri-?" },
+                    { value: 300, question: "Prefix meaning painful, difficult, abnormal", answer: "What is dys-?" },
+                    { value: 400, question: "Word part that comes before the word root", answer: "What is a prefix?" },
+                    { value: 500, question: "Meaning of the prefix inter-", answer: "What is between?" },
+                    { value: 600, question: "Meaning of the prefix an-", answer: "What is without or not?" }
+                ]
+            },
+            {
+                name: "Word Parts",
+                questions: [
+                    { value: 100, question: "The combining _____ is added to the word root to make it easier to pronounce", answer: "What is a vowel?" },
+                    { value: 200, question: "Word part that comes after the word root", answer: "What is a suffix?" },
+                    { value: 300, question: "Plural form of the term vertebra", answer: "What is vertebrae?" },
+                    { value: 400, question: "Word root meaning stomach", answer: "What is gastr?" },
+                    { value: 500, question: "The core or main part of a word", answer: "What is a word root?" },
+                    { value: 600, question: "\"____ marks\" guide which syllable to say more forcefully", answer: "What are accent marks?" }
+                ]
+            },
+            {
+                name: "Combining Forms",
+                questions: [
+                    { value: 100, question: "Combining form meaning skull", answer: "What is crani/o?" },
+                    { value: 200, question: "Combining form that means kidney", answer: "What is nephr/o?" },
+                    { value: 300, question: "Combining form meaning skin", answer: "What is derm/o?" },
+                    { value: 400, question: "Meaning of the combining form pulmon/o", answer: "What is lung?" }
+                ]
+            },
+            {
+                name: "Word Roots",
+                questions: [
+                    { value: 100, question: "Meaning of the word root oste", answer: "What is bone?" },
+                    { value: 200, question: "Term meaning inflammation of the colon", answer: "What is colitis?" },
+                    { value: 300, question: "Term meaning a recording of the blood vessels", answer: "What is an angiogram?" },
+                    { value: 400, question: "Word root meaning heart", answer: "What is cardi?" }
+                ]
+            },
+            {
+                name: "Medical Terms",
+                questions: [
+                    { value: 100, question: "Medical term meaning frequent urination", answer: "What is polyuria?" },
+                    { value: 200, question: "Term meaning not pertaining to bacteria", answer: "What is abacterial?" },
+                    { value: 300, question: "Term meaning pertaining to the kidney", answer: "What is renal?" },
+                    { value: 400, question: "Medical term meaning record of heart activity", answer: "What is an electrocardiogram?" },
+                    { value: 500, question: "Term meaning surgical removal of a disk", answer: "What is a discectomy?" },
+                    { value: 600, question: "Plural form of the term nucleus", answer: "What is nuclei?" }
+                ]
             }
         ];
 
@@ -369,11 +435,22 @@
             const grid = document.getElementById('questionsGrid');
             grid.innerHTML = '';
             
-            for (let i = 0; i < 5; i++) {
+            const maxQuestions = Math.max(...categories.map(category => category.questions.length));
+
+            for (let i = 0; i < maxQuestions; i++) {
                 categories.forEach((category, catIndex) => {
+                    const questionData = category.questions[i];
                     const tile = document.createElement('div');
+
+                    if (!questionData) {
+                        tile.className = 'question-tile empty';
+                        tile.textContent = 'N/A';
+                        grid.appendChild(tile);
+                        return;
+                    }
+
                     tile.className = 'question-tile';
-                    tile.textContent = `$${category.questions[i].value}`;
+                    tile.textContent = `$${questionData.value}`;
                     tile.dataset.category = catIndex;
                     tile.dataset.question = i;
                     tile.onclick = () => openQuestion(catIndex, i, tile);
