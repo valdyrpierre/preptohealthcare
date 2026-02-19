@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 Jeopardy Game - Metric and Household Systems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #060CE9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 3em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .score-display {
+            background: white;
+            color: #060CE9;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .game-board {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: black;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow-x: auto;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(10, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+            min-width: 1600px;
+        }
+        
+        .category {
+            background: #060CE9;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-radius: 5px;
+            text-transform: uppercase;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(10, minmax(140px, 1fr));
+            gap: 10px;
+            min-width: 1600px;
+        }
+        
+        .question-tile {
+            background: #060CE9;
+            color: #D69F4C;
+            padding: 40px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #060CE9;
+        }
+        
+        .question-tile:hover {
+            background: #0505B8;
+            transform: scale(1.05);
+            border-color: #D69F4C;
+        }
+        
+        .question-tile.answered {
+            background: #1a1a1a;
+            color: #333;
+            cursor: default;
+        }
+        
+        .question-tile.answered:hover {
+            transform: none;
+            border-color: #1a1a1a;
+        }
+
+        .question-tile.empty {
+            background: #1a1a1a;
+            color: #333;
+            cursor: default;
+            border-color: #1a1a1a;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #060CE9;
+            padding: 50px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            border: 5px solid #D69F4C;
+        }
+        
+        .modal-value {
+            color: #D69F4C;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .modal-question {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .modal-answer {
+            color: #90EE90;
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .modal-answer.show {
+            display: block;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-reveal {
+            background: #D69F4C;
+            color: #060CE9;
+        }
+        
+        .btn-correct {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-incorrect {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-close {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .reset-btn {
+            background: white;
+            color: #060CE9;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="week3.html" class="nav-btn">📝 Quiz</a>
+            <a href="week3-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+            <a href="week3-matching-game.html" class="nav-btn">🎯 Matching</a>
+            <a href="week3-jeopardy.html" class="nav-btn active">🎮 Jeopardy</a>
+            <a href="week3-memory-game.html" class="nav-btn">🧠 Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>🎮 METRIC + HOUSEHOLD JEOPARDY!</h1>
+        <div class="score-display">Score: $<span id="score">0</span></div>
+    </header>
+
+    <div class="game-board">
+        <div class="categories">
+            <div class="category">Metric Basics</div>
+            <div class="category">g ↔ mg</div>
+            <div class="category">mg ↔ mcg</div>
+            <div class="category">Household Abbrev</div>
+            <div class="category">Liquid Conversions</div>
+            <div class="category">Temperature</div>
+            <div class="category">Quick Method</div>
+            <div class="category">True/False</div>
+            <div class="category">Conversions</div>
+            <div class="category">Mixed Review</div>
+        </div>
+        
+        <div class="questions-grid" id="questionsGrid"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-value" id="modalValue"></div>
+            <div class="modal-question" id="modalQuestion"></div>
+            <div class="modal-answer" id="modalAnswer"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-reveal" id="revealBtn" onclick="revealAnswer()">Reveal Answer</button>
+                <button class="btn btn-correct" id="correctBtn" onclick="markCorrect()" style="display:none;">✓ Correct</button>
+                <button class="btn btn-incorrect" id="incorrectBtn" onclick="markIncorrect()" style="display:none;">✗ Incorrect</button>
+                <button class="btn btn-close" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categories = [
+            {
+                name: "Metric Basics",
+                questions: [
+                    { value: 100, question: "How many grams are in 1 kilogram?", answer: "What is 1000 grams?" },
+                    { value: 200, question: "How many milligrams are in 1 gram?", answer: "What is 1000 milligrams?" },
+                    { value: 300, question: "How many micrograms are in 1 milligram?", answer: "What is 1000 micrograms?" },
+                    { value: 400, question: "Which is larger: gram or milligram?", answer: "What is gram?" },
+                    { value: 500, question: "Put these in order largest to smallest: kg, g, mg, mcg", answer: "What is kg, g, mg, mcg?" }
+                ]
+            },
+            {
+                name: "g ↔ mg",
+                questions: [
+                    { value: 100, question: "Convert 0.4 g to mg", answer: "What is 400 mg?" },
+                    { value: 200, question: "Convert 0.8 g to mg", answer: "What is 800 mg?" },
+                    { value: 300, question: "Convert 500 mg to g", answer: "What is 0.5 g?" },
+                    { value: 400, question: "Convert 1250 mg to g", answer: "What is 1.25 g?" },
+                    { value: 500, question: "When converting g to mg, decimal moves this many places", answer: "What is 3 places right?" }
+                ]
+            },
+            {
+                name: "mg ↔ mcg",
+                questions: [
+                    { value: 100, question: "True or False: 4 mg = 4000 mcg", answer: "What is True?" },
+                    { value: 200, question: "Convert 2 mg to mcg", answer: "What is 2000 mcg?" },
+                    { value: 300, question: "Convert 2500 mcg to mg", answer: "What is 2.5 mg?" },
+                    { value: 400, question: "Convert 0.5 mg to mcg", answer: "What is 500 mcg?" },
+                    { value: 500, question: "Convert 800 mcg to mg", answer: "What is 0.8 mg?" }
+                ]
+            },
+            {
+                name: "Household Abbrev",
+                questions: [
+                    { value: 100, question: "Abbreviation for teaspoon", answer: "What is tsp?" },
+                    { value: 200, question: "Abbreviation for tablespoon", answer: "What is tbsp?" },
+                    { value: 300, question: "Abbreviation for ounce", answer: "What is oz (or fl oz)?" },
+                    { value: 400, question: "Abbreviation for pint", answer: "What is pt?" },
+                    { value: 500, question: "Abbreviation for quart", answer: "What is qt?" }
+                ]
+            },
+            {
+                name: "Liquid Conversions",
+                questions: [
+                    { value: 100, question: "How many mL in 1 tsp?", answer: "What is 5 mL?" },
+                    { value: 200, question: "10 mL equals this many tsp", answer: "What is 2 tsp?" },
+                    { value: 300, question: "7.5 mL equals this many tsp", answer: "What is 1.5 tsp?" },
+                    { value: 400, question: "2.5 mL equals this many tsp", answer: "What is 0.5 tsp?" },
+                    { value: 500, question: "15 mL equals this many tsp", answer: "What is 3 tsp?" }
+                ]
+            },
+            {
+                name: "Temperature",
+                questions: [
+                    { value: 100, question: "Formula: Fahrenheit to Centigrade", answer: "What is °C = (°F − 32) ÷ 1.8?" },
+                    { value: 200, question: "Formula: Centigrade to Fahrenheit", answer: "What is °F = °C × 1.8 + 32?" },
+                    { value: 300, question: "40°C in °F", answer: "What is 104°F?" },
+                    { value: 400, question: "104°F in °C", answer: "What is 40°C?" },
+                    { value: 500, question: "37°C in °F (rounded)", answer: "What is about 98.6°F?" }
+                ]
+            },
+            {
+                name: "Quick Method",
+                questions: [
+                    { value: 100, question: "The open part of the arrow faces this", answer: "What is the larger measure?" },
+                    { value: 200, question: "You write this first in the quick method", answer: "What is the order?" },
+                    { value: 300, question: "Then write this in the quick method", answer: "What are equivalent measures needed?" },
+                    { value: 400, question: "Then show this", answer: "What is decimal movement direction with an arrow?" },
+                    { value: 500, question: "Remember this equivalency: 1 g = ____ mg", answer: "What is 1000 mg?" }
+                ]
+            },
+            {
+                name: "True/False",
+                questions: [
+                    { value: 100, question: "A kilogram is greater than a gram", answer: "What is True?" },
+                    { value: 200, question: "A milligram is greater than a gram", answer: "What is False?" },
+                    { value: 300, question: "1 mg equals 100 mcg", answer: "What is False?" },
+                    { value: 400, question: "10 mL equals 2 tsp", answer: "What is True?" },
+                    { value: 500, question: "40°C equals 100°F", answer: "What is False?" }
+                ]
+            },
+            {
+                name: "Conversions",
+                questions: [
+                    { value: 100, question: "0.25 g to mg", answer: "What is 250 mg?" },
+                    { value: 200, question: "1500 mg to g", answer: "What is 1.5 g?" },
+                    { value: 300, question: "3 mg to mcg", answer: "What is 3000 mcg?" },
+                    { value: 400, question: "900 mcg to mg", answer: "What is 0.9 mg?" },
+                    { value: 500, question: "20 mL to tsp", answer: "What is 4 tsp?" }
+                ]
+            },
+            {
+                name: "Mixed Review",
+                questions: [
+                    { value: 100, question: "Which is larger: mg or mcg?", answer: "What is mg?" },
+                    { value: 200, question: "Abbreviation for pound", answer: "What is lb?" },
+                    { value: 300, question: "Convert 2.2 g to mg", answer: "What is 2200 mg?" },
+                    { value: 400, question: "Convert 3200 mcg to mg", answer: "What is 3.2 mg?" },
+                    { value: 500, question: "Convert 39°C to °F (rounded)", answer: "What is about 102°F?" }
+                ]
+            }
+        ];
+
+        let score = 0;
+        let currentQuestion = null;
+        let answeredQuestions = new Set();
+
+        function initGame() {
+            const grid = document.getElementById('questionsGrid');
+            grid.innerHTML = '';
+            
+            const maxQuestions = Math.max(...categories.map(category => category.questions.length));
+
+            for (let i = 0; i < maxQuestions; i++) {
+                categories.forEach((category, catIndex) => {
+                    const questionData = category.questions[i];
+                    const tile = document.createElement('div');
+
+                    if (!questionData) {
+                        tile.className = 'question-tile empty';
+                        tile.textContent = 'N/A';
+                        grid.appendChild(tile);
+                        return;
+                    }
+
+                    tile.className = 'question-tile';
+                    tile.textContent = `$${questionData.value}`;
+                    tile.dataset.category = catIndex;
+                    tile.dataset.question = i;
+                    tile.onclick = () => openQuestion(catIndex, i, tile);
+                    grid.appendChild(tile);
+                });
+            }
+            
+            score = 0;
+            answeredQuestions.clear();
+            updateScore();
+        }
+
+        function openQuestion(catIndex, qIndex, tile) {
+            if (tile.classList.contains('answered')) return;
+            
+            currentQuestion = {
+                category: catIndex,
+                index: qIndex,
+                tile: tile,
+                data: categories[catIndex].questions[qIndex]
+            };
+            
+            document.getElementById('modalValue').textContent = `$${currentQuestion.data.value}`;
+            document.getElementById('modalQuestion').textContent = currentQuestion.data.question;
+            document.getElementById('modalAnswer').textContent = currentQuestion.data.answer;
+            document.getElementById('modalAnswer').classList.remove('show');
+            
+            document.getElementById('revealBtn').style.display = 'inline-block';
+            document.getElementById('correctBtn').style.display = 'none';
+            document.getElementById('incorrectBtn').style.display = 'none';
+            
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function revealAnswer() {
+            document.getElementById('modalAnswer').classList.add('show');
+            document.getElementById('revealBtn').style.display = 'none';
+            document.getElementById('correctBtn').style.display = 'inline-block';
+            document.getElementById('incorrectBtn').style.display = 'inline-block';
+        }
+
+        function markCorrect() {
+            score += currentQuestion.data.value;
+            updateScore();
+            currentQuestion.tile.classList.add('answered');
+            answeredQuestions.add(`${currentQuestion.category}-${currentQuestion.index}`);
+            closeModal();
+        }
+
+        function markIncorrect() {
+            score -= currentQuestion.data.value;
+            updateScore();
+            currentQuestion.tile.classList.add('answered');
+            answeredQuestions.add(`${currentQuestion.category}-${currentQuestion.index}`);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize game
+        initGame();
+    </script>
+</body>
+</html>
+
