@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4 - Stress, Holistic Health & Self-Care Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.2em; }
+        main { max-width: 800px; margin: 0 auto; }
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover { transform: translateY(-5px); }
+        .question-number { color: #667eea; font-weight: bold; font-size: 1.1em; margin-bottom: 10px; }
+        .question-text { font-size: 1.3em; color: #333; margin-bottom: 20px; line-height: 1.5; }
+        .options { list-style: none; }
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .option:hover { background: #e9ecef; transform: translateX(5px); }
+        .option input[type="radio"] { margin-right: 12px; cursor: pointer; width: 18px; height: 18px; }
+        .option label { cursor: pointer; font-size: 1.1em; }
+        .option.correct { background: #d4edda; border-color: #28a745; }
+        .option.incorrect { background: #f8d7da; border-color: #dc3545; }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .submit-btn:hover { transform: scale(1.05); }
+        .submit-btn:active { transform: scale(0.95); }
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+        .result.show { display: block; }
+        .score { font-size: 3em; color: #667eea; font-weight: bold; margin: 20px 0; }
+        .feedback { font-size: 1.3em; color: #333; margin: 15px 0; }
+        .reset-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+        .reset-btn:hover { transform: scale(1.05); }
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { background: #28a745; }
+    </style>
+</head>
+<body>
+<nav class="nav-bar">
+    <div class="nav-container">
+        <a href="week4.html" class="nav-btn active">📝 Quiz</a>
+        <a href="week4-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+        <a href="week4-matching-game.html" class="nav-btn">🎯 Matching</a>
+        <a href="week4-jeopardy.html" class="nav-btn">🎮 Jeopardy</a>
+        <a href="week4-memory-game.html" class="nav-btn">🧠 Memory</a>
+    </div>
+</nav>
+
+<header>
+    <h1>📚 Week 4 Quiz</h1>
+    <p class="subtitle">Stress, Holistic Health, Self-Care, and Clinical Documentation</p>
+</header>
+
+<main>
+    <form id="quizForm">
+        <div class="question-card"><div class="question-number">Question 1</div><div class="question-text">Stress is best defined as:</div><ul class="options"><li class="option"><input type="radio" name="q1" value="a" id="q1a"><label for="q1a">Only negative events</label></li><li class="option"><input type="radio" name="q1" value="b" id="q1b"><label for="q1b">State of arousal of mind/body in response to demands</label></li><li class="option"><input type="radio" name="q1" value="c" id="q1c"><label for="q1c">A psychiatric diagnosis only</label></li><li class="option"><input type="radio" name="q1" value="d" id="q1d"><label for="q1d">Lack of sleep only</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 2</div><div class="question-text">A stressor is:</div><ul class="options"><li class="option"><input type="radio" name="q2" value="a" id="q2a"><label for="q2a">A treatment plan</label></li><li class="option"><input type="radio" name="q2" value="b" id="q2b"><label for="q2b">A stimulus/event requiring coping or adaptation</label></li><li class="option"><input type="radio" name="q2" value="c" id="q2c"><label for="q2c">A medication side effect only</label></li><li class="option"><input type="radio" name="q2" value="d" id="q2d"><label for="q2d">A nursing diagnosis</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 3</div><div class="question-text">Which is a physical sign of stress?</div><ul class="options"><li class="option"><input type="radio" name="q3" value="a" id="q3a"><label for="q3a">Increased BP and HR</label></li><li class="option"><input type="radio" name="q3" value="b" id="q3b"><label for="q3b">Improved concentration</label></li><li class="option"><input type="radio" name="q3" value="c" id="q3c"><label for="q3c">Euphoria only</label></li><li class="option"><input type="radio" name="q3" value="d" id="q3d"><label for="q3d">No appetite changes ever</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 4</div><div class="question-text">Which is a psychological sign of stress?</div><ul class="options"><li class="option"><input type="radio" name="q4" value="a" id="q4a"><label for="q4a">Bradycardia</label></li><li class="option"><input type="radio" name="q4" value="b" id="q4b"><label for="q4b">Difficulty concentrating</label></li><li class="option"><input type="radio" name="q4" value="c" id="q4c"><label for="q4c">Lower sweat output</label></li><li class="option"><input type="radio" name="q4" value="d" id="q4d"><label for="q4d">Increased urine output only</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 5</div><div class="question-text">A major nurse burnout contributor noted in your slides is:</div><ul class="options"><li class="option"><input type="radio" name="q5" value="a" id="q5a"><label for="q5a">Mandatory overtime and heavy workloads</label></li><li class="option"><input type="radio" name="q5" value="b" id="q5b"><label for="q5b">Too little regulation</label></li><li class="option"><input type="radio" name="q5" value="c" id="q5c"><label for="q5c">Too much vacation</label></li><li class="option"><input type="radio" name="q5" value="d" id="q5d"><label for="q5d">Low-stakes decisions</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 6</div><div class="question-text">Job stress can lead to:</div><ul class="options"><li class="option"><input type="radio" name="q6" value="a" id="q6a"><label for="q6a">Better judgment under all conditions</label></li><li class="option"><input type="radio" name="q6" value="b" id="q6b"><label for="q6b">Care errors and accidents</label></li><li class="option"><input type="radio" name="q6" value="c" id="q6c"><label for="q6c">Guaranteed motivation</label></li><li class="option"><input type="radio" name="q6" value="d" id="q6d"><label for="q6d">No irritability</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 7</div><div class="question-text">The Four A’s of stress management are:</div><ul class="options"><li class="option"><input type="radio" name="q7" value="a" id="q7a"><label for="q7a">Avoid, Alter, Adapt, Accept</label></li><li class="option"><input type="radio" name="q7" value="b" id="q7b"><label for="q7b">Ask, Analyze, Apply, Act</label></li><li class="option"><input type="radio" name="q7" value="c" id="q7c"><label for="q7c">Assess, Admit, Arrange, Attach</label></li><li class="option"><input type="radio" name="q7" value="d" id="q7d"><label for="q7d">Avoid, Achieve, Announce, Assume</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 8</div><div class="question-text">"Learn to say no" belongs to which A?</div><ul class="options"><li class="option"><input type="radio" name="q8" value="a" id="q8a"><label for="q8a">Avoid</label></li><li class="option"><input type="radio" name="q8" value="b" id="q8b"><label for="q8b">Alter</label></li><li class="option"><input type="radio" name="q8" value="c" id="q8c"><label for="q8c">Adapt</label></li><li class="option"><input type="radio" name="q8" value="d" id="q8d"><label for="q8d">Accept</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 9</div><div class="question-text">"Express your feelings and balance expectations" belongs to:</div><ul class="options"><li class="option"><input type="radio" name="q9" value="a" id="q9a"><label for="q9a">Avoid</label></li><li class="option"><input type="radio" name="q9" value="b" id="q9b"><label for="q9b">Alter</label></li><li class="option"><input type="radio" name="q9" value="c" id="q9c"><label for="q9c">Adapt</label></li><li class="option"><input type="radio" name="q9" value="d" id="q9d"><label for="q9d">Accept</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 10</div><div class="question-text">"Reframe and practice gratitude" belongs to:</div><ul class="options"><li class="option"><input type="radio" name="q10" value="a" id="q10a"><label for="q10a">Accept</label></li><li class="option"><input type="radio" name="q10" value="b" id="q10b"><label for="q10b">Adapt</label></li><li class="option"><input type="radio" name="q10" value="c" id="q10c"><label for="q10c">Avoid</label></li><li class="option"><input type="radio" name="q10" value="d" id="q10d"><label for="q10d">Alter</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 11</div><div class="question-text">"Focus on what you can change and how you react" belongs to:</div><ul class="options"><li class="option"><input type="radio" name="q11" value="a" id="q11a"><label for="q11a">Accept</label></li><li class="option"><input type="radio" name="q11" value="b" id="q11b"><label for="q11b">Adapt</label></li><li class="option"><input type="radio" name="q11" value="c" id="q11c"><label for="q11c">Alter</label></li><li class="option"><input type="radio" name="q11" value="d" id="q11d"><label for="q11d">Avoid</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 12</div><div class="question-text">Holistic nursing includes care of mind, body, spirit, and:</div><ul class="options"><li class="option"><input type="radio" name="q12" value="a" id="q12a"><label for="q12a">Emotion</label></li><li class="option"><input type="radio" name="q12" value="b" id="q12b"><label for="q12b">Income</label></li><li class="option"><input type="radio" name="q12" value="c" id="q12c"><label for="q12c">Diagnosis only</label></li><li class="option"><input type="radio" name="q12" value="d" id="q12d"><label for="q12d">Insurance status</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 13</div><div class="question-text">Conventional (allopathic) medicine typically uses:</div><ul class="options"><li class="option"><input type="radio" name="q13" value="a" id="q13a"><label for="q13a">Only meditation</label></li><li class="option"><input type="radio" name="q13" value="b" id="q13b"><label for="q13b">Medication, surgery, procedures</label></li><li class="option"><input type="radio" name="q13" value="c" id="q13c"><label for="q13c">No research process</label></li><li class="option"><input type="radio" name="q13" value="d" id="q13d"><label for="q13d">Only herbs</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 14</div><div class="question-text">Complementary health approaches can include:</div><ul class="options"><li class="option"><input type="radio" name="q14" value="a" id="q14a"><label for="q14a">Nutrition, exercise, stress reduction</label></li><li class="option"><input type="radio" name="q14" value="b" id="q14b"><label for="q14b">Only emergency surgery</label></li><li class="option"><input type="radio" name="q14" value="c" id="q14c"><label for="q14c">No patient education</label></li><li class="option"><input type="radio" name="q14" value="d" id="q14d"><label for="q14d">Only imaging tests</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 15</div><div class="question-text">Integrative health means:</div><ul class="options"><li class="option"><input type="radio" name="q15" value="a" id="q15a"><label for="q15a">Using CAM only</label></li><li class="option"><input type="radio" name="q15" value="b" id="q15b"><label for="q15b">Combining appropriate conventional and complementary approaches</label></li><li class="option"><input type="radio" name="q15" value="c" id="q15c"><label for="q15c">Rejecting standard treatment</label></li><li class="option"><input type="radio" name="q15" value="d" id="q15d"><label for="q15d">Avoiding provider communication</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 16</div><div class="question-text">For I&O documentation, accurate recording is important for:</div><ul class="options"><li class="option"><input type="radio" name="q16" value="a" id="q16a"><label for="q16a">Medication branding only</label></li><li class="option"><input type="radio" name="q16" value="b" id="q16b"><label for="q16b">Fluid balance and patient safety</label></li><li class="option"><input type="radio" name="q16" value="c" id="q16c"><label for="q16c">Room assignment</label></li><li class="option"><input type="radio" name="q16" value="d" id="q16d"><label for="q16d">Visitor schedules</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 17</div><div class="question-text">Military time for 2:30 PM is:</div><ul class="options"><li class="option"><input type="radio" name="q17" value="a" id="q17a"><label for="q17a">0230</label></li><li class="option"><input type="radio" name="q17" value="b" id="q17b"><label for="q17b">1230</label></li><li class="option"><input type="radio" name="q17" value="c" id="q17c"><label for="q17c">1430</label></li><li class="option"><input type="radio" name="q17" value="d" id="q17d"><label for="q17d">1530</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 18</div><div class="question-text">Standard time for 0630 is:</div><ul class="options"><li class="option"><input type="radio" name="q18" value="a" id="q18a"><label for="q18a">6:30 PM</label></li><li class="option"><input type="radio" name="q18" value="b" id="q18b"><label for="q18b">6:30 AM</label></li><li class="option"><input type="radio" name="q18" value="c" id="q18c"><label for="q18c">12:30 AM</label></li><li class="option"><input type="radio" name="q18" value="d" id="q18d"><label for="q18d">3:30 AM</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 19</div><div class="question-text">Which is a healthcare-system factor linked to burnout in your notes?</div><ul class="options"><li class="option"><input type="radio" name="q19" value="a" id="q19a"><label for="q19a">Adequate staffing always</label></li><li class="option"><input type="radio" name="q19" value="b" id="q19b"><label for="q19b">Lack of administrative/team support</label></li><li class="option"><input type="radio" name="q19" value="c" id="q19c"><label for="q19c">No regulations</label></li><li class="option"><input type="radio" name="q19" value="d" id="q19d"><label for="q19d">Low workload</label></li></ul></div>
+        <div class="question-card"><div class="question-number">Question 20</div><div class="question-text">When counseling a patient asking about naturopathy vs full oncology treatment, the nurse should prioritize:</div><ul class="options"><li class="option"><input type="radio" name="q20" value="a" id="q20a"><label for="q20a">Dismissing patient concerns</label></li><li class="option"><input type="radio" name="q20" value="b" id="q20b"><label for="q20b">Therapeutic relationship, complete assessment, and evidence-informed guidance</label></li><li class="option"><input type="radio" name="q20" value="c" id="q20c"><label for="q20c">Recommend internet influencers only</label></li><li class="option"><input type="radio" name="q20" value="d" id="q20d"><label for="q20d">Avoid discussing options</label></li></ul></div>
+
+        <button type="submit" class="submit-btn">Submit Quiz</button>
+    </form>
+
+    <div class="result" id="result">
+        <h2>Quiz Results</h2>
+        <div class="score" id="score"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="reset-btn" onclick="location.reload()">Retake Quiz</button>
+    </div>
+</main>
+
+<script>
+const correctAnswers = {
+    q1:'b', q2:'b', q3:'a', q4:'b', q5:'a',
+    q6:'b', q7:'a', q8:'a', q9:'b', q10:'b',
+    q11:'a', q12:'a', q13:'b', q14:'a', q15:'b',
+    q16:'b', q17:'c', q18:'b', q19:'b', q20:'b'
+};
+
+document.getElementById('quizForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let score = 0;
+    const totalQuestions = Object.keys(correctAnswers).length;
+
+    for (let question in correctAnswers) {
+        const selectedAnswer = document.querySelector(`input[name="${question}"]:checked`);
+        const options = document.querySelectorAll(`input[name="${question}"]`);
+
+        options.forEach(option => {
+            const parent = option.parentElement;
+            parent.classList.remove('correct', 'incorrect');
+            if (option.value === correctAnswers[question]) parent.classList.add('correct');
+            if (selectedAnswer && option === selectedAnswer && option.value !== correctAnswers[question]) parent.classList.add('incorrect');
+        });
+
+        if (selectedAnswer && selectedAnswer.value === correctAnswers[question]) score++;
+    }
+
+    const percentage = (score / totalQuestions * 100).toFixed(0);
+    document.getElementById('score').textContent = `${score} / ${totalQuestions} (${percentage}%)`;
+
+    let feedback = '';
+    if (percentage >= 90) feedback = '🎉 Outstanding! You are mastering stress and holistic care concepts.';
+    else if (percentage >= 80) feedback = '👏 Great job! Strong understanding of Week 4 material.';
+    else if (percentage >= 70) feedback = '👍 Good work! Review burnout factors, Four A’s, and documentation basics.';
+    else if (percentage >= 60) feedback = '📚 Keep going. Revisit self-care, holistic practice, and I&O/time conversion.';
+    else feedback = '📖 Keep studying! Review your notes and try again.';
+
+    document.getElementById('feedback').textContent = feedback;
+    document.getElementById('result').classList.add('show');
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+    document.querySelector('.submit-btn').style.display = 'none';
+});
+
+document.querySelectorAll('.option').forEach(option => {
+    option.addEventListener('click', function() {
+        const radio = this.querySelector('input[type="radio"]');
+        if (!radio.disabled) radio.checked = true;
+    });
+});
+</script>
+</body>
+</html>

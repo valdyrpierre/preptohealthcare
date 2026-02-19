@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4 Jeopardy Game - Stress, Holistic Health & Self-Care</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #060CE9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: white;
+            font-size: 3em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .score-display {
+            background: white;
+            color: #060CE9;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .game-board {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: black;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow-x: auto;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(10, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+            min-width: 1600px;
+        }
+        
+        .category {
+            background: #060CE9;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-radius: 5px;
+            text-transform: uppercase;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(10, minmax(140px, 1fr));
+            gap: 10px;
+            min-width: 1600px;
+        }
+        
+        .question-tile {
+            background: #060CE9;
+            color: #D69F4C;
+            padding: 40px 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #060CE9;
+        }
+        
+        .question-tile:hover {
+            background: #0505B8;
+            transform: scale(1.05);
+            border-color: #D69F4C;
+        }
+        
+        .question-tile.answered {
+            background: #1a1a1a;
+            color: #333;
+            cursor: default;
+        }
+        
+        .question-tile.answered:hover {
+            transform: none;
+            border-color: #1a1a1a;
+        }
+
+        .question-tile.empty {
+            background: #1a1a1a;
+            color: #333;
+            cursor: default;
+            border-color: #1a1a1a;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #060CE9;
+            padding: 50px;
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            border: 5px solid #D69F4C;
+        }
+        
+        .modal-value {
+            color: #D69F4C;
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .modal-question {
+            color: white;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .modal-answer {
+            color: #90EE90;
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .modal-answer.show {
+            display: block;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-reveal {
+            background: #D69F4C;
+            color: #060CE9;
+        }
+        
+        .btn-correct {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-incorrect {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-close {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .reset-btn {
+            background: white;
+            color: #060CE9;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="week4.html" class="nav-btn">📝 Quiz</a>
+            <a href="week4-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+            <a href="week4-matching-game.html" class="nav-btn">🎯 Matching</a>
+            <a href="week4-jeopardy.html" class="nav-btn active">🎮 Jeopardy</a>
+            <a href="week4-memory-game.html" class="nav-btn">🧠 Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>🎮 STRESS + HOLISTIC HEALTH JEOPARDY!</h1>
+        <div class="score-display">Score: $<span id="score">0</span></div>
+    </header>
+
+    <div class="game-board">
+        <div class="categories">
+            <div class="category">Stress Basics</div>
+            <div class="category">Signs & Symptoms</div>
+            <div class="category">Burnout</div>
+            <div class="category">Four A's</div>
+            <div class="category">Holistic Nursing</div>
+            <div class="category">Therapies</div>
+            <div class="category">Self-Care</div>
+            <div class="category">Documentation</div>
+            <div class="category">Time Systems</div>
+            <div class="category">Mixed Review</div>
+        </div>
+        
+        <div class="questions-grid" id="questionsGrid"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-value" id="modalValue"></div>
+            <div class="modal-question" id="modalQuestion"></div>
+            <div class="modal-answer" id="modalAnswer"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-reveal" id="revealBtn" onclick="revealAnswer()">Reveal Answer</button>
+                <button class="btn btn-correct" id="correctBtn" onclick="markCorrect()" style="display:none;">✓ Correct</button>
+                <button class="btn btn-incorrect" id="incorrectBtn" onclick="markIncorrect()" style="display:none;">✗ Incorrect</button>
+                <button class="btn btn-close" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categories = [
+            {
+                name: "Stress Basics",
+                questions: [
+                    { value: 100, question: "Stress is a state of this in mind/body", answer: "What is arousal in response to demands?" },
+                    { value: 200, question: "A stressor is a stimulus requiring this", answer: "What is coping or adaptation?" },
+                    { value: 300, question: "Change can be negative or this and still cause stress", answer: "What is positive?" },
+                    { value: 400, question: "Nursing is high-stress partly because lives depend on this", answer: "What are nurses' decisions/actions?" },
+                    { value: 500, question: "Organization recognizing healthcare stress significance", answer: "What is NIOSH?" }
+                ]
+            },
+            {
+                name: "Signs & Symptoms",
+                questions: [
+                    { value: 100, question: "Stress can increase this vital sign pair", answer: "What are BP and HR?" },
+                    { value: 200, question: "Psychological stress symptom: trouble ____", answer: "What is concentrating?" },
+                    { value: 300, question: "Physical stress symptom related to GI", answer: "What is GI distress?" },
+                    { value: 400, question: "Stress can cause appetite this", answer: "What are changes?" },
+                    { value: 500, question: "Stress can cause difficulty ____", answer: "What is sleeping?" }
+                ]
+            },
+            {
+                name: "Burnout",
+                questions: [
+                    { value: 100, question: "Burnout can reduce this", answer: "What is efficiency?" },
+                    { value: 200, question: "Burnout can increase this mood state", answer: "What is irritability?" },
+                    { value: 300, question: "Burnout can cause diminished ____", answer: "What is motivation?" },
+                    { value: 400, question: "Burnout increases risk of care ____", answer: "What are errors?" },
+                    { value: 500, question: "System factor: inadequate ____", answer: "What is staffing?" }
+                ]
+            },
+            {
+                name: "Four A's",
+                questions: [
+                    { value: 100, question: "First A", answer: "What is Avoid?" },
+                    { value: 200, question: "Second A", answer: "What is Alter?" },
+                    { value: 300, question: "Third A", answer: "What is Adapt?" },
+                    { value: 400, question: "Fourth A", answer: "What is Accept?" },
+                    { value: 500, question: "" + "Learn to say no" + " belongs to this A", answer: "What is Avoid?" }
+                ]
+            },
+            {
+                name: "Holistic Nursing",
+                questions: [
+                    { value: 100, question: "Holistic nursing is grounded in caring and ____", answer: "What is interconnectedness?" },
+                    { value: 200, question: "Holistic care includes this dimension with mind/body/spirit", answer: "What is emotion?" },
+                    { value: 300, question: "Holistic nursing uses evidence-based ____", answer: "What is research?" },
+                    { value: 400, question: "Holistic approach applies to patients and also ____", answer: "What are nurses themselves?" },
+                    { value: 500, question: "Holistic nursing includes defined ____ of practice", answer: "What are standards?" }
+                ]
+            },
+            {
+                name: "Therapies",
+                questions: [
+                    { value: 100, question: "CAM stands for complementary and ____ medicine", answer: "What is alternative?" },
+                    { value: 200, question: "Conventional medicine uses meds, surgery, and ____", answer: "What are procedures?" },
+                    { value: 300, question: "Standard conventional treatments undergo this process", answer: "What is research for safety and effectiveness?" },
+                    { value: 400, question: "Integrative health is more than allopathic + CAM because it also emphasizes ____", answer: "What is whole-person, coordinated decision-making?" },
+                    { value: 500, question: "Case study patient asked about naturopathy after this diagnosis", answer: "What is breast cancer?" }
+                ]
+            },
+            {
+                name: "Self-Care",
+                questions: [
+                    { value: 100, question: "Healthy lifestyle, support systems, and this are part of self-care", answer: "What are stress management techniques?" },
+                    { value: 200, question: "" + "Reframe" + " and gratitude belong to this A", answer: "What is Adapt?" },
+                    { value: 300, question: "Balancing expectations belongs to this A", answer: "What is Alter?" },
+                    { value: 400, question: "Focusing on your reaction belongs to this A", answer: "What is Accept?" },
+                    { value: 500, question: "Quick reset example from class activity", answer: "What is 60-second travel yoga?" }
+                ]
+            },
+            {
+                name: "Documentation",
+                questions: [
+                    { value: 100, question: "I&O stands for ____ and output", answer: "What is intake?" },
+                    { value: 200, question: "Accurate I&O supports safe fluid ____", answer: "What is balance management?" },
+                    { value: 300, question: "One system listed for measurements", answer: "What is metric?" },
+                    { value: 400, question: "Second measurement system listed", answer: "What is apothecaries'?" },
+                    { value: 500, question: "Third measurement system listed", answer: "What is household?" }
+                ]
+            },
+            {
+                name: "Time Systems",
+                questions: [
+                    { value: 100, question: "Military time for 2:30 PM", answer: "What is 1430?" },
+                    { value: 200, question: "Military time for 6:30 AM", answer: "What is 0630?" },
+                    { value: 300, question: "Standard time for 1800", answer: "What is 6:00 PM?" },
+                    { value: 400, question: "Standard time for 0015", answer: "What is 12:15 AM?" },
+                    { value: 500, question: "These two formats are needed for accurate records", answer: "What are standard and military time?" }
+                ]
+            },
+            {
+                name: "Mixed Review",
+                questions: [
+                    { value: 100, question: "National initiative mentioned for wellness goals", answer: "What is Healthy People 2030?" },
+                    { value: 200, question: "Job stress may create constant pressure against ____", answer: "What is time?" },
+                    { value: 300, question: "Patients are also this in high-stress settings", answer: "What is stressed?" },
+                    { value: 400, question: "Important in counseling patients about treatment choices", answer: "What is a therapeutic relationship?" },
+                    { value: 500, question: "Central Week 4 nursing focus", answer: "What is stress management, holistic health, and self-care?" }
+                ]
+            }
+        ];
+
+        let score = 0;
+        let currentQuestion = null;
+        let answeredQuestions = new Set();
+
+        function initGame() {
+            const grid = document.getElementById('questionsGrid');
+            grid.innerHTML = '';
+            
+            const maxQuestions = Math.max(...categories.map(category => category.questions.length));
+
+            for (let i = 0; i < maxQuestions; i++) {
+                categories.forEach((category, catIndex) => {
+                    const questionData = category.questions[i];
+                    const tile = document.createElement('div');
+
+                    if (!questionData) {
+                        tile.className = 'question-tile empty';
+                        tile.textContent = 'N/A';
+                        grid.appendChild(tile);
+                        return;
+                    }
+
+                    tile.className = 'question-tile';
+                    tile.textContent = `$${questionData.value}`;
+                    tile.dataset.category = catIndex;
+                    tile.dataset.question = i;
+                    tile.onclick = () => openQuestion(catIndex, i, tile);
+                    grid.appendChild(tile);
+                });
+            }
+            
+            score = 0;
+            answeredQuestions.clear();
+            updateScore();
+        }
+
+        function openQuestion(catIndex, qIndex, tile) {
+            if (tile.classList.contains('answered')) return;
+            
+            currentQuestion = {
+                category: catIndex,
+                index: qIndex,
+                tile: tile,
+                data: categories[catIndex].questions[qIndex]
+            };
+            
+            document.getElementById('modalValue').textContent = `$${currentQuestion.data.value}`;
+            document.getElementById('modalQuestion').textContent = currentQuestion.data.question;
+            document.getElementById('modalAnswer').textContent = currentQuestion.data.answer;
+            document.getElementById('modalAnswer').classList.remove('show');
+            
+            document.getElementById('revealBtn').style.display = 'inline-block';
+            document.getElementById('correctBtn').style.display = 'none';
+            document.getElementById('incorrectBtn').style.display = 'none';
+            
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function revealAnswer() {
+            document.getElementById('modalAnswer').classList.add('show');
+            document.getElementById('revealBtn').style.display = 'none';
+            document.getElementById('correctBtn').style.display = 'inline-block';
+            document.getElementById('incorrectBtn').style.display = 'inline-block';
+        }
+
+        function markCorrect() {
+            score += currentQuestion.data.value;
+            updateScore();
+            currentQuestion.tile.classList.add('answered');
+            answeredQuestions.add(`${currentQuestion.category}-${currentQuestion.index}`);
+            closeModal();
+        }
+
+        function markIncorrect() {
+            score -= currentQuestion.data.value;
+            updateScore();
+            currentQuestion.tile.classList.add('answered');
+            answeredQuestions.add(`${currentQuestion.category}-${currentQuestion.index}`);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize game
+        initGame();
+    </script>
+</body>
+</html>
+
