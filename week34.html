@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 + 4 Combined Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.2em; }
+        main { max-width: 900px; margin: 0 auto; }
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        .question-card:hover { transform: translateY(-5px); }
+        .question-number { color: #667eea; font-weight: bold; font-size: 1.1em; margin-bottom: 10px; }
+        .question-text { font-size: 1.2em; color: #333; margin-bottom: 20px; line-height: 1.5; }
+        .options { list-style: none; }
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .option:hover { background: #e9ecef; transform: translateX(5px); }
+        .option input[type="radio"] { margin-right: 12px; cursor: pointer; width: 18px; height: 18px; }
+        .option label { cursor: pointer; font-size: 1.05em; }
+        .option.correct { background: #d4edda; border-color: #28a745; }
+        .option.incorrect { background: #f8d7da; border-color: #dc3545; }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .submit-btn:hover { transform: scale(1.05); }
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+        .result.show { display: block; }
+        .score { font-size: 3em; color: #667eea; font-weight: bold; margin: 20px 0; }
+        .feedback { font-size: 1.3em; color: #333; margin: 15px 0; }
+        .reset-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { background: #28a745; }
+    </style>
+</head>
+<body>
+<nav class="nav-bar">
+    <div class="nav-container">
+        <a href="week34.html" class="nav-btn active">📝 Quiz</a>
+        <a href="week34-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+        <a href="week34-matching-game.html" class="nav-btn">🎯 Matching</a>
+        <a href="week34-jeopardy.html" class="nav-btn">🎮 Jeopardy</a>
+        <a href="week34-memory-game.html" class="nav-btn">🧠 Memory</a>
+    </div>
+</nav>
+
+<header>
+    <h1>📚 Week 3 + Week 4 Combined Quiz</h1>
+    <p class="subtitle">Informatics/EBP + Stress/Holistic Health</p>
+</header>
+
+<main>
+    <form id="quizForm"></form>
+
+    <div class="result" id="result">
+        <h2>Quiz Results</h2>
+        <div class="score" id="score"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="reset-btn" onclick="location.reload()">Retake Quiz</button>
+    </div>
+</main>
+
+<script>
+const questionData = [
+    { text: "Nursing informatics allows nurses to use technology for:", options: ["Only billing", "Provision, documentation, and evaluation of care", "Only medication dispensing", "Only scheduling"], answer: 1 },
+    { text: "QSEN describes informatics and EBP with which framework?", options: ["SOAP", "KSA (Knowledge, Skills, Attitudes)", "SBAR", "ABCDE"], answer: 1 },
+    { text: "Evidence-based practice (EBP) integrates best evidence with:", options: ["Hospital policy only", "Clinical expertise and patient/family values", "Insurance rules only", "Provider preference only"], answer: 1 },
+    { text: "A barrier to EBP use is:", options: ["Protected research time", "Poor EHR integration", "Unlimited staffing", "Too much access to journals"], answer: 1 },
+    { text: "In PICOT, P stands for:", options: ["Pathway", "Patient/Problem", "Prescription", "Provider"], answer: 1 },
+    { text: "In PICOT, I stands for:", options: ["Intervention", "Information", "Institution", "Infection"], answer: 0 },
+    { text: "In PICOT, C stands for:", options: ["Condition", "Comparison", "Care plan", "Cost"], answer: 1 },
+    { text: "In PICOT, O stands for:", options: ["Observation", "Organization", "Outcome", "Order"], answer: 2 },
+    { text: "In PICOT, T stands for:", options: ["Treatment", "Timeline", "Target", "Theory"], answer: 1 },
+    { text: "RADAR stands for:", options: ["Rationale, Authority, Date, Accuracy, Relevance", "Research, Access, Data, Analysis, Results", "Review, Assess, Document, Apply, Report", "Reason, Action, Detail, Audit, Record"], answer: 0 },
+    { text: "In RADAR, checking credentials and affiliation is part of:", options: ["Authority", "Date", "Relevance", "Rationale"], answer: 0 },
+    { text: "In RADAR, checking publication/update year is:", options: ["Accuracy", "Date", "Authority", "Rationale"], answer: 1 },
+    { text: "In RADAR, citations and peer review support:", options: ["Accuracy", "Date", "Relevance", "Rationale"], answer: 0 },
+    { text: "A common healthcare abbreviation is:", options: ["BP", "XYZQ", "PLMN", "AB12"], answer: 0 },
+    { text: "A common medical prefix is:", options: ["-itis", "hyper-", "-ectomy", "-algia"], answer: 1 },
+    { text: "A common medical suffix is:", options: ["intra-", "inter-", "-itis", "peri-"], answer: 2 },
+    { text: "Which is another barrier to EBP?", options: ["Lack of understanding of research", "Too many nurse researchers", "Too much free time", "No patient needs"], answer: 0 },
+    { text: "EBP improves:", options: ["Only billing speed", "Nursing practice and patient outcomes", "Only staffing ratios", "Only chart length"], answer: 1 },
+    { text: "Nurses can be researchers.", options: ["True", "False"], answer: 0 },
+    { text: "First step in EBP implementation is:", options: ["Be curious", "Integrate", "Evaluate", "Publish"], answer: 0 },
+
+    { text: "Stress is best defined as:", options: ["Only negative events", "Arousal of mind/body in response to demands", "A psychiatric diagnosis only", "Lack of sleep only"], answer: 1 },
+    { text: "A stressor is:", options: ["A treatment plan", "A stimulus/event requiring coping or adaptation", "A medication side effect only", "A nursing diagnosis"], answer: 1 },
+    { text: "Which is a physical sign of stress?", options: ["Increased BP and HR", "Improved concentration", "Euphoria only", "No appetite changes"], answer: 0 },
+    { text: "Which is a psychological sign of stress?", options: ["Bradycardia", "Difficulty concentrating", "Lower sweat output", "Increased urine output only"], answer: 1 },
+    { text: "A major burnout contributor noted is:", options: ["Mandatory overtime and heavy workloads", "Too little regulation", "Too much vacation", "Low-stakes decisions"], answer: 0 },
+    { text: "Job stress can lead to:", options: ["Better judgment under all conditions", "Care errors and accidents", "Guaranteed motivation", "No irritability"], answer: 1 },
+    { text: "The Four A's of stress management are:", options: ["Avoid, Alter, Adapt, Accept", "Ask, Analyze, Apply, Act", "Assess, Admit, Arrange, Attach", "Avoid, Achieve, Announce, Assume"], answer: 0 },
+    { text: "Learn to say no belongs to:", options: ["Avoid", "Alter", "Adapt", "Accept"], answer: 0 },
+    { text: "Express feelings and balance expectations belongs to:", options: ["Avoid", "Alter", "Adapt", "Accept"], answer: 1 },
+    { text: "Reframe and practice gratitude belongs to:", options: ["Accept", "Adapt", "Avoid", "Alter"], answer: 1 },
+    { text: "Focus on controllable reactions belongs to:", options: ["Accept", "Adapt", "Alter", "Avoid"], answer: 0 },
+    { text: "Holistic nursing includes care of mind, body, spirit, and:", options: ["Emotion", "Income", "Diagnosis only", "Insurance status"], answer: 0 },
+    { text: "Conventional (allopathic) care typically uses:", options: ["Only meditation", "Medication, surgery, procedures", "No research process", "Only herbs"], answer: 1 },
+    { text: "Complementary approaches can include:", options: ["Nutrition, exercise, stress reduction", "Only emergency surgery", "No patient education", "Only imaging"], answer: 0 },
+    { text: "Integrative health means:", options: ["Using CAM only", "Combining conventional and complementary approaches", "Rejecting standard treatment", "Avoiding provider communication"], answer: 1 },
+    { text: "Accurate I&O recording supports:", options: ["Medication branding", "Fluid balance and patient safety", "Room assignment", "Visitor schedules"], answer: 1 },
+    { text: "Military time for 2:30 PM is:", options: ["0230", "1230", "1430", "1530"], answer: 2 },
+    { text: "Standard time for 0630 is:", options: ["6:30 PM", "6:30 AM", "12:30 AM", "3:30 AM"], answer: 1 },
+    { text: "A system factor linked to burnout is:", options: ["Adequate staffing always", "Lack of administrative/team support", "No regulations", "Low workload"], answer: 1 },
+    { text: "In patient counseling, nurse priority is:", options: ["Dismiss concerns", "Therapeutic relationship + complete assessment + evidence-informed guidance", "Use influencers only", "Avoid discussing options"], answer: 1 }
+];
+
+const quizForm = document.getElementById('quizForm');
+questionData.forEach((question, index) => {
+    const questionNumber = index + 1;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'question-card';
+    wrapper.innerHTML = `
+        <div class="question-number">Question ${questionNumber}</div>
+        <div class="question-text">${question.text}</div>
+        <ul class="options">
+            ${question.options.map((option, optionIndex) => `
+                <li class="option">
+                    <input type="radio" name="q${questionNumber}" value="${optionIndex}" id="q${questionNumber}_${optionIndex}">
+                    <label for="q${questionNumber}_${optionIndex}">${option}</label>
+                </li>
+            `).join('')}
+        </ul>
+    `;
+    quizForm.appendChild(wrapper);
+});
+
+const submitBtn = document.createElement('button');
+submitBtn.type = 'submit';
+submitBtn.className = 'submit-btn';
+submitBtn.textContent = 'Submit Quiz';
+quizForm.appendChild(submitBtn);
+
+quizForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    let score = 0;
+    const totalQuestions = questionData.length;
+
+    questionData.forEach((question, index) => {
+        const questionNumber = index + 1;
+        const selectedAnswer = document.querySelector(`input[name="q${questionNumber}"]:checked`);
+        const options = document.querySelectorAll(`input[name="q${questionNumber}"]`);
+
+        options.forEach(option => {
+            const parent = option.parentElement;
+            parent.classList.remove('correct', 'incorrect');
+            if (Number(option.value) === question.answer) parent.classList.add('correct');
+            if (selectedAnswer && option === selectedAnswer && Number(option.value) !== question.answer) parent.classList.add('incorrect');
+        });
+
+        if (selectedAnswer && Number(selectedAnswer.value) === question.answer) score++;
+    });
+
+    const percentage = (score / totalQuestions * 100).toFixed(0);
+    document.getElementById('score').textContent = `${score} / ${totalQuestions} (${percentage}%)`;
+
+    let feedback = '';
+    if (percentage >= 90) feedback = '🎉 Outstanding! Strong mastery of Week 3 and Week 4.';
+    else if (percentage >= 80) feedback = '👏 Great job! You know both chapters well.';
+    else if (percentage >= 70) feedback = '👍 Good work! Review tricky concepts and try again.';
+    else if (percentage >= 60) feedback = '📚 Decent start. Revisit PICOT/RADAR and stress management.';
+    else feedback = '📖 Keep studying! Review both chapter notes and retake.';
+
+    document.getElementById('feedback').textContent = feedback;
+    document.getElementById('result').classList.add('show');
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+    document.querySelector('.submit-btn').style.display = 'none';
+});
+
+document.addEventListener('click', function(e) {
+    const option = e.target.closest('.option');
+    if (!option) return;
+    const radio = option.querySelector('input[type="radio"]');
+    if (radio && !radio.disabled) radio.checked = true;
+});
+</script>
+</body>
+</html>

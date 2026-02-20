@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 3 + 4 Memory Game - Combined Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            max-width: 1000px;
+            margin: 0 auto 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .game-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .memory-card {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .memory-card.matched {
+            opacity: 0.6;
+            cursor: default;
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 3em;
+        }
+        
+        .card-back {
+            background: white;
+            color: #333;
+            transform: rotateY(180deg);
+            border: 3px solid #667eea;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .completion-message {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .completion-message h2 {
+            color: #28a745;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .completion-message p {
+            color: #666;
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+        
+        .timer {
+            color: #667eea;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .memory-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            
+            .card-face {
+                font-size: 0.7em;
+                padding: 10px;
+            }
+        }
+        
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="week34.html" class="nav-btn">📝 Quiz</a>
+            <a href="week34-flashcards.html" class="nav-btn">🎴 Flashcards</a>
+            <a href="week34-matching-game.html" class="nav-btn">🎯 Matching</a>
+            <a href="week34-jeopardy.html" class="nav-btn">🎮 Jeopardy</a>
+            <a href="week34-memory-game.html" class="nav-btn active">🧠 Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>🧠 Memory Match Game</h1>
+        <p class="subtitle">Match Week 3 + Week 4 concept pairs.</p>
+    </header>
+
+    <div class="game-container">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Moves</div>
+                <div class="stat-value" id="moves">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Matches</div>
+                <div class="stat-value" id="matches">0 / 40</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Time</div>
+                <div class="stat-value timer" id="timer">0:00</div>
+            </div>
+        </div>
+
+        <div class="memory-grid" id="memoryGrid"></div>
+
+        <div class="completion-message" id="completionMessage">
+            <h2>🎉 Excellent Memory!</h2>
+            <p>You matched all cards!</p>
+            <p style="margin-top: 20px;">Moves: <span id="finalMoves"></span></p>
+            <p>Time: <span id="finalTime"></span></p>
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
+    </div>
+
+    <script>
+        const cardPairs = [
+            { id: 1, content: "Nursing Informatics" },
+            { id: 1, content: "Technology in care, documentation, and evaluation" },
+            { id: 2, content: "KSA" },
+            { id: 2, content: "Knowledge, Skills, Attitudes" },
+            { id: 3, content: "Evidence-Based Practice" },
+            { id: 3, content: "Best evidence + expertise + patient values" },
+            { id: 4, content: "EBP Benefit" },
+            { id: 4, content: "Improves practice and outcomes" },
+            { id: 5, content: "Barrier" },
+            { id: 5, content: "Poor EHR integration" },
+            { id: 6, content: "Barrier" },
+            { id: 6, content: "Lack of research understanding" },
+            { id: 7, content: "Barrier" },
+            { id: 7, content: "Time and staffing constraints" },
+            { id: 8, content: "P" },
+            { id: 8, content: "Patient/Problem" },
+            { id: 9, content: "I" },
+            { id: 9, content: "Intervention" },
+            { id: 10, content: "C" },
+            { id: 10, content: "Comparison" },
+            { id: 11, content: "O" },
+            { id: 11, content: "Outcome" },
+            { id: 12, content: "T" },
+            { id: 12, content: "Timeline" },
+            { id: 13, content: "R in RADAR" },
+            { id: 13, content: "Rationale" },
+            { id: 14, content: "A in RADAR" },
+            { id: 14, content: "Authority" },
+            { id: 15, content: "D in RADAR" },
+            { id: 15, content: "Date" },
+            { id: 16, content: "A in RADAR (2nd)" },
+            { id: 16, content: "Accuracy" },
+            { id: 17, content: "R in RADAR (final)" },
+            { id: 17, content: "Relevance" },
+            { id: 18, content: "Prefix Example" },
+            { id: 18, content: "hyper-" },
+            { id: 19, content: "Suffix Example" },
+            { id: 19, content: "-itis" },
+            { id: 20, content: "Common Abbreviation" },
+            { id: 20, content: "BP" },
+            { id: 21, content: "Stress" },
+            { id: 21, content: "Mind/body arousal to demands" },
+            { id: 22, content: "Stressor" },
+            { id: 22, content: "Event requiring coping" },
+            { id: 23, content: "Physical signs" },
+            { id: 23, content: "Increased BP/HR, sweating" },
+            { id: 24, content: "Psychological signs" },
+            { id: 24, content: "Anxiety, irritability, poor focus" },
+            { id: 25, content: "Burnout result" },
+            { id: 25, content: "Care errors" },
+            { id: 26, content: "Avoid" },
+            { id: 26, content: "Say no to unnecessary stress" },
+            { id: 27, content: "Alter" },
+            { id: 27, content: "Express feelings, adjust expectations" },
+            { id: 28, content: "Adapt" },
+            { id: 28, content: "Reframe and practice gratitude" },
+            { id: 29, content: "Accept" },
+            { id: 29, content: "Focus on controllable reactions" },
+            { id: 30, content: "Holistic nursing" },
+            { id: 30, content: "Mind, body, spirit, emotion" },
+            { id: 31, content: "Conventional therapy" },
+            { id: 31, content: "Meds, surgery, procedures" },
+            { id: 32, content: "Complementary approach" },
+            { id: 32, content: "Nutrition, exercise, stress reduction" },
+            { id: 33, content: "Integrative health" },
+            { id: 33, content: "Conventional + complementary" },
+            { id: 34, content: "I&O" },
+            { id: 34, content: "Intake and output" },
+            { id: 35, content: "1430" },
+            { id: 35, content: "2:30 PM" },
+            { id: 36, content: "0630" },
+            { id: 36, content: "6:30 AM" },
+            { id: 37, content: "Healthy People 2030" },
+            { id: 37, content: "National health goals framework" },
+            { id: 38, content: "NIOSH" },
+            { id: 38, content: "Recognizes job stress significance" },
+            { id: 39, content: "Self-care" },
+            { id: 39, content: "Lifestyle + support + stress management" },
+            { id: 40, content: "Case-study priority" },
+            { id: 40, content: "Therapeutic relationship and informed guidance" }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let timerInterval;
+        let seconds = 0;
+
+        function shuffle(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function initGame() {
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+            
+            const shuffledCards = shuffle(cardPairs);
+            
+            shuffledCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'memory-card';
+                cardElement.dataset.id = card.id;
+                cardElement.dataset.index = index;
+                
+                cardElement.innerHTML = `
+                    <div class="card-face card-front">?</div>
+                    <div class="card-face card-back">${card.content}</div>
+                `;
+                
+                cardElement.onclick = () => flipCard(cardElement);
+                grid.appendChild(cardElement);
+            });
+            
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            seconds = 0;
+            
+            updateStats();
+            document.getElementById('completionMessage').classList.remove('show');
+            
+            clearInterval(timerInterval);
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length >= 2) return;
+            if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+            
+            // Start timer on first move
+            if (moves === 0) {
+                startTimer();
+            }
+            
+            card.classList.add('flipped');
+            flippedCards.push(card);
+            
+            if (flippedCards.length === 2) {
+                moves++;
+                updateStats();
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            
+            if (card1.dataset.id === card2.dataset.id) {
+                // Match found
+                setTimeout(() => {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    flippedCards = [];
+                    matchedPairs++;
+                    updateStats();
+                    
+                    if (matchedPairs === cardPairs.length / 2) {
+                        setTimeout(showCompletion, 500);
+                    }
+                }, 600);
+            } else {
+                // No match
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('moves').textContent = moves;
+            document.getElementById('matches').textContent = `${matchedPairs} / ${cardPairs.length / 2}`;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function showCompletion() {
+            clearInterval(timerInterval);
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('finalMoves').textContent = moves;
+            document.getElementById('finalTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('completionMessage').classList.add('show');
+        }
+
+        function resetGame() {
+            clearInterval(timerInterval);
+            initGame();
+        }
+
+        // Initialize game
+        initGame();
+    </script>
+</body>
+</html>
+
