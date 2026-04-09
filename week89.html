@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 8 + 9 Combined Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.2em; }
+
+        main { max-width: 900px; margin: 0 auto; }
+
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .question-card:hover { transform: translateY(-5px); }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options { list-style: none; }
+
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option label { cursor: pointer; font-size: 1.05em; }
+
+        .option.correct { background: #d4edda; border-color: #28a745; }
+        .option.incorrect { background: #f8d7da; border-color: #dc3545; }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .submit-btn:hover { transform: scale(1.05); }
+
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result.show { display: block; }
+        .score { font-size: 3em; color: #667eea; font-weight: bold; margin: 20px 0; }
+        .feedback { font-size: 1.3em; color: #333; margin: 15px 0; }
+
+        .reset-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { background: #28a745; }
+    </style>
+</head>
+<body>
+<nav class="nav-bar">
+    <div class="nav-container">
+        <a href="week89.html" class="nav-btn active">Quiz</a>
+        <a href="week89-flashcards.html" class="nav-btn">Flashcards</a>
+        <a href="week89-matching-game.html" class="nav-btn">Matching</a>
+        <a href="week89-jeopardy.html" class="nav-btn">Jeopardy</a>
+        <a href="week89-memory-game.html" class="nav-btn">Memory</a>
+    </div>
+</nav>
+
+<header>
+    <h1>Week 8 + Week 9 Combined Quiz</h1>
+    <p class="subtitle">Safety and Quality Improvement + Incivility, Bullying, and Conflict Resolution</p>
+</header>
+
+<main>
+    <form id="quizForm"></form>
+
+    <div class="result" id="result">
+        <h2>Quiz Results</h2>
+        <div class="score" id="score"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="reset-btn" onclick="location.reload()">Retake Quiz</button>
+    </div>
+</main>
+
+<script>
+const questionData = [
+    { text: "Patient safety is best defined as:", options: ["Avoiding all treatment risks", "Minimizing risk of harm through system effectiveness and individual performance", "Focusing only on individual nurse actions", "Using the newest technology"], answer: 1 },
+    { text: "According to IOM, patients must rely on healthcare professionals and institutions for:", options: ["Cost savings", "Faster discharge", "Safety and well-being", "Insurance approvals"], answer: 2 },
+    { text: "Preventable medical errors are estimated as the ___ leading cause of death in the U.S.", options: ["First", "Second", "Third", "Fifth"], answer: 2 },
+    { text: "A sentinel event results in:", options: ["Minor inconvenience only", "Death, permanent harm, or severe temporary harm", "Only medication delays", "Only financial loss"], answer: 1 },
+    { text: "A never event is:", options: ["An unavoidable side effect", "An error that should never happen", "A patient refusal", "A scheduling issue"], answer: 1 },
+    { text: "Errors of omission occur when:", options: ["A wrong action is taken", "A needed action is not taken", "Documentation is late", "Policies are updated"], answer: 1 },
+    { text: "Errors of commission occur when:", options: ["No action is taken", "The wrong action is taken", "A patient asks questions", "Orders are clarified"], answer: 1 },
+    { text: "The Joint Commission mission includes:", options: ["Licensing all nurses", "Improving healthcare quality and safety", "Setting insurance premiums", "Running hospital payroll"], answer: 1 },
+    { text: "To maintain Joint Commission accreditation, most organizations are surveyed at least every:", options: ["Year", "Two years", "Three years", "Five years"], answer: 2 },
+    { text: "A just culture is best described as:", options: ["Punishing every mistake equally", "Ignoring all unsafe behaviors", "Examining behavior type to guide fair response", "Focusing only on individual blame"], answer: 2 },
+    { text: "Just culture does NOT tolerate:", options: ["Human error", "Near-miss reporting", "Reckless behavior", "System analysis"], answer: 2 },
+    { text: "In a culture of safety, nurses are expected to:", options: ["Avoid speaking up", "Report errors and near misses", "Work independently without team input", "Prioritize speed over safety"], answer: 1 },
+    { text: "Being the patient advocate is:", options: ["Optional in nursing", "Only for managers", "Integral to nursing practice", "Limited to ICU"], answer: 2 },
+    { text: "Quality improvement (QI) emphasizes:", options: ["One-time fixes", "Using data and improvement methods for continuous improvement", "Replacing all staff", "Reducing documentation only"], answer: 1 },
+    { text: "Quality of care is commonly viewed:", options: ["As pass/fail only", "On a continuum from poor to high quality", "As a financial metric only", "As unrelated to patient outcomes"], answer: 1 },
+    { text: "A mistake-proofing example is:", options: ["Unlabeled medications", "Interchangeable tubing", "Non-interchangeable tubing", "Skipping verification"], answer: 2 },
+    { text: "Universal Protocol is associated with:", options: ["Surgical procedure safety", "Outpatient billing", "Public health surveillance", "Insurance coding"], answer: 0 },
+    { text: "A successive check example is:", options: ["Single signature for blood transfusion", "Two RNs checking before transfusion", "Patient self-verification only", "Skipping blood checks in emergencies"], answer: 1 },
+    { text: "SBAR is primarily a tool for:", options: ["Medication reconciliation", "Structured communication", "Wound care staging", "Billing and coding"], answer: 1 },
+    { text: "Care bundles are used to:", options: ["Increase chart length", "Prevent complications like CLABSI", "Replace clinical judgment", "Reduce patient education"], answer: 1 },
+    { text: "The phrase 'What gets measured, gets done' highlights the value of:", options: ["Data tracking and transparency", "Informal opinions", "Less documentation", "Avoiding benchmarks"], answer: 0 },
+    { text: "CMS outcome tracking is associated with:", options: ["Worse outcomes", "No measurable change", "Improvement in outcomes", "Lower staffing always"], answer: 2 },
+    { text: "One IOM quality aim is:", options: ["Profitability", "Exclusivity", "Patient-centeredness", "Competition"], answer: 2 },
+    { text: "Which is one of the six IOM aims?", options: ["Safety", "Aggressive growth", "Department loyalty", "Autonomy only"], answer: 0 },
+    { text: "QSEN core competencies include:", options: ["Quality improvement and informatics", "Revenue cycle management", "Hospital marketing", "Real estate planning"], answer: 0 },
+    { text: "Nurses have high impact on quality because:", options: ["Only administrators shape outcomes", "Nurses influence culture, outcomes, and daily care", "Technology replaces nursing judgment", "Quality is only physician-driven"], answer: 1 },
+
+    { text: "Incivility is best defined as:", options: ["Physical assault", "One or more rude, discourteous, or disrespectful actions", "Any policy violation", "Only verbal abuse with intent"], answer: 1 },
+    { text: "Bullying is best defined as:", options: ["Single accidental rude comment", "Repeated, unwanted harmful actions to humiliate or distress", "Only patient complaints", "Constructive feedback"], answer: 1 },
+    { text: "Oppressed Group Theory suggests members of an oppressed group may:", options: ["Always support one another", "Direct anger inward toward peers", "Experience no hierarchy impact", "Avoid all conflict"], answer: 1 },
+    { text: "In healthcare, worker-on-worker violence is commonly perceived as:", options: ["Customer/client violence", "Criminal intent", "Bullying", "Personal relationship violence"], answer: 2 },
+    { text: "The most common healthcare environment-based assault type is:", options: ["Criminal intent", "Customer/client", "Worker-on-worker", "Personal relationship"], answer: 1 },
+    { text: "Type 1 workplace violence is:", options: ["Customer/client", "Worker-on-worker", "Criminal intent", "Personal relationship"], answer: 2 },
+    { text: "Type 4 workplace violence refers to:", options: ["Criminal intent", "Worker-on-worker", "Personal relationship spillover", "Customer/client"], answer: 2 },
+    { text: "A physical symptom linked to workplace bullying/incivility is:", options: ["Improved sleep", "Headaches and intestinal problems", "Increased appetite only", "Lower stress hormones"], answer: 1 },
+    { text: "A psychological effect of bullying may include:", options: ["Lower anxiety", "Improved concentration", "Depressive symptoms and irritability", "Instant resilience"], answer: 2 },
+    { text: "Incivility can affect patient care by causing:", options: ["Improved judgment", "Impaired clinical judgment", "Faster medication reconciliation", "Fewer communication errors"], answer: 1 },
+    { text: "A healthy response by nurses includes:", options: ["Ignoring all incidents", "Committing to healthy interpersonal relationships", "Public shaming", "Retaliation"], answer: 1 },
+    { text: "Nurses should become familiar with:", options: ["Only social media guidelines", "Employer bullying prevention policies and codes of conduct", "Only physician preferences", "None of the above"], answer: 1 },
+    { text: "One practical de-escalation strategy is to:", options: ["Establish an agreed-upon signal for support", "Confront alone without backup", "Avoid reporting threats", "Delay all communication"], answer: 0 },
+    { text: "The ANA position states the nursing profession will:", options: ["Tolerate minor violence", "Not tolerate violence of any kind", "Address violence only in acute care", "Leave prevention to security staff"], answer: 1 },
+    { text: "According to ANA, creating a culture of respect requires collaboration between:", options: ["Nurses and employers", "Only nurses", "Only leadership", "Patients and insurers only"], answer: 0 },
+    { text: "Evidence-based anti-bullying strategies are categorized as:", options: ["Internal/external", "Primary, secondary, and tertiary prevention", "Local and federal", "Short-term and long-term only"], answer: 1 }
+];
+
+const quizForm = document.getElementById('quizForm');
+questionData.forEach((question, index) => {
+    const questionNumber = index + 1;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'question-card';
+    wrapper.innerHTML = `
+        <div class="question-number">Question ${questionNumber}</div>
+        <div class="question-text">${question.text}</div>
+        <ul class="options">
+            ${question.options.map((option, optionIndex) => `
+                <li class="option">
+                    <input type="radio" name="q${questionNumber}" value="${optionIndex}" id="q${questionNumber}_${optionIndex}">
+                    <label for="q${questionNumber}_${optionIndex}">${option}</label>
+                </li>
+            `).join('')}
+        </ul>
+    `;
+    quizForm.appendChild(wrapper);
+});
+
+const submitBtn = document.createElement('button');
+submitBtn.type = 'submit';
+submitBtn.className = 'submit-btn';
+submitBtn.textContent = 'Submit Quiz';
+quizForm.appendChild(submitBtn);
+
+quizForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    let score = 0;
+    const totalQuestions = questionData.length;
+
+    questionData.forEach((question, index) => {
+        const questionNumber = index + 1;
+        const selectedAnswer = document.querySelector(`input[name="q${questionNumber}"]:checked`);
+        const options = document.querySelectorAll(`input[name="q${questionNumber}"]`);
+
+        options.forEach(option => {
+            const parent = option.parentElement;
+            parent.classList.remove('correct', 'incorrect');
+            if (Number(option.value) === question.answer) parent.classList.add('correct');
+            if (selectedAnswer && option === selectedAnswer && Number(option.value) !== question.answer) parent.classList.add('incorrect');
+        });
+
+        if (selectedAnswer && Number(selectedAnswer.value) === question.answer) score++;
+    });
+
+    const percentage = (score / totalQuestions * 100).toFixed(0);
+    document.getElementById('score').textContent = `${score} / ${totalQuestions} (${percentage}%)`;
+
+    let feedback = '';
+    if (percentage >= 90) feedback = 'Outstanding work. You have strong Week 8 and Week 9 mastery.';
+    else if (percentage >= 80) feedback = 'Great job. You are very solid on safety, QI, and workplace civility.';
+    else if (percentage >= 70) feedback = 'Good progress. Review just culture, IOM aims, and violence types.';
+    else if (percentage >= 60) feedback = 'Decent start. Revisit sentinel events, QI tools, and ANA guidance.';
+    else feedback = 'Keep studying. Review the Week 8 and 9 notes, then retake.';
+
+    document.getElementById('feedback').textContent = feedback;
+    document.getElementById('result').classList.add('show');
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+    document.querySelector('.submit-btn').style.display = 'none';
+});
+
+document.addEventListener('click', function(e) {
+    const option = e.target.closest('.option');
+    if (!option) return;
+    const radio = option.querySelector('input[type="radio"]');
+    if (radio && !radio.disabled) radio.checked = true;
+});
+</script>
+</body>
+</html>
