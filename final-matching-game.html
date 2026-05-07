@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Exam Matching Game - Intro to Nursing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 12px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { background: #28a745; }
+
+        header {
+            background: white;
+            padding: 28px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 24px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto 24px;
+        }
+
+        h1 { color: #667eea; font-size: 2.2em; margin-bottom: 8px; }
+        .subtitle { color: #666; font-size: 1.1em; }
+
+        .game-container { max-width: 1200px; margin: 0 auto; }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 16px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .stat-item { text-align: center; min-width: 120px; }
+        .stat-label { color: #666; font-size: 0.95em; margin-bottom: 4px; }
+        .stat-value { color: #667eea; font-size: 1.8em; font-weight: bold; }
+
+        .matching-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 26px;
+            margin-top: 20px;
+        }
+
+        .column {
+            background: white;
+            padding: 18px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .column-title {
+            font-size: 1.25em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 14px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .match-item {
+            background: #f8f9fa;
+            padding: 14px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 3px solid transparent;
+            font-size: 1em;
+            user-select: none;
+        }
+
+        .match-item:hover { background: #e9ecef; transform: translateX(4px); }
+        .match-item.selected { background: #fff3cd; border-color: #ffc107; transform: scale(1.02); }
+        .match-item.matched { background: #d4edda; border-color: #28a745; cursor: default; opacity: 0.8; }
+        .match-item.wrong { background: #f8d7da; border-color: #dc3545; }
+
+        .completion-message {
+            background: white;
+            padding: 26px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            max-width: 640px;
+            margin: 24px auto;
+        }
+
+        .completion-message.show { display: block; }
+        .completion-message h2 { color: #28a745; margin-bottom: 10px; }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 26px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05em;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+
+        @media (max-width: 900px) {
+            .matching-area { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="final.html" class="nav-btn">Quiz</a>
+            <a href="final-flashcards.html" class="nav-btn">Flashcards</a>
+            <a href="final-matching-game.html" class="nav-btn active">Matching</a>
+            <a href="final-jeopardy.html" class="nav-btn">Jeopardy</a>
+            <a href="final-memory-game.html" class="nav-btn">Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Final Exam Matching Game</h1>
+        <p class="subtitle">Match key nursing concepts to the correct definitions.</p>
+    </header>
+
+    <div class="game-container">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Matches</div>
+                <div class="stat-value" id="matches">0 / 20</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Attempts</div>
+                <div class="stat-value" id="attempts">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-value" id="accuracy">100%</div>
+            </div>
+        </div>
+
+        <div class="matching-area">
+            <div class="column">
+                <div class="column-title">Terms</div>
+                <div id="leftColumn"></div>
+            </div>
+            <div class="column">
+                <div class="column-title">Definitions</div>
+                <div id="rightColumn"></div>
+            </div>
+        </div>
+
+        <div class="completion-message" id="completionMessage">
+            <h2>Excellent work</h2>
+            <p>You matched all terms for your final review.</p>
+            <p style="margin-top: 10px;">Final Accuracy: <span id="finalScore"></span></p>
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <script>
+        const matchPairs = [
+            { term: 'Florence Nightingale', definition: 'Founder of modern nursing' },
+            { term: 'Crimean War', definition: 'Conflict where nursing mortality was reduced by half' },
+            { term: 'Nurse Practice Act', definition: 'State legislation defining legal nursing scope' },
+            { term: 'Patient Advocate', definition: 'Role focused on protecting patient rights and preferences' },
+            { term: 'QSEN', definition: 'Framework for quality and safety competencies in nursing education' },
+            { term: 'Informatics', definition: 'Use of information and technology in patient care' },
+            { term: 'Incident Report', definition: 'Safety report used after an error or unusual occurrence' },
+            { term: 'Fidelity', definition: 'Faithfulness to obligations and promises to patients' },
+            { term: 'Autonomy', definition: 'Respect for patient right to make informed decisions' },
+            { term: 'Justice', definition: 'Fair and equitable treatment of patients' },
+            { term: 'Health Literacy', definition: 'Ability to obtain, understand, and use health information' },
+            { term: 'SBAR', definition: 'Situation, Background, Assessment, Recommendation communication model' },
+            { term: 'Teach-back', definition: 'Method where patient repeats information to confirm understanding' },
+            { term: 'EBP', definition: 'Care using research evidence, expertise, and patient values' },
+            { term: 'RADAR', definition: 'Rationale, Authority, Date, Accuracy, Relevance source framework' },
+            { term: 'PICOT', definition: 'Question model using Population, Intervention, Comparison, Outcome, Time' },
+            { term: 'Incivility', definition: 'Rude or disrespectful behavior with or without harmful intent' },
+            { term: 'Bullying', definition: 'Repeated unwanted harmful actions causing distress' },
+            { term: 'Tachypnea', definition: 'Rapid breathing' },
+            { term: 'Suffix -itis', definition: 'Inflammation' }
+        ];
+
+        let selectedLeft = null;
+        let selectedRight = null;
+        let matches = 0;
+        let attempts = 0;
+
+        function shuffle(array) {
+            const copy = [...array];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function renderBoard() {
+            const leftColumn = document.getElementById('leftColumn');
+            const rightColumn = document.getElementById('rightColumn');
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+
+            const leftItems = shuffle(matchPairs.map((item, index) => ({ id: index, text: item.term })));
+            const rightItems = shuffle(matchPairs.map((item, index) => ({ id: index, text: item.definition })));
+
+            leftItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.textContent = item.text;
+                div.dataset.id = item.id;
+                div.dataset.side = 'left';
+                div.onclick = () => selectItem(div);
+                leftColumn.appendChild(div);
+            });
+
+            rightItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.textContent = item.text;
+                div.dataset.id = item.id;
+                div.dataset.side = 'right';
+                div.onclick = () => selectItem(div);
+                rightColumn.appendChild(div);
+            });
+        }
+
+        function selectItem(item) {
+            if (item.classList.contains('matched')) return;
+
+            if (item.dataset.side === 'left') {
+                if (selectedLeft) selectedLeft.classList.remove('selected');
+                selectedLeft = item;
+                selectedLeft.classList.add('selected');
+            } else {
+                if (selectedRight) selectedRight.classList.remove('selected');
+                selectedRight = item;
+                selectedRight.classList.add('selected');
+            }
+
+            if (selectedLeft && selectedRight) {
+                attempts++;
+                if (selectedLeft.dataset.id === selectedRight.dataset.id) {
+                    selectedLeft.classList.remove('selected');
+                    selectedRight.classList.remove('selected');
+                    selectedLeft.classList.add('matched');
+                    selectedRight.classList.add('matched');
+                    matches++;
+                } else {
+                    selectedLeft.classList.add('wrong');
+                    selectedRight.classList.add('wrong');
+                    setTimeout(() => {
+                        selectedLeft.classList.remove('wrong', 'selected');
+                        selectedRight.classList.remove('wrong', 'selected');
+                        selectedLeft = null;
+                        selectedRight = null;
+                    }, 450);
+                    updateStats();
+                    return;
+                }
+
+                selectedLeft = null;
+                selectedRight = null;
+                updateStats();
+                if (matches === matchPairs.length) completeGame();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('matches').textContent = `${matches} / ${matchPairs.length}`;
+            document.getElementById('attempts').textContent = attempts;
+            const accuracy = attempts === 0 ? 100 : Math.round((matches / attempts) * 100);
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+        }
+
+        function completeGame() {
+            const accuracy = attempts === 0 ? 100 : Math.round((matches / attempts) * 100);
+            document.getElementById('finalScore').textContent = `${accuracy}%`;
+            document.getElementById('completionMessage').classList.add('show');
+        }
+
+        function resetGame() {
+            selectedLeft = null;
+            selectedRight = null;
+            matches = 0;
+            attempts = 0;
+            document.getElementById('completionMessage').classList.remove('show');
+            renderBoard();
+            updateStats();
+        }
+
+        resetGame();
+    </script>
+</body>
+</html>

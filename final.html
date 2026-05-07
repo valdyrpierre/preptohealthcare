@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Exam Quiz - Intro to Nursing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 12px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { background: #28a745; }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 { color: #667eea; font-size: 2.4em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.15em; }
+
+        main { max-width: 900px; margin: 0 auto; }
+
+        .question-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            margin-bottom: 18px;
+            transition: transform 0.25s ease;
+        }
+
+        .question-card:hover { transform: translateY(-3px); }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.12em;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.45;
+        }
+
+        .options { list-style: none; }
+
+        .option {
+            background: #f8f9fa;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
+        }
+
+        .option:hover { background: #e9ecef; transform: translateX(4px); }
+        .option input[type="radio"] { margin-right: 10px; cursor: pointer; }
+        .option label { cursor: pointer; }
+
+        .option.correct { background: #d4edda; border-color: #28a745; }
+        .option.incorrect { background: #f8d7da; border-color: #dc3545; }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 34px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.25s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .submit-btn:hover { transform: scale(1.04); }
+
+        .result {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            margin-top: 25px;
+        }
+
+        .result.show { display: block; }
+        .score { font-size: 2.4em; color: #667eea; font-weight: bold; margin: 15px 0; }
+        .feedback { font-size: 1.15em; color: #333; margin: 10px 0; }
+
+        .reset-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            h1 { font-size: 1.8em; }
+            .question-card { padding: 18px; }
+            .question-text { font-size: 1.02em; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="final.html" class="nav-btn active">Quiz</a>
+            <a href="final-flashcards.html" class="nav-btn">Flashcards</a>
+            <a href="final-matching-game.html" class="nav-btn">Matching</a>
+            <a href="final-jeopardy.html" class="nav-btn">Jeopardy</a>
+            <a href="final-memory-game.html" class="nav-btn">Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Final Exam Quiz</h1>
+        <p class="subtitle">Intro to Nursing: History, Roles, QSEN, Ethics, Teamwork, Research, and Terminology</p>
+    </header>
+
+    <main>
+        <form id="quizForm"></form>
+
+        <div class="result" id="result">
+            <h2>Quiz Results</h2>
+            <div class="score" id="score"></div>
+            <div class="feedback" id="feedback"></div>
+            <button class="reset-btn" onclick="location.reload()">Retake Quiz</button>
+        </div>
+    </main>
+
+    <script>
+        const questionData = [
+            {
+                text: "Who is considered the founder of modern nursing?",
+                options: ["Clara Barton", "Dorothea Dix", "Florence Nightingale", "Mary Mahoney"],
+                answer: 2
+            },
+            {
+                text: "In which war did Florence Nightingale decrease mortality by about half?",
+                options: ["World War I", "Crimean War", "American Civil War", "World War II"],
+                answer: 1
+            },
+            {
+                text: "Which nursing pioneer founded the American Red Cross?",
+                options: ["Mary Mahoney", "Clara Barton", "Dorothea Dix", "Lillian Wald"],
+                answer: 1
+            },
+            {
+                text: "Dorothea Dix is known for establishing which group?",
+                options: ["Nightingale School", "Nurse Corps of the US Army", "ANA ethics board", "AACN committee"],
+                answer: 1
+            },
+            {
+                text: "What does the BSN pathway focus on?",
+                options: ["Only hospital routines", "Art and science of nursing", "Only pharmacology", "Only administration"],
+                answer: 1
+            },
+            {
+                text: "What is the ADN entry route in nursing?",
+                options: ["2-year community-focused clinical program", "3-year hospital diploma", "4-year research degree", "1-year bridge"],
+                answer: 0
+            },
+            {
+                text: "The scope of nursing practice is primarily defined by:",
+                options: ["Hospital policy only", "Nurse Practice Act and state law", "Insurance companies", "National journals"],
+                answer: 1
+            },
+            {
+                text: "Which is one of the ANA nursing roles?",
+                options: ["Architect", "Patient advocate", "Lab engineer", "Paramedic director"],
+                answer: 1
+            },
+            {
+                text: "Which responsibility of nursing focuses on reducing disease risk?",
+                options: ["Prevent illness", "Restore health", "Alleviate suffering", "Promote billing"],
+                answer: 0
+            },
+            {
+                text: "Healthy People 2030 emphasizes all except:",
+                options: ["Removing preventable disease burden", "Eliminating health disparities", "Creating supportive environments", "Replacing all primary care with telehealth"],
+                answer: 3
+            },
+            {
+                text: "Which trend currently affects nursing practice?",
+                options: ["Lower patient acuity", "Shorter length of stay", "No tech changes", "Unlimited staffing"],
+                answer: 1
+            },
+            {
+                text: "QSEN competencies were designed around what framework elements?",
+                options: ["Knowledge, Skills, Attitudes", "Policy, Finance, Marketing", "Anatomy only", "Documentation only"],
+                answer: 0
+            },
+            {
+                text: "Which is NOT one of the six QSEN competencies?",
+                options: ["Informatics", "Quality improvement", "Teamwork and collaboration", "Hospital accounting"],
+                answer: 3
+            },
+            {
+                text: "A common cause of healthcare errors is:",
+                options: ["Good communication", "Interruptions and distractions", "Team planning", "Adequate training"],
+                answer: 1
+            },
+            {
+                text: "Incident/safety reports are primarily used to:",
+                options: ["Punish staff", "Identify causes and improve safety", "Increase overtime", "Replace charting"],
+                answer: 1
+            },
+            {
+                text: "In these notes, beneficence is listed as:",
+                options: ["Do no harm", "Tell the truth", "Respect privacy only", "Be objective"],
+                answer: 0
+            },
+            {
+                text: "Which ethical principle refers to honoring commitments to patients and obligations?",
+                options: ["Autonomy", "Fidelity", "Justice", "Utility"],
+                answer: 1
+            },
+            {
+                text: "Health literacy is best defined as the ability to:",
+                options: ["Read medical charts only", "Obtain and use health information for decisions", "Memorize anatomy terms", "Speak English fluently"],
+                answer: 1
+            },
+            {
+                text: "For non-English-speaking patients, one best intervention is to:",
+                options: ["Use family only as interpreters", "Use trained interpreters", "Avoid visuals", "Speak louder"],
+                answer: 1
+            },
+            {
+                text: "The nursing process steps are:",
+                options: ["Assess, Diagnose, Plan, Implement, Evaluate", "Observe, Report, Medicate, Discharge", "Plan, Test, Finance, Review", "Triage, Operate, Recover, Transfer"],
+                answer: 0
+            },
+            {
+                text: "TeamSTEPPS CUS stands for:",
+                options: ["Concerned, Uncomfortable, Safety issue", "Confident, Useful, Specific", "Clear, Urgent, Structured", "Coordinate, Understand, Solve"],
+                answer: 0
+            },
+            {
+                text: "Which is a core TeamSTEPPS component?",
+                options: ["Mutual support", "Independent decision only", "Policy coding", "Financial audits"],
+                answer: 0
+            },
+            {
+                text: "SBAR's 'A' stands for:",
+                options: ["Action", "Assessment", "Answer", "Analysis plan"],
+                answer: 1
+            },
+            {
+                text: "A therapeutic communication strategy is:",
+                options: ["Changing subject quickly", "Active listening", "Using only yes/no questions", "Avoiding patient emotions"],
+                answer: 1
+            },
+            {
+                text: "Evidence-based practice combines research with:",
+                options: ["Only provider preference", "Patient/family values and clinical expertise", "Hospital budget only", "Internet opinion"],
+                answer: 1
+            },
+            {
+                text: "A known barrier to EBP is:",
+                options: ["Too much staffing", "Limited time and resources", "Too many mentors", "Overuse of libraries"],
+                answer: 1
+            },
+            {
+                text: "In the RADAR framework, the 'D' checks:",
+                options: ["Date/currency of source", "Data-only calculations", "Department approval", "Doctor's opinion"],
+                answer: 0
+            },
+            {
+                text: "In PICOT, the 'O' stands for:",
+                options: ["Objective", "Observation", "Outcome", "Operation"],
+                answer: 2
+            },
+            {
+                text: "Incivility is described as:",
+                options: ["Any physical assault", "Rude/discourteous/disrespectful actions", "Only legal harassment", "One-time medication error"],
+                answer: 1
+            },
+            {
+                text: "Bullying in nursing is characterized by:",
+                options: ["Constructive feedback", "Repeated, unwanted harmful actions", "Single accidental comment", "Routine delegation"],
+                answer: 1
+            },
+            {
+                text: "Which medical term means rapid breathing?",
+                options: ["Erythema", "Tachypnea", "Neuralgia", "Necrosis"],
+                answer: 1
+            },
+            {
+                text: "The prefix 'hypo-' means:",
+                options: ["Above", "Below", "Without", "After"],
+                answer: 1
+            },
+            {
+                text: "The suffix '-itis' means:",
+                options: ["Removal", "Pain", "Inflammation", "Abnormal"],
+                answer: 2
+            }
+        ];
+
+        const quizForm = document.getElementById('quizForm');
+        questionData.forEach((question, index) => {
+            const number = index + 1;
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-number">Question ${number}</div>
+                <div class="question-text">${question.text}</div>
+                <ul class="options">
+                    ${question.options.map((option, optionIndex) => `
+                        <li class="option">
+                            <input type="radio" name="q${number}" value="${optionIndex}" id="q${number}_${optionIndex}">
+                            <label for="q${number}_${optionIndex}">${option}</label>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            quizForm.appendChild(card);
+        });
+
+        const submitBtn = document.createElement('button');
+        submitBtn.type = 'submit';
+        submitBtn.className = 'submit-btn';
+        submitBtn.textContent = 'Submit Final Quiz';
+        quizForm.appendChild(submitBtn);
+
+        quizForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let score = 0;
+
+            questionData.forEach((question, index) => {
+                const number = index + 1;
+                const selected = document.querySelector(`input[name="q${number}"]:checked`);
+                const options = document.querySelectorAll(`input[name="q${number}"]`);
+
+                options.forEach(option => {
+                    const parent = option.parentElement;
+                    parent.classList.remove('correct', 'incorrect');
+                    if (Number(option.value) === question.answer) parent.classList.add('correct');
+                    if (selected && option === selected && Number(option.value) !== question.answer) {
+                        parent.classList.add('incorrect');
+                    }
+                });
+
+                if (selected && Number(selected.value) === question.answer) score++;
+            });
+
+            const total = questionData.length;
+            const percent = Math.round((score / total) * 100);
+            document.getElementById('score').textContent = `${score} / ${total} (${percent}%)`;
+
+            let feedback = '';
+            if (percent >= 90) feedback = 'Excellent final exam readiness. Keep this momentum.';
+            else if (percent >= 80) feedback = 'Strong performance. Review weak areas once more.';
+            else if (percent >= 70) feedback = 'Good start. Revisit QSEN, ethics, and research frameworks.';
+            else if (percent >= 60) feedback = 'You are close. Focus on history, communication, and terminology.';
+            else feedback = 'Keep studying your notes and retry this quiz.';
+
+            document.getElementById('feedback').textContent = feedback;
+            document.getElementById('result').classList.add('show');
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+            submitBtn.style.display = 'none';
+        });
+
+        document.addEventListener('click', function(e) {
+            const option = e.target.closest('.option');
+            if (!option) return;
+            const radio = option.querySelector('input[type="radio"]');
+            if (radio && !radio.disabled) radio.checked = true;
+        });
+    </script>
+</body>
+</html>

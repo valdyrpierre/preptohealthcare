@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Exam Memory Game - Intro to Nursing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 12px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover { transform: translateY(-2px); }
+        .nav-btn.active { background: #28a745; }
+
+        header {
+            background: white;
+            padding: 28px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 24px;
+            text-align: center;
+            max-width: 980px;
+            margin: 0 auto 24px;
+        }
+
+        h1 { color: #667eea; font-size: 2.2em; margin-bottom: 8px; }
+        .subtitle { color: #666; font-size: 1.1em; }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 16px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 24px;
+            max-width: 980px;
+            margin: 0 auto 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .stat-item { text-align: center; min-width: 120px; }
+        .stat-label { color: #666; font-size: 0.95em; margin-bottom: 4px; }
+        .stat-value { color: #667eea; font-size: 1.8em; font-weight: bold; }
+
+        .game-container { max-width: 980px; margin: 0 auto; }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+        }
+
+        .memory-card.flipped { transform: rotateY(180deg); }
+        .memory-card.matched { opacity: 0.7; cursor: default; }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 0.82em;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #2f80ed 0%, #56ccf2 100%);
+            color: white;
+            font-size: 2em;
+        }
+
+        .card-back {
+            background: white;
+            color: #333;
+            transform: rotateY(180deg);
+            border: 3px solid #667eea;
+        }
+
+        .completion-message {
+            background: white;
+            padding: 24px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            max-width: 560px;
+            margin: 20px auto;
+        }
+
+        .completion-message.show { display: block; }
+        .completion-message h2 { color: #28a745; margin-bottom: 10px; }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05em;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .memory-grid { grid-template-columns: repeat(4, 1fr); }
+            .card-face { font-size: 0.72em; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="final.html" class="nav-btn">Quiz</a>
+            <a href="final-flashcards.html" class="nav-btn">Flashcards</a>
+            <a href="final-matching-game.html" class="nav-btn">Matching</a>
+            <a href="final-jeopardy.html" class="nav-btn">Jeopardy</a>
+            <a href="final-memory-game.html" class="nav-btn active">Memory</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Final Exam Memory Game</h1>
+        <p class="subtitle">Find concept-definition pairs fast to train recall.</p>
+    </header>
+
+    <div class="game-container">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Moves</div>
+                <div class="stat-value" id="moves">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Matches</div>
+                <div class="stat-value" id="matches">0 / 18</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Time</div>
+                <div class="stat-value" id="timer">0:00</div>
+            </div>
+        </div>
+
+        <div class="memory-grid" id="memoryGrid"></div>
+
+        <div class="completion-message" id="completionMessage">
+            <h2>Great memory work</h2>
+            <p>You matched all cards.</p>
+            <p style="margin-top: 8px;">Moves: <span id="finalMoves"></span></p>
+            <p>Time: <span id="finalTime"></span></p>
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">New Game</button>
+    </div>
+
+    <script>
+        const cardPairs = [
+            { id: 1, content: 'Founder of modern nursing' },
+            { id: 1, content: 'Florence Nightingale' },
+            { id: 2, content: 'Nurse legal scope by state' },
+            { id: 2, content: 'Nurse Practice Act' },
+            { id: 3, content: 'Framework: knowledge, skills, attitudes' },
+            { id: 3, content: 'QSEN' },
+            { id: 4, content: 'Respect patient choices' },
+            { id: 4, content: 'Autonomy' },
+            { id: 5, content: 'Faithful to commitments' },
+            { id: 5, content: 'Fidelity' },
+            { id: 6, content: 'Safety communication model' },
+            { id: 6, content: 'SBAR' },
+            { id: 7, content: 'Rapid breathing' },
+            { id: 7, content: 'Tachypnea' },
+            { id: 8, content: 'Inflammation suffix' },
+            { id: 8, content: '-itis' },
+            { id: 9, content: 'Source check framework' },
+            { id: 9, content: 'RADAR' },
+            { id: 10, content: 'Population, Intervention, Comparison, Outcome, Time' },
+            { id: 10, content: 'PICOT' },
+            { id: 11, content: 'Evidence + expertise + patient values' },
+            { id: 11, content: 'Evidence-based practice' },
+            { id: 12, content: 'Rude/disrespectful actions' },
+            { id: 12, content: 'Incivility' },
+            { id: 13, content: 'Repeated harmful actions' },
+            { id: 13, content: 'Bullying' },
+            { id: 14, content: 'Used after unusual event' },
+            { id: 14, content: 'Incident report' },
+            { id: 15, content: 'Promote health, prevent illness, restore health, alleviate suffering' },
+            { id: 15, content: 'Nursing responsibilities' },
+            { id: 16, content: 'Teaches and protects patients' },
+            { id: 16, content: 'Professional nursing roles' },
+            { id: 17, content: 'Stress and fatigue can increase this' },
+            { id: 17, content: 'Healthcare errors' },
+            { id: 18, content: 'Patient repeats teaching in own words' },
+            { id: 18, content: 'Teach-back method' }
+        ];
+
+        let cards = [];
+        let flippedCards = [];
+        let moves = 0;
+        let matches = 0;
+        let timer = 0;
+        let timerInterval = null;
+        let gameStarted = false;
+
+        function shuffle(array) {
+            const copy = [...array];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function formatTime(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                timer++;
+                document.getElementById('timer').textContent = formatTime(timer);
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function createBoard() {
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+
+            cards = shuffle(cardPairs).map((card, index) => ({ ...card, index, matched: false }));
+
+            cards.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'memory-card';
+                cardEl.dataset.index = card.index;
+                cardEl.innerHTML = `
+                    <div class="card-face card-front">?</div>
+                    <div class="card-face card-back">${card.content}</div>
+                `;
+                cardEl.addEventListener('click', () => flipCard(cardEl, card));
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function flipCard(cardEl, card) {
+            if (card.matched || cardEl.classList.contains('flipped') || flippedCards.length === 2) return;
+
+            if (!gameStarted) {
+                gameStarted = true;
+                startTimer();
+            }
+
+            cardEl.classList.add('flipped');
+            flippedCards.push({ cardEl, card });
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('moves').textContent = moves;
+
+                const [first, second] = flippedCards;
+                if (first.card.id === second.card.id) {
+                    first.card.matched = true;
+                    second.card.matched = true;
+                    first.cardEl.classList.add('matched');
+                    second.cardEl.classList.add('matched');
+                    matches++;
+                    document.getElementById('matches').textContent = `${matches} / 18`;
+                    flippedCards = [];
+
+                    if (matches === 18) {
+                        stopTimer();
+                        document.getElementById('finalMoves').textContent = moves;
+                        document.getElementById('finalTime').textContent = formatTime(timer);
+                        document.getElementById('completionMessage').classList.add('show');
+                    }
+                } else {
+                    setTimeout(() => {
+                        first.cardEl.classList.remove('flipped');
+                        second.cardEl.classList.remove('flipped');
+                        flippedCards = [];
+                    }, 700);
+                }
+            }
+        }
+
+        function resetGame() {
+            stopTimer();
+            timer = 0;
+            moves = 0;
+            matches = 0;
+            flippedCards = [];
+            gameStarted = false;
+
+            document.getElementById('timer').textContent = '0:00';
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('matches').textContent = '0 / 18';
+            document.getElementById('completionMessage').classList.remove('show');
+            createBoard();
+        }
+
+        resetGame();
+    </script>
+</body>
+</html>
