@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Respiratory Flashcards</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Respiratory Flashcards</h1>
+    <p>NSG2200: Pathophysiology</p>
+  </header>
+
+  <div class="toolbar">
+    <select id="filter">
+      <option value="All">All cards</option>
+      <option value="Key Concepts">Key concepts</option>
+      <option value="Terms">Terms</option>
+      <option value="Health Alterations">Health alterations</option>
+    </select>
+    <button id="shuffle">Shuffle</button>
+    <button id="reset">Reset order</button>
+  </div>
+
+  <div class="counter" id="counter">1 / 1</div>
+
+  <div class="scene">
+    <div class="card" id="card">
+      <div class="face front">
+        <span class="tag" id="tagFront"></span>
+        <div class="term" id="term"></div>
+        <span class="hint">Click to see the definition</span>
+      </div>
+      <div class="face back">
+        <span class="tag" id="tagBack"></span>
+        <div class="definition" id="definition"></div>
+        <span class="hint">Click to flip back</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button id="prev">&larr; Previous</button>
+    <button id="next" class="primary">Next &rarr;</button>
+  </div>
+
+  <p class="keys">Keyboard: Space to flip &middot; Left / Right arrows to move</p>
+
+  <script>
+    const cards = [
+      { section: "Key Concepts", term: "Primary function of the respiratory system", def: "Gas exchange. It brings oxygen into the body and removes carbon dioxide." },
+
+      { section: "Terms", term: "Inspiration", def: "When you are breathing in." },
+      { section: "Terms", term: "Expiration", def: "When you are breathing out." },
+      { section: "Terms", term: "Lung compliance", def: "How easily the lungs stretch and expand." },
+      { section: "Terms", term: "Surfactant", def: "A slippery substance that keeps the alveoli from collapsing." },
+      { section: "Terms", term: "Pulmonary ventilation", def: "Moving air in and out of the lungs." },
+      { section: "Terms", term: "Alveolar ventilation", def: "The amount of air that actually reaches the alveoli for gas exchange." },
+      { section: "Terms", term: "Dead air space", def: "Air that fills the airways but never reaches the alveoli, so no gas exchange happens." },
+      { section: "Terms", term: "Shunt", def: "Blood passes through the lungs without picking up oxygen." },
+      { section: "Terms", term: "Chemoreceptors", def: "Sensors that detect oxygen, CO₂, and pH levels in the blood and adjust breathing." },
+      { section: "Terms", term: "Lung receptors", def: "Sensors in the lungs that respond to stretch or irritation and change breathing." },
+      { section: "Terms", term: "Dyspnea", def: "Feeling short of breath, like you can't get enough air." },
+      { section: "Terms", term: "Orthopnea", def: "Trouble breathing when lying flat that gets better when sitting up." },
+      { section: "Terms", term: "Apnea", def: "A pause where breathing stops completely for a short time." },
+
+      { section: "Key Concepts", term: "Two types of chemoreceptors and what they sense", def: "Central chemoreceptors are in the medulla and are sensitive to changes in CO₂ and pH. Peripheral chemoreceptors are in the carotid and aortic bodies and are mainly sensitive to low oxygen, but also respond to CO₂ and pH." },
+
+      { section: "Health Alterations", term: "Hypoxia", def: "Not enough oxygen reaching the body's tissues." },
+      { section: "Health Alterations", term: "Hypoxemia", def: "Low oxygen in the blood." },
+      { section: "Health Alterations", term: "Hypercapnia", def: "Too much carbon dioxide (CO₂) in the blood." },
+      { section: "Health Alterations", term: "Pleural pain", def: "Sharp chest pain from irritation of the lining around the lungs that gets worse when breathing in or coughing." },
+      { section: "Health Alterations", term: "Spontaneous pneumothorax", def: "A collapsed lung caused by air leaking into the space around the lung without any injury." },
+      { section: "Health Alterations", term: "Secondary pneumothorax", def: "A collapsed lung caused by an existing lung disease, such as COPD, asthma, or cystic fibrosis." },
+      { section: "Health Alterations", term: "Traumatic pneumothorax", def: "A collapsed lung caused by an injury to the chest, such as a stab wound, gunshot, broken rib, or car accident." },
+      { section: "Health Alterations", term: "Tension pneumothorax", def: "Air gets trapped in the chest and keeps building up, pushing on the heart and the other lung. It's a life-threatening emergency." },
+      { section: "Health Alterations", term: "Pleural effusion", def: "Extra fluid builds up in the space between the lungs and the chest wall, making it harder to breathe." },
+      { section: "Health Alterations", term: "Atelectasis", def: "Part or all of a lung collapses because the alveoli deflate and can't fill with air." },
+      { section: "Health Alterations", term: "Extrinsic (atopic) asthma", def: "Asthma caused by an allergic reaction. When the person breathes in an allergen like pollen, dust, or pet dander, their airways swell and tighten, making it hard to breathe." },
+      { section: "Health Alterations", term: "Intrinsic (nonatopic) asthma", def: "Asthma that is not caused by allergies. It's triggered by things like respiratory infections, cold air, exercise, stress, or irritants such as smoke." },
+      { section: "Health Alterations", term: "Chronic bronchitis", def: "Long-term inflammation of the airways that causes a cough with mucus for at least 3 months a year, two years in a row." },
+      { section: "Health Alterations", term: "Emphysema", def: "The alveoli are damaged and lose their stretch, so air gets trapped and the person has trouble breathing out. It's usually caused by smoking." },
+      { section: "Health Alterations", term: "Chronic obstructive pulmonary disease (COPD)", def: "A long-term lung disease that blocks airflow and makes it hard to breathe. It includes chronic bronchitis and emphysema and is mostly caused by smoking." },
+      { section: "Health Alterations", term: "Pulmonary embolism", def: "A blood clot, usually from the legs, travels to the lungs and blocks blood flow there." },
+      { section: "Health Alterations", term: "Pulmonary arterial hypertension", def: "High blood pressure in the arteries of the lungs. It makes the right side of the heart work harder and can lead to heart failure." },
+      { section: "Health Alterations", term: "Secondary pulmonary hypertension", def: "High blood pressure in the lungs caused by another condition, such as COPD, heart disease, blood clots, or sleep apnea." },
+      { section: "Health Alterations", term: "Cor pulmonale", def: "The right side of the heart gets enlarged and fails because it has to pump too hard against high blood pressure in the lungs." },
+      { section: "Health Alterations", term: "Respiratory failure", def: "The lungs can't take in enough oxygen or get rid of enough carbon dioxide, so the blood has too little O₂, too much CO₂, or both." }
+    ];
+
+    const cardEl = document.getElementById("card");
+    const termEl = document.getElementById("term");
+    const defEl = document.getElementById("definition");
+    const tagFront = document.getElementById("tagFront");
+    const tagBack = document.getElementById("tagBack");
+    const counterEl = document.getElementById("counter");
+    const filterEl = document.getElementById("filter");
+
+    let deck = [...cards];
+    let index = 0;
+
+    function render() {
+      // Flip back to the front instantly so the next answer isn't shown
+      cardEl.classList.add("no-anim");
+      cardEl.classList.remove("flipped");
+      void cardEl.offsetWidth;
+      cardEl.classList.remove("no-anim");
+
+      const c = deck[index];
+      termEl.textContent = c.term;
+      defEl.textContent = c.def;
+      tagFront.textContent = c.section;
+      tagBack.textContent = c.section;
+      counterEl.textContent = (index + 1) + " / " + deck.length;
+    }
+
+    function flip() {
+      cardEl.classList.toggle("flipped");
+    }
+
+    function next() {
+      index = (index + 1) % deck.length;
+      render();
+    }
+
+    function prev() {
+      index = (index - 1 + deck.length) % deck.length;
+      render();
+    }
+
+    function buildDeck() {
+      const choice = filterEl.value;
+      deck = choice === "All" ? [...cards] : cards.filter(c => c.section === choice);
+      index = 0;
+      render();
+    }
+
+    function shuffle() {
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      index = 0;
+      render();
+    }
+
+    cardEl.addEventListener("click", flip);
+    document.getElementById("next").addEventListener("click", next);
+    document.getElementById("prev").addEventListener("click", prev);
+    document.getElementById("shuffle").addEventListener("click", shuffle);
+    document.getElementById("reset").addEventListener("click", buildDeck);
+    filterEl.addEventListener("change", buildDeck);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "SELECT") return;
+      if (e.key === "ArrowRight") next();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        flip();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
