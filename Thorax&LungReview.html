@@ -1,0 +1,531 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Thorax &amp; Lung Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: sticky mode bar over one working surface; slide-plum accent from the lecture deck, cool blue-grey clinical neutrals */
+:root{
+  --bg:#f3f4f7; --surface:#ffffff; --sunk:#e8eaf0; --fg:#1d2030; --muted:#5d6278; --line:#d6d9e3;
+  --accent:#7a1f5c; --accent-soft:#f3e3ee; --accent-fg:#ffffff;
+  --good:#1f7a4d; --good-soft:#dff2e8; --bad:#b3322b; --bad-soft:#fbe3e1;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14161e; --surface:#1d2029; --sunk:#262a35; --fg:#e8e9f0; --muted:#a2a7ba; --line:#343949;
+  --accent:#e08bc0; --accent-soft:#3a2234; --accent-fg:#1a0f17;
+  --good:#6fd3a0; --good-soft:#173328; --bad:#f08a82; --bad-soft:#3a1e1c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14161e; --surface:#1d2029; --sunk:#262a35; --fg:#e8e9f0; --muted:#a2a7ba; --line:#343949;
+  --accent:#e08bc0; --accent-soft:#3a2234; --accent-fg:#1a0f17;
+  --good:#6fd3a0; --good-soft:#173328; --bad:#f08a82; --bad-soft:#3a1e1c; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+header.top h1{font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-.01em}
+header.top p{margin:.4rem 0 0;color:var(--muted)}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+nav.modes{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;padding-block:12px;margin-top:14px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav.modes button{flex:1 0 auto;font:700 .95rem var(--body);padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+nav.modes button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button:focus-visible,select:focus-visible,input:focus-visible,.tile:focus-visible,.card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section.view{padding-top:18px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+select,input[type=number]{font:inherit;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:0}
+select{max-width:100%}
+.btn{font:700 .95rem var(--body);padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.good{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.btn.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.meta{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+
+/* Flashcards */
+.cardstage{perspective:1200px}
+.card{position:relative;min-height:300px;cursor:pointer;transform-style:preserve-3d;transition:transform .45s ease}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:22px;display:flex;flex-direction:column;gap:10px;overflow:auto}
+.face.back{transform:rotateY(180deg);background:var(--accent-soft);border-color:var(--accent)}
+.face .q{font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,4.5vw,1.6rem);line-height:1.2;text-wrap:balance;margin:auto 0}
+.face .a{font-size:1.05rem;margin:auto 0;white-space:pre-line}
+.face .tag{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.face .hint{font-size:.85rem;color:var(--muted)}
+.cardnav{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:space-between}
+.cardnav .grp{display:flex;gap:8px;flex-wrap:wrap}
+.bar{height:6px;border-radius:6px;background:var(--sunk);overflow:hidden;margin:10px 0 14px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+/* Memory */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (min-width:640px){.grid.g8{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tile{min-height:96px;border-radius:12px;border:1px solid var(--line);background:var(--accent);color:var(--accent-fg);font:700 .85rem/1.25 var(--body);padding:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;transition:transform .2s,background .2s}
+.tile span{visibility:hidden}
+.tile.up{background:var(--surface);color:var(--fg)}
+.tile.up span{visibility:visible}
+.tile.done{background:var(--good-soft);border-color:var(--good);color:var(--good);cursor:default}
+.tile.done span{visibility:visible}
+.tile.miss{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.tile .term{font-family:var(--display);font-weight:800;font-size:.95rem}
+.tile.term-tile:not(.up):not(.done)::after{content:"T";font-family:var(--display);opacity:.55}
+.tile.def-tile:not(.up):not(.done)::after{content:"?";font-family:var(--display);opacity:.55}
+.tile:not(.up):not(.done) span{display:none}
+.won{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--good-soft);color:var(--good);font-weight:700}
+
+/* Quiz */
+.qbox{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.qbox h3{font-family:var(--display);font-weight:600;font-size:1.25rem;line-height:1.25;margin:.3rem 0 14px;text-wrap:balance}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;font:1rem/1.4 var(--body);padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;white-space:pre-line}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.dose{margin-top:22px}
+.dose .formula{font-family:var(--display);font-weight:800;font-size:1.6rem;color:var(--accent)}
+.dose .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dose input{width:9rem}
+
+/* Guide */
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.toc a{font-size:.85rem;padding:6px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--fg);text-decoration:none}
+.gsec{margin-top:26px}
+.gsec h2{font-family:var(--display);font-weight:800;font-size:1.35rem;margin:0 0 8px;padding-bottom:6px;border-bottom:2px solid var(--accent)}
+dl.qa{margin:0;display:grid;gap:0}
+dl.qa div{padding:10px 0;border-bottom:1px solid var(--line)}
+dl.qa dt{font-weight:700}
+dl.qa dd{margin:2px 0 0;white-space:pre-line;color:var(--fg)}
+.tblwrap{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{background:var(--accent);color:var(--accent-fg);font-weight:700}
+.star{color:var(--accent);font-weight:800}
+.note{font-size:.88rem;color:var(--muted);margin-top:28px}
+@media (prefers-reduced-motion:reduce){.card,.tile,.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">NSG 2013 · Quiz 2 review</div>
+  <h1>Thorax &amp; Lung Assessment</h1>
+  <p>Every fact from your notes and lecture slides, as flashcards, a memory match game, a practice quiz and a full study guide.</p>
+</header>
+
+<nav class="modes" role="tablist" aria-label="Study mode">
+  <button role="tab" id="tab-cards" aria-selected="true" data-view="cards">Flashcards</button>
+  <button role="tab" id="tab-match" aria-selected="false" data-view="match">Memory match</button>
+  <button role="tab" id="tab-quiz" aria-selected="false" data-view="quiz">Quiz</button>
+  <button role="tab" id="tab-guide" aria-selected="false" data-view="guide">Study guide</button>
+</nav>
+
+<!-- FLASHCARDS -->
+<section class="view" id="view-cards">
+  <div class="controls">
+    <select id="fc-topic" aria-label="Topic"></select>
+    <select id="fc-filter" aria-label="Which cards">
+      <option value="all">All cards</option>
+      <option value="learning">Still learning</option>
+      <option value="star">Highlighted in class ★</option>
+    </select>
+    <button class="btn" id="fc-shuffle">Shuffle</button>
+    <button class="btn" id="fc-reset">Reset progress</button>
+  </div>
+  <div class="meta" id="fc-meta"></div>
+  <div class="bar"><i id="fc-bar"></i></div>
+  <div class="cardstage">
+    <div class="card" id="fc-card" tabindex="0" role="button" aria-label="Flip card">
+      <div class="face front"><div class="tag" id="fc-tag"></div><div class="q" id="fc-q"></div><div class="hint">Tap or press Space to flip</div></div>
+      <div class="face back"><div class="tag">Answer</div><div class="a" id="fc-a"></div></div>
+    </div>
+  </div>
+  <div class="cardnav">
+    <div class="grp"><button class="btn" id="fc-prev">← Back</button><button class="btn" id="fc-next">Next →</button></div>
+    <div class="grp"><button class="btn bad" id="fc-again">Still learning</button><button class="btn good" id="fc-know">Got it</button></div>
+  </div>
+</section>
+
+<!-- MEMORY -->
+<section class="view" id="view-match" hidden>
+  <div class="controls">
+    <select id="mm-topic" aria-label="Topic for memory game"></select>
+    <select id="mm-size" aria-label="Board size"><option value="6">6 pairs</option><option value="8">8 pairs</option></select>
+    <button class="btn primary" id="mm-new">New board</button>
+  </div>
+  <p class="meta" id="mm-meta">Flip two tiles. Match each term (T) with its fact (?).</p>
+  <div class="grid" id="mm-grid"></div>
+  <div class="won" id="mm-won" hidden></div>
+</section>
+
+<!-- QUIZ -->
+<section class="view" id="view-quiz" hidden>
+  <div class="controls">
+    <select id="qz-topic" aria-label="Topic for quiz"></select>
+    <select id="qz-len" aria-label="Number of questions"><option value="10">10 questions</option><option value="20">20 questions</option><option value="40">40 questions</option></select>
+    <button class="btn primary" id="qz-start">Start quiz</button>
+  </div>
+  <div class="qbox" id="qz-box"></div>
+
+  <div class="qbox dose">
+    <div class="eyebrow">The 1 math question</div>
+    <div class="formula">D / H × Q</div>
+    <p class="meta">Desired dose ÷ dose on Hand × Quantity it comes in. Practice the setup with random numbers.</p>
+    <p id="dose-q"></p>
+    <div class="row">
+      <input type="number" id="dose-in" step="any" inputmode="decimal" aria-label="Your answer">
+      <button class="btn primary" id="dose-check">Check</button>
+      <button class="btn" id="dose-new">New problem</button>
+    </div>
+    <p id="dose-fb" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- GUIDE -->
+<section class="view" id="view-guide" hidden>
+  <div class="toc" id="g-toc"></div>
+  <div id="g-body"></div>
+  <p class="note">Not included: slides 1, 13 and 23 were too small to read in your screenshots. Send clear shots and they can be added.</p>
+</section>
+</div>
+
+<script>
+const TOPICS = {
+  o2:"Oxygenation & anatomy", lm:"Landmarks & breathing mechanics", hx:"History & symptoms",
+  ex:"Exam techniques", bs:"Breath sounds", rp:"Respiratory patterns", cs:"Chest shapes",
+  dx:"Respiratory conditions", nd:"Nursing diagnoses", lf:"Lifespan & health promotion",
+  ur:"Urgent assessment", qz:"Quiz 2 & math"
+};
+
+/* [topic, question, answer, highlighted-in-class] */
+const CARDS = [
+ ["o2","What does the respiratory system do?","Supplies oxygen to cells and removes carbon dioxide, using the processes of ventilation and diffusion."],
+ ["o2","Oxygenation concept: what does it cover?","Processes that facilitate and impair oxygenation."],
+ ["o2","Why is adequate perfusion necessary?","To deliver oxygenated blood to tissues and remove metabolic waste."],
+ ["o2","How are oxygenation and intracranial regulation related?","Intracranial regulation supports oxygenation.\nAdequate oxygenation is needed to support intracranial function.\nThe interrelationship is necessary."],
+ ["o2","How many lobes does the LEFT lung have?","2 lobes: upper left lobe and lower left lobe."],
+ ["o2","How many lobes does the RIGHT lung have?","3 lobes: upper, middle and lower right lobes."],
+ ["o2","Airway structures labeled on the lung diagram","Trachea, right main bronchus, left main bronchus, lobar bronchi, segmental bronchi of the middle lobe."],
+ ["o2","Upper airway structures (head diagram)","Nose, pharynx, epiglottis, larynx, trachea."],
+
+ ["lm","Primary muscles of inspiration","Diaphragm and intercostal muscles."],
+ ["lm","What happens during inspiration?","The diaphragm contracts and pushes abdominal contents down, while the intercostal muscles push the chest wall outward."],
+ ["lm","Anterior breathing muscles labeled on the slide","Scalene, sternocleidomastoid, intercostals, pectoralis minor, serratus anterior, rectus abdominis."],
+ ["lm","Posterior breathing muscles labeled on the slide","Serratus posterior superior, intercostals, transverse thoracic, diaphragm, serratus posterior inferior."],
+ ["lm","What are topographic markers?","Surface landmarks that help locate underlying structures and describe the exact location of a physical finding."],
+ ["lm","Anterior chest landmarks","Suprasternal notch, clavicle, first interspace, midsternal line, midclavicular line, manubrium, manubriosternal junction (angle of Louis), second rib, body of sternum, nipple, xiphoid process, costal angle."],
+ ["lm","What is the angle of Louis?","The manubriosternal junction (where the manubrium meets the body of the sternum)."],
+ ["lm","Lateral chest lines","Anterior axillary line, midaxillary line, posterior axillary line."],
+ ["lm","Posterior chest landmarks","Vertebra prominens, scapular line, vertebral line. (12th rib and scapula also labeled on the posterior view.)"],
+ ["lm","Where are heart sounds located (from your notes)?","Midclavicular line, 5th intercostal space."],
+
+ ["hx","Parts of the general health history","Present health status, medications, past medical history, lifestyle and personal habits, occupational history, environmental exposures, family history, travel."],
+ ["hx","Most commonly reported lung problems","Cough, shortness of breath, and chest pain with breathing."],
+ ["hx","What does a symptom analysis include?","Onset, location, duration, characterization, aggravating factors, related symptoms, treatments, severity."],
+ ["hx","Common respiratory symptoms (slide 14)","Chest pain or discomfort; dyspnea; orthopnea or paroxysmal nocturnal dyspnea; cough; sputum or phlegm from cough (amount, appearance, color, odor, viscosity, e.g. watery vs thick); wheezing or tightness in chest; change in functional ability."],
+ ["hx","Orthopnea","Difficulty breathing while lying down."],
+ ["hx","Productive cough","Coughing up secretions, such as sputum."],
+ ["hx","Non-productive cough","Coughing without bringing anything up."],
+ ["hx","What do you assess on someone with a productive cough?","The sputum's consistency, color, and odor."],
+
+ ["ex","Inspection of the patient: what do you look at?","General appearance, posture, and breathing effort; nails, skin, and lips for color. It helps determine the acuity of the situation."],
+ ["ex","Inspection of the chest: what do you observe?","Respiratory rate and quality, breathing pattern, and chest expansion. It gives information on chest shape and breathing pattern."],
+ ["ex","When is the chest palpated?","When tenderness, masses, or lesions are present."],
+ ["ex","When is chest expansion assessed?","In cases of physical or neuromuscular limitations."],
+ ["ex","When is tactile fremitus assessed?","When consolidation or hyperinflation is anticipated."],
+ ["ex","When is percussion of the chest done?","When consolidation or hyperinflation is anticipated."],
+ ["ex","Why is auscultation performed?","To accurately identify breath sounds and adventitious sounds."],
+ ["ex","Inspect the ANTERIOR thorax for…","Shape and symmetry, muscle development, anteroposterior diameter to lateral diameter, and costal angle. Then auscultate the anterior thorax for breath sounds."],
+ ["ex","Inspect the POSTERIOR thorax for…","Shape and symmetry, and muscle development. Then auscultate the posterior and lateral thorax for breath sounds."],
+ ["ex","Inspect the chest for (from your notes)","Symmetry, barrel chest, chest expansion, adventitious sounds."],
+ ["ex","Where do we listen to the lungs?","Posterior and anterior (plus lateral), moving side to side, top to bottom, comparing each point with its opposite."],
+ ["ex","Sample charting for normal lung sounds","\"Lung sounds assessed. No adventitious sounds noted.\""],
+
+ ["bs","Adventitious lung sounds","Abnormal lung sounds, such as wheezing, crackles, rhonchi."],
+ ["bs","Bronchial and vesicular sounds are…","Normal lung sounds."],
+ ["bs","Bronchial breath sounds: pitch, quality, duration, location","Loud and high · coarse or tubular · inspiration less than expiration · over the larynx and trachea."],
+ ["bs","Bronchovesicular breath sounds: pitch, quality, duration, location","Intermediate · intermediate · inspiration equal to expiration · anteriorly between the 1st and 2nd ICSs and between the scapulae."],
+ ["bs","Vesicular breath sounds: pitch, quality, duration, location","Soft and low · whispering undertones · inspiration greater than expiration · over most of the lung fields."],
+ ["bs","Fine crackles: description","High-pitched, soft, brief crackling sounds; can be simulated by rolling a strand of hair near the ear or stethoscope."],
+ ["bs","Fine crackles: mechanism","Deflated small airways and alveoli pop open during inspiration. In early CHF, small amounts of fluid in the alveoli may cause fine crackles."],
+ ["bs","Late vs early inspiratory crackles","Late inspiratory crackles: restrictive disease (e.g., fibrosis, heart failure).\nEarly inspiratory crackles: obstructive disease (e.g., asthma, COPD)."],
+ ["bs","Coarse crackles: description","Low-pitched, moist, longer sounds, like Velcro slowly being separated."],
+ ["bs","Coarse crackles: mechanism and conditions","Small air bubbles flow through secretions or narrowed airways. Seen in respiratory fibrosis, respiratory edema, COPD."],
+ ["bs","Wheeze (high-pitched / sibilant): description","High-pitched musical sounds heard mainly during inspiration."],
+ ["bs","Wheeze: mechanism and conditions","Air passes through narrowed airways and makes sound like a vibrating reed; note if inspiratory or expiratory. Asthma, bronchitis, emphysema."],
+ ["bs","Rhonchi (low-pitched wheeze, snoring): description","Low-pitched snoring or gurgling sound that may clear with coughing."],
+ ["bs","Rhonchi: mechanism and condition","Airflow passes around or through secretions or narrowed passages. Associated with pneumonia."],
+ ["bs","Pleural friction rub: description","Loud, coarse, low-pitched grating or creaking, like a squeaky door, during inspiration and expiration; more common in the lower anterolateral thorax."],
+ ["bs","Pleural friction rub: mechanism and condition","Inflamed pleural surfaces lose their normal lubrication and rub together during breathing. Associated with pleuritis."],
+ ["bs","Stridor: description","Loud, high-pitched, crowing or honking sound, louder in the upper airway."],
+ ["bs","Stridor: mechanism and conditions","Laryngeal or tracheal inflammation or spasm, or aspiration of a foreign object. Epiglottitis, croup, partially obstructed airway; can signal an emergency needing immediate attention."],
+
+ ["rp","Eupnea","Rate 10–20 breaths/min · respiration-to-pulse ratio about 1:4 · 500–800 ml/breath · regular rhythm. Normal findings."],
+ ["rp","Normal ratio of respiration to pulse","Approximately 1:4."],
+ ["rp","Tachypnea: description","Rate greater than 24 breaths/min · less than 500 ml/breath, shallow · regular rhythm."],
+ ["rp","Tachypnea: associated conditions","Anxiety, fear, elevated metabolic rate, fever, exercise, respiratory diseases in which rate must increase to maintain oxygenation."],
+ ["rp","Hyperventilation: description","Rate greater than 24 breaths/min · greater than 800 ml/breath, deep · regular rhythm."],
+ ["rp","Hyperventilation: associated conditions","Extreme anxiety or fear, exercise, increased intracranial pressure."],
+ ["rp","Kussmaul respirations","Seen with diabetic ketoacidosis, because the body is trying to remove carbon dioxide to normalize pH."],
+ ["rp","Bradypnea: description","Rate less than 10 breaths/min · 500–800 ml/breath, shallow · regular rhythm."],
+ ["rp","Bradypnea: associated conditions","Depressed breathing center in the medulla: narcotic overdose, diabetic coma, increased intracranial pressure."],
+ ["rp","Hypoventilation: description","Rate less than 10 breaths/min · less than 500 ml/breath, shallow · IRREGULAR rhythm."],
+ ["rp","Hypoventilation: associated conditions","Narcotic or anesthetic overdose, increased intracranial pressure."],
+ ["rp","Cheyne-Stokes respiration","Rate and depth variable; regular irregular rhythm that cycles from deep and fast to shallow and slow, with periods of apnea."],
+ ["rp","Cheyne-Stokes: associated conditions","Normal in children and the elderly; also terminal illness, renal failure, drug overdose, increased intracranial pressure, heart failure. Count the rate for 1 full minute and record the length of apnea."],
+ ["rp","Biot respiration","Rate and depth variable, irregular rhythm. Severe brain damage, commonly at the level of the medulla. Count for 1 full minute and record length of apnea."],
+ ["rp","Agonal respiration","Rate intermittent, depth variable. Seen in patients at end of life. Count for 1 full minute and record length of apnea."],
+ ["rp","Apnea","No breaths. Cardiac arrest and brain death."],
+
+ ["cs","Barrel chest","AP-to-lateral ratio near 1:1, round shaped. Ribs more horizontal and costal margin widened. Associated with COPD, chronic asthma, and normal aging.",1],
+ ["cs","Kyphoscoliosis","Kyphosis: thoracic spine curves forward, compressing the anterior chest and reducing inspiratory lung volumes.\nScoliosis: lateral S-shaped curve causes unequal shoulders, scapulae, and hips. In severe cases, asymmetry may impede breathing."],
+ ["cs","Pectus carinatum (pigeon chest)","Sternum displaced anteriorly, depressing the adjacent costal cartilages. Congenital, with increased AP diameter."],
+ ["cs","Flail chest","Multiple fractured ribs cause paradoxical chest movement: as the diaphragm pulls down on inspiration, negative pressure makes the injured area cave in; on expiration it moves out."],
+
+ ["dx","Asthma: auscultation, sputum, percussion","Wheezes, diminished lung sounds · clear sputum · occasional hyperresonance.",1],
+ ["dx","Atelectasis: auscultation, sputum, percussion","Diminished lung sounds in lower lobe · no sputum · dullness over affected lung.",1],
+ ["dx","Bronchitis: auscultation, sputum, percussion","Occasional wheezing or fine crackles · clear sputum · resonance."],
+ ["dx","COPD: auscultation, sputum, percussion","Wheezes · clear sputum · hyperresonance."],
+ ["dx","Pneumothorax: auscultation, sputum, percussion","Absent sounds · sputum absent · hyperresonance over affected area."],
+ ["dx","Hemothorax: auscultation, sputum, percussion","Absent sounds · bloody sputum · dull over affected area."],
+ ["dx","Pneumonia: auscultation, sputum, percussion","Wheezes, crackles, or gurgles · purulent sputum · dull over affected area.",1],
+ ["dx","CHF: auscultation, sputum, percussion","Absent bases · frothy sputum · dull bases."],
+ ["dx","Pleural effusion: auscultation, sputum, percussion","Absent over affected lung · no sputum · dull over affected lung."],
+ ["dx","Pulmonary embolism: auscultation, sputum, percussion","Clear or mild wheezes · no sputum · tympanic.",1],
+ ["dx","Acute bronchitis: definition","Inflammation of the mucous membranes of the bronchial tree, caused by viruses or bacteria."],
+ ["dx","Acute bronchitis: clinical findings","Cough non-productive at first, may become productive after a few days; substernal chest pain aggravated by coughing; fever, malaise, tachypnea; rhonchi and crackles often heard, with wheezing after coughing."],
+ ["dx","Pneumonia: definition and causes","Inflammation of terminal bronchioles and alveoli; caused by bacteria, fungi, viruses, mycoplasma, or aspiration of gastric secretions.",1],
+ ["dx","Viral vs bacterial pneumonia cough","Viral: non-productive cough or clear sputum.\nBacterial: productive cough with white, yellow, or green sputum.",1],
+ ["dx","Pneumonia: other findings","Fever, tachypnea, dyspnea; crackles and wheezes may be heard.",1],
+ ["dx","Tuberculosis: definition","Contagious bacterial infection caused by Mycobacterium tuberculosis. Mainly lungs, but kidney, bone, lymph node, and meninges can be involved."],
+ ["dx","Tuberculosis: clinical findings","Usually asymptomatic early; first signs are fatigue, anorexia, weight loss, fever. Later: cough that becomes increasingly frequent, producing mucopurulent sputum."],
+ ["dx","Pleural effusion: definition","Accumulation of serous fluid in the pleural space between the visceral and parietal pleurae."],
+ ["dx","Pleural effusion: clinical findings","Depends on amount of fluid and patient position. If rapid and large: dyspnea, intercostal bulging, or decreased chest wall movement."],
+ ["dx","Asthma: what characterizes it?","Hyperreactive airway disease with bronchoconstriction, airway obstruction, and inflammation.",1],
+ ["dx","Asthma triggers","Allergens or pollutants, infection, cold air, vigorous exercise, emotional stress.",1],
+ ["dx","Asthma: clinical signs","Increased respiratory rate with prolonged expiration, audible wheeze, dyspnea, tachycardia, anxious appearance, possible use of accessory muscles, cough.",1],
+ ["dx","Asthma: auscultation findings","Prolonged expiration, expiratory and occasionally inspiratory wheeze, diminished breath sounds.",1],
+ ["dx","Emphysema: definition","Destruction of alveolar walls causing permanent abnormal enlargement of air spaces."],
+ ["dx","Emphysema: clinical findings","Advanced: underweight, barrel chest, short of breath with minimal exertion. Diminished breath and voice sounds, possible wheezing or crackles, decreased diaphragmatic excursion on percussion."],
+ ["dx","Chronic bronchitis: definition","Hypersecretion of mucus by goblet cells of the trachea and bronchi, causing a productive cough for 3 months in each of two successive years."],
+ ["dx","Chronic bronchitis: causes","Irritants such as cigarette smoke and air pollution, or infection."],
+ ["dx","Chronic bronchitis: clinical findings","Productive cough, increased mucus, dyspnea; rhonchi sometimes cleared by coughing; crackles when enough mucus occludes alveoli."],
+ ["dx","Pneumothorax: definition and 3 types","Air in the pleural spaces.\nClosed: spontaneous, traumatic, or iatrogenic.\nOpen: after penetration of the chest by injury or surgery.\nTension: air leaks into the pleura and cannot escape."],
+ ["dx","Pneumothorax: clinical findings","Vary with amount of collapse. Minor: slightly short of breath, anxious, chest pain. Large: severe distress with dyspnea, tachypnea, cyanosis. Decreased chest wall movement on affected side; possible paradoxic movement. Severe: tracheal shift toward the unaffected side (mediastinal shift)."],
+ ["dx","Hemothorax","Blood in the pleural space from chest injury or as a complication of thoracic surgery. Signs like pneumothorax, plus distant muffled breath sounds and dullness on percussion over the area."],
+ ["dx","Atelectasis: definition and 2 types","Collapsed alveoli.\nCompression atelectasis: external pressure from tumor, fluid, or air in the pleural space.\nAbsorption atelectasis: hypoventilation or obstruction by secretions removes the air.",1],
+ ["dx","Atelectasis: clinical findings","Affected lobe has diminished or absent breath sounds; oxygen saturation may drop below 90%.",1],
+ ["dx","Lung cancer: definition and causes","Uncontrolled growth of anaplastic cells in the lung. Agents: tobacco smoke, asbestos, ionizing radiation, other noxious inhalants. Types pictured: squamous cell, small cell (oat cell), adenocarcinoma, large cell carcinoma."],
+ ["dx","Lung cancer: clinical findings","Most common first symptom: persistent cough. Advanced: weight loss, congestion, wheezing, hemoptysis, labored breathing, dyspnea. Lung sounds normal or diminished; wheezes if tumor partly obstructs an airway. Percussion normal or dull, especially if large or with atelectasis."],
+ ["dx","Asthma (summary table): risk, history, objective, test","Allergic hypersensitivity producing bronchospasm. Risk: hyperresponsive airways, bronchospasm triggers. History: cough worse at night and early morning. Objective: wheezing especially on exhalation, diminished lung sounds, clear sputum. Test: respiratory function with short-acting bronchodilator.",1],
+ ["dx","Atelectasis (summary table): risk, history, objective, test","Collapsed alveoli from immobility, obstruction, compression, or decreased surfactant. Risk: immobility. History: dyspnea, fever possible, no sputum. Objective: decreased or absent breath sounds over the area, reduced inspiratory capacity. Test: chest x-ray.",1],
+ ["dx","Emphysema (summary table): risk, history, objective, test","Destruction of capillary bed and alveoli creating large air sacs and bullae. Risk: smoking, occupational exposure. History: shortness of breath, chronic cough. Objective: cough, SOB, decreased breath sounds, barrel chest. Test: respiratory function tests."],
+ ["dx","Bronchitis (summary table): risk, history, objective, test","Inflammation of bronchi stimulating mucous glands; secretions may partly obstruct airways. Risk: recent infection; COPD presents with both bronchitis and emphysema. History: chest tight or wheezy, clear sputum. Objective: occasional wheezing or fine crackles. Test: chest x-ray."],
+
+ ["nd","Impaired gas exchange","Point: changes at the capillary level and film/fluid impairing movement across the alveolar wall.\nSigns: low SaO₂, confusion, cyanosis, fatigue, tachycardia, accessory muscle use.\nInterventions: oxygen**, deep breathing, incentive spirometer, inhalers**."],
+ ["nd","Ineffective airway clearance","Point: thick, tenacious sputum the patient is too fatigued and weak to expectorate.\nSigns: weak, ineffective cough; thick secretions; wheezes; rhonchi; cyanosis.\nInterventions: cough and deep breathing, increase fluids, expectorants**, postural drainage**."],
+ ["nd","Ineffective breathing pattern","Point: changes in respiratory rate, rhythm, or depth.\nSigns: decreased chest excursion, dyspnea, nasal flaring, increased rate, decreased depth, accessory muscles.\nInterventions: position to decrease workload of breathing, pace activity, provide rest, reduce fever."],
+ ["nd","Activity intolerance","Point: imbalance between oxygen supply and demand.\nSigns: dyspneic with minimal activity; SaO₂ falls and RR rises with activity.\nInterventions: teach energy conservation, evaluate need for supplemental O₂, teach slow steady walking with gradual increase in distance."],
+
+ ["lf","Infants: exam tips","Undress to the diaper; keep covered when not examining to prevent exposure and cooling; examine while calm (crying infant is hard to examine)."],
+ ["lf","Children: cooperation","By ages 2 to 3, usually cooperative. Before that, develop a relationship with the child to improve cooperation."],
+ ["lf","Older adults: structural changes","Posterior thoracic stooping or kyphosis may alter thorax shape and make thoracic expansion more difficult."],
+ ["lf","Older adults: what to assess and teach","Lower tolerance for ADLs; assess how a respiratory disorder affects function, energy level, and tiring activities. Recommend pacing, rest, and higher-energy tasks when well rested. Counsel high-risk patients to avoid infected people and plan for weather (e.g., walk in a mall on a cold day). Educate on lifestyle changes like not smoking."],
+ ["lf","Respiratory health goals (risk reduction)","Increase adults vaccinated against influenza and pneumococcal infections; reduce missed workdays from asthma; reduce adults limited by chronic lung disease symptoms; reduce respiratory mortality; reduce former smokers and never-smokers exposed to secondhand smoke."],
+
+ ["ur","Signs of urgent respiratory distress (your notes)","Airway obstruction, increased heart rate, increased breathing, tachypnea, tachycardia, low O₂, cyanosis, pale."],
+ ["ur","Patient with acute shortness of breath: first actions","Immediately assess airway, respiratory and pulse rates, BP, and O₂ saturation. Auscultate for diminished/absent sounds or fluid. Give oxygen or bronchodilating inhaler as ordered. Elevate the head of the bed."],
+ ["ur","Why elevate the head of the bed?","To reduce the effect of gravity on the effort of breathing."],
+ ["ur","Patient in extreme difficulty breathing","Stop the assessment and get help."],
+ ["ur","Signs that may indicate hypoxia (a medical emergency)","Decreased level of consciousness, respiratory rate above 30 breaths/min, O₂ saturation less than 92%, cyanosis."],
+
+ ["qz","Quiz 2 topics","Mental health, cultural assessment, HEENT, skin, nose, hydration, lung and thorax, plus 1 math question (D/H × Q)."],
+ ["qz","Dosage formula for the math question","D / H × Q\nDesired dose ÷ dose on Hand × Quantity."]
+];
+
+/* Memory-match pairs: [topic, term, short fact] */
+const PAIRS = [
+ ["rp","Eupnea","10–20/min, 1:4 to pulse"],["rp","Tachypnea",">24/min, shallow, regular"],["rp","Hyperventilation",">24/min, deep, regular"],
+ ["rp","Bradypnea","<10/min, regular"],["rp","Hypoventilation","<10/min, shallow, irregular"],["rp","Kussmaul","Diabetic ketoacidosis"],
+ ["rp","Cheyne-Stokes","Deep-fast to shallow-slow + apnea"],["rp","Biot","Brain damage at medulla"],["rp","Agonal","End of life"],["rp","Apnea","Cardiac arrest, brain death"],
+ ["dx","Pneumonia sputum","Purulent"],["dx","Hemothorax sputum","Bloody"],["dx","CHF sputum","Frothy"],["dx","Asthma sputum","Clear"],
+ ["dx","PE percussion","Tympanic"],["dx","Pneumothorax percussion","Hyperresonance over area"],["dx","COPD percussion","Hyperresonance"],
+ ["dx","Bronchitis percussion","Resonance"],["dx","CHF auscultation","Absent bases"],["dx","Atelectasis","Collapsed alveoli"],
+ ["dx","Emphysema","Alveolar wall destruction"],["dx","Chronic bronchitis","Cough 3 mo × 2 yrs"],["dx","Tuberculosis","Mycobacterium tuberculosis"],
+ ["dx","Pleural effusion","Serous fluid in pleural space"],["dx","Tension pneumothorax","Air leaks in, can't escape"],["dx","Hemothorax","Blood in pleural space"],
+ ["dx","Lung cancer 1st sign","Persistent cough"],["dx","Viral pneumonia","Non-productive or clear"],
+ ["bs","Stridor","Croup, epiglottitis"],["bs","Rhonchi","Clears with coughing"],["bs","Pleural friction rub","Pleuritis, squeaky door"],
+ ["bs","Fine crackles","Rolling hair by ear"],["bs","Coarse crackles","Velcro pulled apart"],["bs","Wheeze","Vibrating reed, musical"],
+ ["bs","Bronchial","Larynx & trachea"],["bs","Vesicular","Most of lung fields"],["bs","Bronchovesicular","Between scapulae"],
+ ["cs","Barrel chest","AP:lateral ≈ 1:1"],["cs","Flail chest","Paradoxical movement"],["cs","Pigeon chest","Sternum displaced forward"],["cs","Kyphosis","Spine curves forward"],
+ ["lm","Angle of Louis","Manubriosternal junction"],["o2","Left lung","2 lobes"],["o2","Right lung","3 lobes"],
+ ["lm","Inspiration muscles","Diaphragm + intercostals"],["hx","Orthopnea","Hard to breathe lying down"],
+ ["ur","Hypoxia","RR >30, SpO₂ <92%"],["ur","Extreme dyspnea","Stop & get help"],
+ ["nd","Impaired gas exchange","Capillary/alveolar level"],["nd","Ineffective airway clearance","Too weak to expectorate"],
+ ["nd","Activity intolerance","O₂ supply vs demand"],["nd","Ineffective breathing pattern","Rate, rhythm, depth change"],
+ ["ex","Tactile fremitus","Consolidation/hyperinflation"],["ex","Palpation","Tenderness, masses, lesions"],
+ ["qz","Math question","D / H × Q"]
+];
+
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+function fillTopics(sel,withAll=true){
+  sel.innerHTML=(withAll?'<option value="all">All topics</option>':'')+Object.entries(TOPICS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+}
+[$("#fc-topic"),$("#mm-topic"),$("#qz-topic")].forEach(s=>fillTopics(s));
+
+/* Tabs */
+document.querySelectorAll("nav.modes button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav.modes button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  document.querySelectorAll("section.view").forEach(v=>v.hidden=v.id!=="view-"+b.dataset.view);
+  store.set("lung-tab",b.dataset.view);
+}));
+const savedTab=store.get("lung-tab","cards"); const tb=document.querySelector(`nav.modes button[data-view="${savedTab}"]`); if(tb) tb.click();
+
+/* Flashcards */
+let known=new Set(store.get("lung-known",[]));
+let deck=[],idx=0;
+function buildDeck(order){
+  const t=$("#fc-topic").value,f=$("#fc-filter").value;
+  deck=CARDS.map((c,i)=>i).filter(i=>(t==="all"||CARDS[i][0]===t)&&(f!=="learning"||!known.has(i))&&(f!=="star"||CARDS[i][3]));
+  if(order) deck=shuffle(deck);
+  idx=0;showCard();
+}
+function showCard(){
+  const card=$("#fc-card");card.classList.remove("flipped");
+  const total=CARDS.filter((c,i)=>$("#fc-topic").value==="all"||c[0]===$("#fc-topic").value);
+  const knownHere=CARDS.map((c,i)=>i).filter(i=>($("#fc-topic").value==="all"||CARDS[i][0]===$("#fc-topic").value)&&known.has(i)).length;
+  $("#fc-bar").style.width=(total.length?knownHere/total.length*100:0)+"%";
+  if(!deck.length){$("#fc-tag").textContent="";$("#fc-q").textContent="No cards here. You know them all, or try another filter.";$("#fc-a").textContent="";$("#fc-meta").textContent=`${knownHere} of ${total.length} marked “got it”`;return;}
+  const c=CARDS[deck[idx]];
+  $("#fc-tag").innerHTML=esc(TOPICS[c[0]])+(c[3]?' <span class="star">★ highlighted in class</span>':'')+(known.has(deck[idx])?' · ✓ got it':'');
+  setTimeout(()=>{$("#fc-q").textContent=c[1];$("#fc-a").textContent=c[2];},card.classList.contains("flipped")?200:0);
+  $("#fc-meta").textContent=`Card ${idx+1} of ${deck.length} · ${knownHere} of ${total.length} marked “got it”`;
+}
+function flip(){$("#fc-card").classList.toggle("flipped")}
+$("#fc-card").addEventListener("click",flip);
+$("#fc-card").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();flip();}});
+document.addEventListener("keydown",e=>{if($("#view-cards").hidden||e.target.tagName==="SELECT"||e.target.tagName==="INPUT")return;if(e.key==="ArrowRight")next();if(e.key==="ArrowLeft")prev();});
+function next(){if(deck.length){idx=(idx+1)%deck.length;showCard();}}
+function prev(){if(deck.length){idx=(idx-1+deck.length)%deck.length;showCard();}}
+$("#fc-next").onclick=next;$("#fc-prev").onclick=prev;
+$("#fc-know").onclick=()=>{if(!deck.length)return;known.add(deck[idx]);store.set("lung-known",[...known]);
+  if($("#fc-filter").value==="learning"){deck.splice(idx,1);if(idx>=deck.length)idx=0;showCard();}else next();};
+$("#fc-again").onclick=()=>{if(!deck.length)return;known.delete(deck[idx]);store.set("lung-known",[...known]);next();};
+$("#fc-shuffle").onclick=()=>buildDeck(true);
+$("#fc-reset").onclick=()=>{known=new Set();store.set("lung-known",[]);buildDeck(false);};
+$("#fc-topic").onchange=()=>buildDeck(false);$("#fc-filter").onchange=()=>buildDeck(false);
+buildDeck(false);
+
+/* Memory match */
+let mmOpen=[],mmLock=false,mmMoves=0,mmLeft=0,mmStart=0;
+function newBoard(){
+  const t=$("#mm-topic").value,n=+$("#mm-size").value;
+  let pool=PAIRS.filter(p=>t==="all"||p[0]===t);
+  if(pool.length<n) pool=pool.concat(shuffle(PAIRS.filter(p=>!pool.includes(p))).slice(0,n-pool.length));
+  const pick=shuffle(pool).slice(0,n);
+  const tiles=shuffle(pick.flatMap((p,i)=>[{id:i,txt:p[1],kind:"term"},{id:i,txt:p[2],kind:"def"}]));
+  const g=$("#mm-grid");g.className="grid"+(n===8?" g8":"");g.innerHTML="";
+  tiles.forEach(tl=>{const b=document.createElement("button");b.className="tile "+tl.kind+"-tile";b.dataset.id=tl.id;
+    b.innerHTML=`<span class="${tl.kind==="term"?"term":""}">${esc(tl.txt)}</span>`;b.setAttribute("aria-label","Hidden tile");
+    b.onclick=()=>pickTile(b,tl);g.appendChild(b);});
+  mmOpen=[];mmLock=false;mmMoves=0;mmLeft=n;mmStart=Date.now();$("#mm-won").hidden=true;
+  $("#mm-meta").textContent=`Flip two tiles. Match each term (T) with its fact (?). ${n} pairs to find.`;
+}
+function pickTile(b,tl){
+  if(mmLock||b.classList.contains("up")||b.classList.contains("done"))return;
+  b.classList.add("up");b.setAttribute("aria-label",tl.txt);mmOpen.push(b);
+  if(mmOpen.length<2)return;
+  mmMoves++;const[a,c]=mmOpen;
+  if(a.dataset.id===c.dataset.id&&a!==c){a.classList.add("done");c.classList.add("done");mmOpen=[];mmLeft--;
+    if(!mmLeft){const s=Math.round((Date.now()-mmStart)/1000);const w=$("#mm-won");w.hidden=false;w.textContent=`Board cleared in ${mmMoves} moves and ${s} seconds. Press New board for another set.`;}
+  }else{mmLock=true;a.classList.add("miss");c.classList.add("miss");
+    setTimeout(()=>{[a,c].forEach(x=>{x.classList.remove("up","miss");x.setAttribute("aria-label","Hidden tile");});mmOpen=[];mmLock=false;},1100);}
+  $("#mm-meta").textContent=`Moves: ${mmMoves} · Pairs left: ${mmLeft}`;
+}
+$("#mm-new").onclick=newBoard;$("#mm-topic").onchange=newBoard;$("#mm-size").onchange=newBoard;
+newBoard();
+
+/* Quiz */
+let qz=[],qi=0,qScore=0,missed=[];
+function startQuiz(){
+  const t=$("#qz-topic").value,n=+$("#qz-len").value;
+  const idxs=CARDS.map((c,i)=>i).filter(i=>t==="all"||CARDS[i][0]===t);
+  qz=shuffle(idxs).slice(0,n);qi=0;qScore=0;missed=[];renderQ();
+}
+function renderQ(){
+  const box=$("#qz-box");
+  if(qi>=qz.length){
+    box.innerHTML=`<div class="eyebrow">Done</div><h3>You scored ${qScore} of ${qz.length} (${Math.round(qScore/qz.length*100)}%)</h3>`+
+      (missed.length?`<p class="meta">Review these:</p><dl class="qa">${missed.map(i=>`<div><dt>${esc(CARDS[i][1])}</dt><dd>${esc(CARDS[i][2])}</dd></div>`).join("")}</dl>`:`<p>Perfect run.</p>`)+
+      `<p><button class="btn primary" id="qz-again">Try again</button></p>`;
+    $("#qz-again").onclick=startQuiz;return;
+  }
+  const i=qz[qi],c=CARDS[i];
+  let pool=CARDS.map((x,j)=>j).filter(j=>j!==i&&CARDS[j][0]===c[0]&&CARDS[j][2]!==c[2]);
+  if(pool.length<3) pool=pool.concat(CARDS.map((x,j)=>j).filter(j=>j!==i&&CARDS[j][0]!==c[0]));
+  const opts=shuffle([i,...shuffle(pool).slice(0,3)]);
+  box.innerHTML=`<div class="meta">Question ${qi+1} of ${qz.length} · Score ${qScore} · ${esc(TOPICS[c[0]])}</div><h3>${esc(c[1])}</h3><div class="opts">`+
+    opts.map(o=>`<button class="opt" data-o="${o}">${esc(CARDS[o][2])}</button>`).join("")+`</div><p id="qz-fb" aria-live="polite"></p>`;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const ok=+b.dataset.o===i;if(ok)qScore++;else missed.push(i);
+    box.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(+x.dataset.o===i)x.classList.add("right");});
+    if(!ok)b.classList.add("wrong");
+    $("#qz-fb").innerHTML=`<strong>${ok?"Correct.":"Not quite."}</strong> <button class="btn primary" id="qz-next">Next</button>`;
+    $("#qz-next").onclick=()=>{qi++;renderQ();};$("#qz-next").focus();
+  });
+}
+$("#qz-start").onclick=startQuiz;
+$("#qz-box").innerHTML=`<div class="eyebrow">Practice quiz</div><h3>Pick a topic and length, then press Start quiz.</h3><p class="meta">Questions come straight from your flashcards. Missed ones are listed at the end for review.</p>`;
+
+/* Dose practice */
+let dose={};
+function newDose(){
+  const sets=[[250,500,5,"mL"],[50,25,1,"tablet(s)"],[0.25,0.125,1,"tablet(s)"],[750,250,5,"mL"],[40,20,2,"mL"],[100,50,1,"tablet(s)"],[15,10,5,"mL"],[300,150,1,"capsule(s)"],[1000,500,1,"tablet(s)"],[12.5,25,1,"tablet(s)"]];
+  const s=sets[Math.floor(Math.random()*sets.length)];
+  dose={D:s[0],H:s[1],Q:s[2],u:s[3],ans:+(s[0]/s[1]*s[2]).toFixed(3)};
+  $("#dose-q").innerHTML=`Ordered (D): <strong>${dose.D} mg</strong> · On hand (H): <strong>${dose.H} mg</strong> per <strong>${dose.Q} ${dose.u.replace("(s)","")}</strong>. How many ${dose.u} do you give?`;
+  $("#dose-in").value="";$("#dose-fb").textContent="";
+}
+$("#dose-new").onclick=newDose;
+$("#dose-check").onclick=()=>{const v=parseFloat($("#dose-in").value);
+  if(isNaN(v)){$("#dose-fb").textContent="Enter a number first.";return;}
+  const ok=Math.abs(v-dose.ans)<0.01;
+  $("#dose-fb").innerHTML=`<strong>${ok?"Correct.":"Not quite."}</strong> ${dose.D} ÷ ${dose.H} × ${dose.Q} = <strong>${dose.ans} ${dose.u}</strong>`;};
+newDose();
+
+/* Study guide */
+(function(){
+  const toc=$("#g-toc"),body=$("#g-body");
+  const tables={
+    bs:`<div class="tblwrap"><table><thead><tr><th>Normal sound</th><th>Intensity & pitch</th><th>Quality</th><th>Duration</th><th>Location</th></tr></thead><tbody>
+<tr><td>Bronchial</td><td>Loud and high</td><td>Coarse or tubular</td><td>Insp. less than exp.</td><td>Larynx and trachea</td></tr>
+<tr><td>Bronchovesicular</td><td>Intermediate</td><td>Intermediate</td><td>Insp. equal to exp.</td><td>Anteriorly 1st–2nd ICS; between scapulae</td></tr>
+<tr><td>Vesicular</td><td>Soft and low</td><td>Whispering undertones</td><td>Insp. greater than exp.</td><td>Most of lung fields</td></tr></tbody></table></div>`,
+    rp:`<div class="tblwrap"><table><thead><tr><th>Pattern</th><th>Rate/min</th><th>Volume</th><th>Rhythm</th></tr></thead><tbody>
+<tr><td>Eupnea</td><td>10–20</td><td>500–800 ml</td><td>Regular</td></tr>
+<tr><td>Tachypnea</td><td>&gt;24</td><td>&lt;500 ml, shallow</td><td>Regular</td></tr>
+<tr><td>Hyperventilation</td><td>&gt;24</td><td>&gt;800 ml, deep</td><td>Regular</td></tr>
+<tr><td>Bradypnea</td><td>&lt;10</td><td>500–800 ml, shallow</td><td>Regular</td></tr>
+<tr><td>Hypoventilation</td><td>&lt;10</td><td>&lt;500 ml, shallow</td><td>Irregular</td></tr></tbody></table></div>`,
+    dx:`<div class="tblwrap"><table><thead><tr><th>Condition</th><th>Auscultation</th><th>Sputum</th><th>Percussion</th></tr></thead><tbody>
+<tr><td><span class="star">★</span> Asthma</td><td>Wheezes; diminished lung sounds</td><td>Clear</td><td>Occasional hyperresonance</td></tr>
+<tr><td><span class="star">★</span> Atelectasis</td><td>Diminished in lower lobe</td><td>None</td><td>Dullness over affected lung</td></tr>
+<tr><td>Bronchitis</td><td>Occasional wheezing or fine crackles</td><td>Clear</td><td>Resonance</td></tr>
+<tr><td>COPD</td><td>Wheezes</td><td>Clear</td><td>Hyperresonance</td></tr>
+<tr><td>Pneumothorax</td><td>Absent</td><td>Absent</td><td>Hyperresonance over area</td></tr>
+<tr><td>Hemothorax</td><td>Absent</td><td>Bloody</td><td>Dull over area</td></tr>
+<tr><td><span class="star">★</span> Pneumonia</td><td>Wheezes, crackles, or gurgles</td><td>Purulent</td><td>Dull over area</td></tr>
+<tr><td>CHF</td><td>Absent bases</td><td>Frothy</td><td>Dull bases</td></tr>
+<tr><td>Pleural effusion</td><td>Absent over affected lung</td><td>None</td><td>Dull over affected lung</td></tr>
+<tr><td><span class="star">★</span> Pulmonary embolism</td><td>Clear or mild wheezes</td><td>None</td><td>Tympanic</td></tr></tbody></table></div>
+<p class="meta">★ = highlighted on your class slide (barrel chest was highlighted too).</p>`
+  };
+  Object.entries(TOPICS).forEach(([k,v])=>{
+    toc.insertAdjacentHTML("beforeend",`<a href="#g-${k}">${esc(v)}</a>`);
+    const items=CARDS.filter(c=>c[0]===k);
+    body.insertAdjacentHTML("beforeend",`<div class="gsec" id="g-${k}"><h2>${esc(v)}</h2>${tables[k]||""}<dl class="qa">${items.map(c=>`<div><dt>${c[3]?'<span class="star">★</span> ':''}${esc(c[1])}</dt><dd>${esc(c[2])}</dd></div>`).join("")}</dl></div>`);
+  });
+})();
+</script>
+
+</body></html>
