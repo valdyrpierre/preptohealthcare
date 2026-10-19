@@ -17,108 +17,221 @@
   body { margin: 0; background: var(--bg); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 24px 16px; }
-  h1 { font-size: 1.3rem; margin: 0 0 4px; }
-  .sub { color: var(--muted); font-size: .9rem; margin-bottom: 18px; text-align: center; }
-  .progress { width: 100%; max-width: 560px; display: flex; justify-content: space-between;
+  h1 { font-size: 1.3rem; margin: 0 0 4px; text-align: center; }
+  .sub { color: var(--muted); font-size: .9rem; margin-bottom: 14px; text-align: center; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+  .tabs button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .progress { width: 100%; max-width: 640px; display: flex; justify-content: space-between;
     font-size: .85rem; color: var(--muted); margin-bottom: 8px; }
-  .bar { width: 100%; max-width: 560px; height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 18px; overflow: hidden; }
+  .bar { width: 100%; max-width: 640px; height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 18px; overflow: hidden; }
   .bar div { height: 100%; background: var(--accent); width: 0; transition: width .3s; }
-  .scene { width: 100%; max-width: 560px; height: 320px; perspective: 1200px; cursor: pointer; }
+  .scene { width: 100%; max-width: 640px; height: 420px; perspective: 1400px; cursor: pointer; }
   .card { position: relative; width: 100%; height: 100%; transition: transform .5s; transform-style: preserve-3d; }
   .card.flipped { transform: rotateY(180deg); }
   .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
     border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 6px 20px rgba(0,0,0,.08);
-    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px; text-align: center; }
-  .front { background: var(--card); }
-  .front .term { font-size: 2rem; font-weight: 700; }
-  .back { background: var(--back); transform: rotateY(180deg); }
-  .back .term-small { font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 12px; font-weight: 600; }
-  .back .def { font-size: 1.05rem; line-height: 1.55; }
-  .hint { color: var(--muted); font-size: .8rem; position: absolute; bottom: 14px; }
-  .controls, .grade { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+    padding: 28px; }
+  .front { background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .front .tag { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 600; margin-bottom: 12px; }
+  .front .q { font-size: 1.9rem; font-weight: 700; line-height: 1.3; }
+  .front .q.long { font-size: 1.3rem; }
+  .front .q.def { font-size: 1.05rem; font-weight: 400; line-height: 1.55; }
+  .back { background: var(--back); transform: rotateY(180deg); overflow-y: auto; text-align: left; }
+  .back .label { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 10px; font-weight: 600; }
+  .back .a { font-size: 1rem; line-height: 1.55; }
+  .back .a.big { font-size: 1.8rem; font-weight: 700; text-align: center; margin-top: 40px; }
+  .back ul, .back ol { margin: 6px 0; padding-left: 20px; }
+  .back li { margin-bottom: 5px; }
+  .back p { margin: 6px 0; }
+  .hint { color: var(--muted); font-size: .8rem; position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; }
+  .controls, .grade { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
   button { font: inherit; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border);
     background: var(--card); color: var(--text); cursor: pointer; }
   button:hover { border-color: var(--accent); }
   .good { border-color: var(--good); color: var(--good); }
   .bad { border-color: var(--bad); color: var(--bad); }
   .toggle { font-size: .85rem; padding: 8px 14px; }
-  .done { text-align: center; padding: 30px; }
   .keys { color: var(--muted); font-size: .78rem; margin-top: 16px; text-align: center; }
-  @media (max-width: 480px) { .scene { height: 360px; } .front .term { font-size: 1.6rem; } .back .def { font-size: .98rem; } }
+  @media (max-width: 480px) {
+    .scene { height: 480px; } .face { padding: 20px; }
+    .front .q { font-size: 1.5rem; } .front .q.long { font-size: 1.15rem; } .back .a { font-size: .95rem; }
+  }
 </style>
 </head>
 <body>
-  <h1>Renal Terms — NSG 2200</h1>
+  <h1>Renal Study Deck — NSG 2200</h1>
   <div class="sub">Chapters 32–35 · Tap the card to flip</div>
+
+  <div class="tabs">
+    <button id="tabAll" class="active">All (20)</button>
+    <button id="tabDef">Definitions (12)</button>
+    <button id="tabCon">Concepts (8)</button>
+  </div>
 
   <div class="progress"><span id="count"></span><span id="score"></span></div>
   <div class="bar"><div id="fill"></div></div>
 
-  <div id="area" style="width:100%;display:flex;flex-direction:column;align-items:center;">
-    <div class="scene" id="scene">
-      <div class="card" id="card">
-        <div class="face front"><div class="term" id="frontText"></div><div class="hint">tap to flip</div></div>
-        <div class="face back"><div class="term-small" id="backLabel"></div><div class="def" id="backText"></div></div>
-      </div>
+  <div class="scene" id="scene">
+    <div class="card" id="card">
+      <div class="face front"><div class="tag" id="tag"></div><div class="q" id="frontText"></div><div class="hint">tap to flip</div></div>
+      <div class="face back"><div class="label" id="backLabel"></div><div class="a" id="backText"></div></div>
     </div>
-
-    <div class="grade">
-      <button class="bad" id="again">✗ Still learning</button>
-      <button class="good" id="got">✓ Got it</button>
-    </div>
-    <div class="controls">
-      <button id="prev">← Prev</button>
-      <button id="shuffle">Shuffle</button>
-      <button id="next">Next →</button>
-    </div>
-    <div class="controls">
-      <button class="toggle" id="mode">Mode: Term → Definition</button>
-      <button class="toggle" id="restart">Restart all</button>
-      <button class="toggle" id="missed">Review missed only</button>
-    </div>
-    <div class="keys">Keyboard: Space = flip · ← → = navigate · 1 = still learning · 2 = got it</div>
   </div>
+
+  <div class="grade">
+    <button class="bad" id="again">✗ Still learning</button>
+    <button class="good" id="got">✓ Got it</button>
+  </div>
+  <div class="controls">
+    <button id="prev">← Prev</button>
+    <button id="shuffle">Shuffle</button>
+    <button id="next">Next →</button>
+  </div>
+  <div class="controls">
+    <button class="toggle" id="mode">Definitions: Term → Definition</button>
+    <button class="toggle" id="restart">Reset scores</button>
+    <button class="toggle" id="missed">Review missed only</button>
+  </div>
+  <div class="keys">Keyboard: Space = flip · ← → = navigate · 1 = still learning · 2 = got it</div>
 
 <script>
 const ALL = [
-  ["Azotemia", "Abnormally high levels of nitrogen-containing waste products (mainly BUN and creatinine) in the blood. Usually reflects reduced glomerular filtration; can be prerenal, intrarenal, or postrenal."],
-  ["Dysuria", "Painful, burning, or uncomfortable urination. Commonly associated with UTIs, urethritis, or bladder irritation."],
-  ["Polyuria", "Excessive urine output (generally > 2.5–3 L/day in adults). Causes include diabetes mellitus, diabetes insipidus, diuretics, and the recovery phase of AKI."],
-  ["Oliguria", "Decreased urine output — generally < 400 mL/day (or < 0.5 mL/kg/hr) in adults. Often signals reduced renal perfusion or acute kidney injury."],
-  ["Anuria", "Absent or nearly absent urine output — usually < 100 mL/day. Suggests severe kidney failure or complete urinary tract obstruction."],
-  ["Uremia", "Clinical syndrome from accumulation of waste products in the blood due to advanced kidney failure. Affects many systems: nausea, vomiting, fatigue, confusion, pruritus, pericarditis, bleeding tendencies."],
-  ["Acute Tubular Necrosis (ATN)", "Damage and death of renal tubular epithelial cells. Most common intrarenal cause of AKI; usually caused by ischemia (prolonged low blood flow) or nephrotoxins (e.g., aminoglycosides, contrast dye)."],
-  ["Pyelonephritis", "Bacterial infection of the kidney (renal pelvis and parenchyma), usually E. coli ascending from the lower urinary tract. Presents with fever, chills, flank pain, and CVA tenderness."],
-  ["Hydronephrosis", "Dilation of the renal pelvis and calyces from urine backing up due to obstruction (stones, tumors, enlarged prostate). Untreated, the pressure can damage kidney tissue."],
-  ["Nephrolithiasis", "Formation of stones (calculi) in the kidney. Most are calcium-based; others include uric acid, struvite, and cystine. Stones moving into the ureter cause severe colicky flank pain and hematuria."],
-  ["Diuresis", "Increased formation and excretion of urine. Can be natural (high fluid intake), osmotic (e.g., glucose), or caused by diuretic medications."],
-  ["Hemodialysis", "Renal replacement therapy where blood is pumped through a dialyzer (artificial kidney with a semipermeable membrane) to remove wastes, excess fluid, and electrolytes, then returned. Typically 3×/week via AV fistula, graft, or catheter."]
-];
+  // ---------- CONCEPTS ----------
+  { type: "con", q: "Q1. List the functions of the kidney", a: `
+    <ul>
+      <li><b>Fluid balance</b> — regulates body water volume and osmolality</li>
+      <li><b>Electrolyte balance</b> — Na⁺, K⁺, Ca²⁺, phosphate, Mg²⁺</li>
+      <li><b>Acid–base balance</b> — excretes H⁺ and reabsorbs/generates HCO₃⁻</li>
+      <li><b>Waste excretion</b> — urea, creatinine, uric acid, drugs, and toxins</li>
+      <li><b>Blood pressure regulation</b> — via renin (RAAS) and control of fluid volume</li>
+      <li><b>Erythropoietin production</b> — stimulates red blood cell production</li>
+      <li><b>Vitamin D activation</b> — converts it to calcitriol for calcium absorption</li>
+      <li><b>Gluconeogenesis</b> — makes glucose during prolonged fasting</li>
+    </ul>` },
+  { type: "con", q: "Q2. Diagnostic tests used to assess kidney function", a: `
+    <ul>
+      <li><b>Urinalysis</b> — checks color, clarity, specific gravity, pH, protein, glucose, blood, cells, and casts. Casts and protein suggest kidney damage.</li>
+      <li><b>BUN (blood urea nitrogen)</b> — normal ~10–20 mg/dL. Rises with decreased GFR, but also affected by dehydration, high protein intake, and GI bleeding.</li>
+      <li><b>Serum creatinine</b> — normal ~0.6–1.2 mg/dL. A more reliable marker of kidney function than BUN because it is produced at a steady rate from muscle.</li>
+      <li><b>GFR / eGFR</b> — best overall measure of kidney function; normal ~90–120 mL/min/1.73 m². Usually estimated from serum creatinine, age, and sex.</li>
+      <li><b>Creatinine clearance</b> — 24-hour urine collection compared with serum creatinine to estimate GFR.</li>
+      <li><b>BUN : creatinine ratio</b> — normal ~10:1–20:1. A high ratio suggests a prerenal cause (e.g., dehydration).</li>
+      <li><b>Urine culture</b> — identifies bacteria causing infection.</li>
+      <li><b>Imaging</b> — ultrasound (size, obstruction, hydronephrosis), CT, KUB x-ray, renal scan.</li>
+      <li><b>Cystoscopy</b> — scope view of the bladder and urethra.</li>
+      <li><b>Renal biopsy</b> — tissue sample to diagnose specific kidney disease.</li>
+    </ul>` },
+  { type: "con", q: "Q3. Discuss the two functional components of the kidney", a: `
+    <p>The functional unit of the kidney is the <b>nephron</b> (~1 million per kidney). Each nephron has two functional components:</p>
+    <ol>
+      <li><b>Glomerulus (vascular / filtering component)</b> — a tuft of capillaries inside Bowman's capsule, supplied by the afferent arteriole and drained by the efferent arteriole. Blood pressure forces water and small solutes out of the blood, forming the filtrate. Blood cells and large proteins normally stay in the blood.</li>
+      <li><b>Tubular component</b> — the proximal convoluted tubule, loop of Henle, distal convoluted tubule, and collecting duct. It modifies the filtrate by <b>reabsorbing</b> what the body needs (water, glucose, Na⁺, HCO₃⁻) and <b>secreting</b> what it needs to remove (H⁺, K⁺, drugs). The loop of Henle concentrates or dilutes the urine.</li>
+    </ol>
+    <p><i>Check your textbook's wording — some texts frame this as the vascular vs. tubular components of the nephron.</i></p>` },
+  { type: "con", q: "Q4. Describe the three components of urine formation", a: `
+    <ol>
+      <li><b>Glomerular filtration</b> — blood is filtered at the glomerulus into Bowman's capsule. Water, electrolytes, glucose, and wastes pass through; cells and large proteins do not. About 180 L of filtrate is formed per day.</li>
+      <li><b>Tubular reabsorption</b> — substances the body needs move from the tubule back into the blood (peritubular capillaries). About 99% of filtered water is reabsorbed, along with nearly all glucose and amino acids. Most reabsorption happens in the proximal tubule.</li>
+      <li><b>Tubular secretion</b> — substances move from the blood into the tubule to be excreted, such as H⁺, K⁺, ammonia, creatinine, and drugs (e.g., penicillin). This helps regulate pH and potassium.</li>
+    </ol>
+    <p><b>Urine excreted = Filtered − Reabsorbed + Secreted</b> (~1–2 L/day)</p>` },
+  { type: "con", q: "Q5. Describe the Renin–Angiotensin–Aldosterone System (RAAS)", a: `
+    <p>A hormone system that raises blood pressure and blood volume.</p>
+    <p><b>Trigger:</b> decreased blood pressure or renal perfusion, decreased Na⁺ sensed by the macula densa, or sympathetic stimulation.</p>
+    <ol>
+      <li><b>Juxtaglomerular cells</b> of the kidney release <b>renin</b>.</li>
+      <li>Renin converts <b>angiotensinogen</b> (made by the liver) into <b>angiotensin I</b>.</li>
+      <li><b>ACE</b> (angiotensin-converting enzyme, mainly in the lungs) converts angiotensin I into <b>angiotensin II</b>.</li>
+      <li><b>Angiotensin II</b>:
+        <ul>
+          <li>Causes strong <b>vasoconstriction</b> → ↑ BP</li>
+          <li>Stimulates the adrenal cortex to release <b>aldosterone</b></li>
+          <li>Stimulates <b>ADH</b> release and <b>thirst</b></li>
+        </ul></li>
+      <li><b>Aldosterone</b> acts on the distal tubule/collecting duct → reabsorbs <b>Na⁺ and water</b>, excretes <b>K⁺</b> → ↑ blood volume.</li>
+    </ol>
+    <p><b>Result:</b> ↑ blood pressure and volume, which then shuts off renin release (negative feedback).</p>
+    <p><b>Clinical link:</b> ACE inhibitors (-pril) and ARBs (-sartan) block this system to treat hypertension and heart failure. Overactive RAAS contributes to hypertension and CKD progression.</p>` },
+  { type: "con", q: "Q7. What is chronic kidney disease (CKD)?", a: `
+    <p><b>Definition:</b> Kidney damage <b>or</b> a GFR below 60 mL/min/1.73 m² lasting <b>3 months or longer</b>. It is progressive and irreversible loss of nephrons.</p>
+    <p><b>Leading causes:</b> diabetes mellitus (#1) and hypertension (#2); also glomerulonephritis and polycystic kidney disease.</p>
+    <p><b>Stages (by GFR):</b></p>
+    <ul>
+      <li>Stage 1: ≥ 90 (damage with normal GFR)</li>
+      <li>Stage 2: 60–89</li>
+      <li>Stage 3: 30–59</li>
+      <li>Stage 4: 15–29</li>
+      <li>Stage 5: < 15 or on dialysis = <b>end-stage renal disease (ESRD)</b></li>
+    </ul>
+    <p><b>Effects:</b> fluid overload, hypertension, hyperkalemia, metabolic acidosis, anemia (↓ erythropoietin), bone disease (↓ vitamin D activation, high phosphate), and uremia.</p>
+    <p><b>Treatment:</b> control BP and blood sugar, ACE inhibitors/ARBs, diet limits (Na⁺, K⁺, phosphate, protein), and dialysis or transplant in ESRD.</p>` },
+  { type: "con", q: "Q8. Identify two types of neurogenic bladder", a: `
+    <ol>
+      <li><b>Spastic (reflex / upper motor neuron) bladder</b> — lesion is <b>above</b> the sacral micturition center (S2–S4), e.g., spinal cord injury above the sacral level, stroke, multiple sclerosis. The bladder contracts involuntarily and empties reflexively. <b>Problem: failure to store</b> → small capacity, frequency, urgency, incontinence. Detrusor–sphincter dyssynergia may occur.</li>
+      <li><b>Flaccid (atonic / lower motor neuron) bladder</b> — lesion is <b>at</b> the sacral cord or in the peripheral nerves, e.g., sacral spinal injury, diabetic neuropathy. The bladder cannot contract well. <b>Problem: failure to empty</b> → large bladder, urinary retention, overflow incontinence, high UTI risk.</li>
+    </ol>` },
+  { type: "con", q: "Q9. Risk factors for urinary incontinence in elderly patients", a: `
+    <ul>
+      <li><b>Age-related changes</b> — smaller bladder capacity, overactive detrusor muscle, weaker pelvic floor and sphincter, more urine produced at night</li>
+      <li><b>Menopause</b> — loss of estrogen weakens urethral and pelvic tissues</li>
+      <li><b>Enlarged prostate (BPH)</b> in men — retention and overflow</li>
+      <li><b>Limited mobility</b> — can't reach the toilet in time (functional incontinence)</li>
+      <li><b>Cognitive impairment</b> — dementia, delirium</li>
+      <li><b>Medications</b> — diuretics, sedatives/hypnotics, anticholinergics, opioids, alpha-blockers</li>
+      <li><b>UTI</b></li>
+      <li><b>Constipation / fecal impaction</b></li>
+      <li><b>Neurological disease</b> — stroke, Parkinson's disease</li>
+      <li><b>Diabetes</b> — high urine output and neuropathy</li>
+      <li><b>Obesity, multiple childbirths, pelvic surgery</b></li>
+      <li><b>Depression</b></li>
+    </ul>
+    <p><b>Memory aid — DIAPPERS</b> (reversible causes): Delirium, Infection, Atrophic vaginitis, Pharmaceuticals, Psychological, Excess urine output, Restricted mobility, Stool impaction.</p>` },
 
-let deck = ALL.map((c, i) => ({ term: c[0], def: c[1], id: i }));
+  // ---------- DEFINITIONS ----------
+  { type: "def", q: "Azotemia", a: "Abnormally high levels of nitrogen-containing waste products (mainly BUN and creatinine) in the blood. Usually reflects reduced glomerular filtration; can be prerenal, intrarenal, or postrenal." },
+  { type: "def", q: "Dysuria", a: "Painful, burning, or uncomfortable urination. Commonly associated with UTIs, urethritis, or bladder irritation." },
+  { type: "def", q: "Polyuria", a: "Excessive urine output (generally > 2.5–3 L/day in adults). Causes include diabetes mellitus, diabetes insipidus, diuretics, and the recovery phase of AKI." },
+  { type: "def", q: "Oliguria", a: "Decreased urine output — generally < 400 mL/day (or < 0.5 mL/kg/hr) in adults. Often signals reduced renal perfusion or acute kidney injury." },
+  { type: "def", q: "Anuria", a: "Absent or nearly absent urine output — usually < 100 mL/day. Suggests severe kidney failure or complete urinary tract obstruction." },
+  { type: "def", q: "Uremia", a: "Clinical syndrome from accumulation of waste products in the blood due to advanced kidney failure. Affects many systems: nausea, vomiting, fatigue, confusion, pruritus, pericarditis, bleeding tendencies." },
+  { type: "def", q: "Acute Tubular Necrosis (ATN)", a: "Damage and death of renal tubular epithelial cells. Most common intrarenal cause of AKI; usually caused by ischemia (prolonged low blood flow) or nephrotoxins (e.g., aminoglycosides, contrast dye)." },
+  { type: "def", q: "Pyelonephritis", a: "Bacterial infection of the kidney (renal pelvis and parenchyma), usually E. coli ascending from the lower urinary tract. Presents with fever, chills, flank pain, and CVA tenderness." },
+  { type: "def", q: "Hydronephrosis", a: "Dilation of the renal pelvis and calyces from urine backing up due to obstruction (stones, tumors, enlarged prostate). Untreated, the pressure can damage kidney tissue." },
+  { type: "def", q: "Nephrolithiasis", a: "Formation of stones (calculi) in the kidney. Most are calcium-based; others include uric acid, struvite, and cystine. Stones moving into the ureter cause severe colicky flank pain and hematuria." },
+  { type: "def", q: "Diuresis", a: "Increased formation and excretion of urine. Can be natural (high fluid intake), osmotic (e.g., glucose), or caused by diuretic medications." },
+  { type: "def", q: "Hemodialysis", a: "Renal replacement therapy where blood is pumped through a dialyzer (artificial kidney with a semipermeable membrane) to remove wastes, excess fluid, and electrolytes, then returned. Typically 3×/week via AV fistula, graft, or catheter." }
+].map((c, i) => ({ ...c, id: i }));
+
+let filter = "all";
+let deck = [...ALL];
 let idx = 0, reverse = false;
-let status = {}; // id -> "got" | "miss"
+let status = {};
 
 const $ = id => document.getElementById(id);
 const card = $("card");
 
+function buildDeck() {
+  deck = ALL.filter(c => filter === "all" || c.type === filter);
+  idx = 0;
+}
+
 function render() {
-  if (deck.length === 0) {
-    $("area").innerHTML = '<div class="done"><h2>Nothing to review 🎉</h2><button onclick="location.reload()">Start over</button></div>';
-    return;
-  }
   const c = deck[idx];
+  const wasFlipped = card.classList.contains("flipped");
   card.classList.remove("flipped");
   setTimeout(() => {
-    $("frontText").textContent = reverse ? c.def : c.term;
-    $("frontText").style.fontSize = reverse ? "1.05rem" : "";
-    $("frontText").style.fontWeight = reverse ? "400" : "";
-    $("frontText").style.lineHeight = reverse ? "1.55" : "";
-    $("backLabel").textContent = reverse ? "Term" : c.term;
-    $("backText").textContent = reverse ? c.term : c.def;
-    $("backText").style.fontSize = reverse ? "1.8rem" : "";
-    $("backText").style.fontWeight = reverse ? "700" : "";
-  }, card.classList.contains("flipped") ? 250 : 0);
+    const isDef = c.type === "def";
+    const flipDef = isDef && reverse;
+    const ft = $("frontText");
+    $("tag").textContent = isDef ? "Definition" : "Concept";
+    ft.className = "q" + (flipDef ? " def" : (!isDef ? " long" : ""));
+    ft.textContent = flipDef ? c.a : c.q;
+    $("backLabel").textContent = flipDef ? "Term" : c.q;
+    const bt = $("backText");
+    bt.className = "a" + (flipDef ? " big" : "");
+    if (flipDef) bt.textContent = c.q; else bt.innerHTML = c.a;
+    $("card").querySelector(".back").scrollTop = 0;
+  }, wasFlipped ? 250 : 0);
   $("count").textContent = `Card ${idx + 1} of ${deck.length}`;
   const got = Object.values(status).filter(s => s === "got").length;
   const miss = Object.values(status).filter(s => s === "miss").length;
@@ -126,11 +239,21 @@ function render() {
   $("fill").style.width = ((idx + 1) / deck.length * 100) + "%";
 }
 
+function setTab(f, btn) {
+  filter = f;
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  buildDeck(); render();
+}
+
 function flip() { card.classList.toggle("flipped"); }
 function next() { idx = (idx + 1) % deck.length; render(); }
 function prev() { idx = (idx - 1 + deck.length) % deck.length; render(); }
 function grade(s) { status[deck[idx].id] = s; next(); }
 
+$("tabAll").onclick = e => setTab("all", e.target);
+$("tabDef").onclick = e => setTab("def", e.target);
+$("tabCon").onclick = e => setTab("con", e.target);
 $("scene").onclick = flip;
 $("next").onclick = next;
 $("prev").onclick = prev;
@@ -142,12 +265,12 @@ $("shuffle").onclick = () => {
 };
 $("mode").onclick = () => {
   reverse = !reverse;
-  $("mode").textContent = reverse ? "Mode: Definition → Term" : "Mode: Term → Definition";
+  $("mode").textContent = reverse ? "Definitions: Definition → Term" : "Definitions: Term → Definition";
   render();
 };
-$("restart").onclick = () => { deck = ALL.map((c, i) => ({ term: c[0], def: c[1], id: i })); status = {}; idx = 0; render(); };
+$("restart").onclick = () => { status = {}; buildDeck(); render(); };
 $("missed").onclick = () => {
-  const missed = ALL.map((c, i) => ({ term: c[0], def: c[1], id: i })).filter(c => status[c.id] === "miss");
+  const missed = ALL.filter(c => status[c.id] === "miss" && (filter === "all" || c.type === filter));
   if (missed.length === 0) { alert("No missed cards yet — mark some as 'Still learning' first."); return; }
   deck = missed; idx = 0; render();
 };
