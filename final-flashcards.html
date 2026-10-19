@@ -1,354 +1,164 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Exam Flashcards - Intro to Nursing</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .nav-bar {
-            width: 100%;
-            background: white;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-radius: 12px;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .nav-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 1em;
-            font-weight: 600;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-btn:hover { transform: translateY(-2px); }
-        .nav-btn.active { background: #28a745; }
-
-        header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-            text-align: center;
-            width: 100%;
-            max-width: 860px;
-        }
-
-        h1 { color: #667eea; font-size: 2.3em; margin-bottom: 10px; }
-        .subtitle { color: #666; font-size: 1.1em; }
-
-        .flashcard-container {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 760px;
-            height: 420px;
-            margin: 15px 0;
-        }
-
-        .flashcard {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            cursor: pointer;
-        }
-
-        .flashcard.flipped { transform: rotateY(180deg); }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 36px;
-            text-align: center;
-        }
-
-        .card-front {
-            background: white;
-            color: #333;
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, #2e8b57 0%, #1f6f45 100%);
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        .card-label {
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 18px;
-            opacity: 0.75;
-            font-weight: bold;
-        }
-
-        .card-content {
-            font-size: 1.45em;
-            line-height: 1.45;
-            font-weight: 500;
-        }
-
-        .controls {
-            display: flex;
-            gap: 14px;
-            margin-top: 16px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .btn {
-            background: white;
-            color: #667eea;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.05em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            font-weight: bold;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-        }
-
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn:disabled:hover { transform: none; }
-
-        .counter {
-            background: white;
-            color: #667eea;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .shuffle-btn { background: #28a745; color: white; }
-
-        .progress-bar {
-            width: 100%;
-            max-width: 760px;
-            height: 10px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 18px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: white;
-            transition: width 0.3s ease;
-        }
-
-        .hint {
-            margin-top: 16px;
-            background: rgba(255,255,255,0.95);
-            color: #444;
-            padding: 12px 18px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 760px;
-        }
-
-        @media (max-width: 768px) {
-            .flashcard-container { height: 360px; }
-            .card-content { font-size: 1.15em; }
-            h1 { font-size: 1.8em; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Renal Flashcards</title>
+<style>
+  :root {
+    --bg: #f4f6f9; --card: #ffffff; --back: #eaf3fb; --text: #1d2733;
+    --muted: #5f6b7a; --accent: #2a6fb0; --good: #2e8b57; --bad: #c0503a; --border: #d8dee6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14181d; --card: #1f252d; --back: #1b2a39; --text: #e8edf2;
+      --muted: #9aa6b4; --accent: #6aa9e6; --good: #5cc18a; --bad: #e07a63; --border: #2f3843; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 24px 16px; }
+  h1 { font-size: 1.3rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: .9rem; margin-bottom: 18px; text-align: center; }
+  .progress { width: 100%; max-width: 560px; display: flex; justify-content: space-between;
+    font-size: .85rem; color: var(--muted); margin-bottom: 8px; }
+  .bar { width: 100%; max-width: 560px; height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 18px; overflow: hidden; }
+  .bar div { height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+  .scene { width: 100%; max-width: 560px; height: 320px; perspective: 1200px; cursor: pointer; }
+  .card { position: relative; width: 100%; height: 100%; transition: transform .5s; transform-style: preserve-3d; }
+  .card.flipped { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px; text-align: center; }
+  .front { background: var(--card); }
+  .front .term { font-size: 2rem; font-weight: 700; }
+  .back { background: var(--back); transform: rotateY(180deg); }
+  .back .term-small { font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 12px; font-weight: 600; }
+  .back .def { font-size: 1.05rem; line-height: 1.55; }
+  .hint { color: var(--muted); font-size: .8rem; position: absolute; bottom: 14px; }
+  .controls, .grade { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+  button { font: inherit; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  .good { border-color: var(--good); color: var(--good); }
+  .bad { border-color: var(--bad); color: var(--bad); }
+  .toggle { font-size: .85rem; padding: 8px 14px; }
+  .done { text-align: center; padding: 30px; }
+  .keys { color: var(--muted); font-size: .78rem; margin-top: 16px; text-align: center; }
+  @media (max-width: 480px) { .scene { height: 360px; } .front .term { font-size: 1.6rem; } .back .def { font-size: .98rem; } }
+</style>
 </head>
 <body>
-    <nav class="nav-bar">
-        <div class="nav-container">
-            <a href="final.html" class="nav-btn">Quiz</a>
-            <a href="final-flashcards.html" class="nav-btn active">Flashcards</a>
-            <a href="final-matching-game.html" class="nav-btn">Matching</a>
-            <a href="final-jeopardy.html" class="nav-btn">Jeopardy</a>
-            <a href="final-memory-game.html" class="nav-btn">Memory</a>
-        </div>
-    </nav>
+  <h1>Renal Terms — NSG 2200</h1>
+  <div class="sub">Chapters 32–35 · Tap the card to flip</div>
 
-    <header>
-        <h1>Final Exam Flashcards</h1>
-        <p class="subtitle">Tap card to flip. Review history, practice, ethics, QSEN, research, and terminology.</p>
-    </header>
+  <div class="progress"><span id="count"></span><span id="score"></span></div>
+  <div class="bar"><div id="fill"></div></div>
 
-    <div class="flashcard-container">
-        <div class="flashcard" id="flashcard">
-            <div class="card-face card-front">
-                <div class="card-label">Question</div>
-                <div class="card-content" id="question"></div>
-            </div>
-            <div class="card-face card-back">
-                <div class="card-label">Answer</div>
-                <div class="card-content" id="answer"></div>
-            </div>
-        </div>
+  <div id="area" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+    <div class="scene" id="scene">
+      <div class="card" id="card">
+        <div class="face front"><div class="term" id="frontText"></div><div class="hint">tap to flip</div></div>
+        <div class="face back"><div class="term-small" id="backLabel"></div><div class="def" id="backText"></div></div>
+      </div>
     </div>
 
+    <div class="grade">
+      <button class="bad" id="again">✗ Still learning</button>
+      <button class="good" id="got">✓ Got it</button>
+    </div>
     <div class="controls">
-        <button class="btn" id="prevBtn" onclick="previousCard()">Previous</button>
-        <div class="counter" id="counter">1 / 40</div>
-        <button class="btn" id="nextBtn" onclick="nextCard()">Next</button>
-        <button class="btn shuffle-btn" onclick="shuffleCards()">Shuffle</button>
+      <button id="prev">← Prev</button>
+      <button id="shuffle">Shuffle</button>
+      <button id="next">Next →</button>
     </div>
-
-    <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+    <div class="controls">
+      <button class="toggle" id="mode">Mode: Term → Definition</button>
+      <button class="toggle" id="restart">Restart all</button>
+      <button class="toggle" id="missed">Review missed only</button>
     </div>
+    <div class="keys">Keyboard: Space = flip · ← → = navigate · 1 = still learning · 2 = got it</div>
+  </div>
 
-    <div class="hint">Tip: Use this for fast recall before your exam.</div>
+<script>
+const ALL = [
+  ["Azotemia", "Abnormally high levels of nitrogen-containing waste products (mainly BUN and creatinine) in the blood. Usually reflects reduced glomerular filtration; can be prerenal, intrarenal, or postrenal."],
+  ["Dysuria", "Painful, burning, or uncomfortable urination. Commonly associated with UTIs, urethritis, or bladder irritation."],
+  ["Polyuria", "Excessive urine output (generally > 2.5–3 L/day in adults). Causes include diabetes mellitus, diabetes insipidus, diuretics, and the recovery phase of AKI."],
+  ["Oliguria", "Decreased urine output — generally < 400 mL/day (or < 0.5 mL/kg/hr) in adults. Often signals reduced renal perfusion or acute kidney injury."],
+  ["Anuria", "Absent or nearly absent urine output — usually < 100 mL/day. Suggests severe kidney failure or complete urinary tract obstruction."],
+  ["Uremia", "Clinical syndrome from accumulation of waste products in the blood due to advanced kidney failure. Affects many systems: nausea, vomiting, fatigue, confusion, pruritus, pericarditis, bleeding tendencies."],
+  ["Acute Tubular Necrosis (ATN)", "Damage and death of renal tubular epithelial cells. Most common intrarenal cause of AKI; usually caused by ischemia (prolonged low blood flow) or nephrotoxins (e.g., aminoglycosides, contrast dye)."],
+  ["Pyelonephritis", "Bacterial infection of the kidney (renal pelvis and parenchyma), usually E. coli ascending from the lower urinary tract. Presents with fever, chills, flank pain, and CVA tenderness."],
+  ["Hydronephrosis", "Dilation of the renal pelvis and calyces from urine backing up due to obstruction (stones, tumors, enlarged prostate). Untreated, the pressure can damage kidney tissue."],
+  ["Nephrolithiasis", "Formation of stones (calculi) in the kidney. Most are calcium-based; others include uric acid, struvite, and cystine. Stones moving into the ureter cause severe colicky flank pain and hematuria."],
+  ["Diuresis", "Increased formation and excretion of urine. Can be natural (high fluid intake), osmotic (e.g., glucose), or caused by diuretic medications."],
+  ["Hemodialysis", "Renal replacement therapy where blood is pumped through a dialyzer (artificial kidney with a semipermeable membrane) to remove wastes, excess fluid, and electrolytes, then returned. Typically 3×/week via AV fistula, graft, or catheter."]
+];
 
-    <script>
-        const flashcards = [
-            { question: "Founder of modern nursing?", answer: "Florence Nightingale." },
-            { question: "War where Nightingale cut mortality about half?", answer: "Crimean War (1854)." },
-            { question: "Book written by Nightingale?", answer: "Notes on Nursing." },
-            { question: "Who established Nurse Corps of the US Army?", answer: "Dorothea Dix." },
-            { question: "Who founded the American Red Cross?", answer: "Clara Barton." },
-            { question: "First African American nurse graduate?", answer: "Mary Mahoney." },
-            { question: "Three nursing entry points?", answer: "Diploma, ADN, BSN." },
-            { question: "ADN focus?", answer: "2-year program focused on clinical skills in the community." },
-            { question: "BSN focus?", answer: "4-year program focused on art and science of nursing." },
-            { question: "Scope of nursing practice is guided by what?", answer: "Nurse Practice Act and state law." },
-            { question: "Standards of nursing practice define what?", answer: "Minimum acceptable professional nursing behavior." },
-            { question: "Main nursing roles?", answer: "Caregiver, advocate, educator, decision-maker, manager/coordinator, communicator, collaborator." },
-            { question: "Four nursing responsibilities?", answer: "Promote health, prevent illness, restore health, alleviate suffering." },
-            { question: "Healthy People 2030 key goal?", answer: "Healthy thriving lives free of preventable disease and reduced disparities." },
-            { question: "Three common causes of healthcare errors?", answer: "Interruptions, poor communication, inadequate knowledge." },
-            { question: "Incident report purpose?", answer: "Identify cause of error or unusual event to improve safety." },
-            { question: "Human factors causing errors?", answer: "Stress, fatigue, distractions." },
-            { question: "QSEN stands for?", answer: "Quality and Safety Education for Nursing." },
-            { question: "Six QSEN competencies?", answer: "Patient-centered care, teamwork/collaboration, EBP, QI, safety, informatics." },
-            { question: "Fidelity in nursing ethics means?", answer: "Faithfulness to professional obligations and promises to patients." },
-            { question: "Autonomy principle means?", answer: "Respecting patient's informed decisions about care." },
-            { question: "Justice principle means?", answer: "Providing fair and equitable care." },
-            { question: "What is health literacy?", answer: "Ability to obtain, understand, and use health information for decisions." },
-            { question: "Interpreter strategy for non-English speakers?", answer: "Use trained interpreters and written information in patient language." },
-            { question: "Nursing process steps?", answer: "Assessment, diagnosis, planning, implementation, evaluation." },
-            { question: "TeamSTEPPS CUS words?", answer: "Concerned, Uncomfortable, Safety issue." },
-            { question: "SBAR words?", answer: "Situation, Background, Assessment, Recommendation." },
-            { question: "Evidence-based practice uses what 3 components?", answer: "Research evidence, provider expertise, patient/family values." },
-            { question: "Two barriers to EBP?", answer: "Limited time/resources and understaffing." },
-            { question: "Critical thinking means?", answer: "Knowing why we do what we do using science." },
-            { question: "Clinical judgment means?", answer: "What we do based on science." },
-            { question: "RADAR letters?", answer: "Rationale, Authority, Date, Accuracy, Relevance." },
-            { question: "PICOT letters?", answer: "Population, Intervention, Comparison, Outcome, Time." },
-            { question: "Incivility definition?", answer: "Rude/discourteous/disrespectful actions, with or without intent." },
-            { question: "Bullying definition?", answer: "Repeated unwanted harmful actions meant to distress or humiliate." },
-            { question: "Tachypnea means?", answer: "Rapid breathing." },
-            { question: "Erythema means?", answer: "Redness." },
-            { question: "Prefix dys- means?", answer: "Abnormal or painful." },
-            { question: "Prefix hypo- means?", answer: "Below." },
-            { question: "Suffix -itis means?", answer: "Inflammation." }
-        ];
+let deck = ALL.map((c, i) => ({ term: c[0], def: c[1], id: i }));
+let idx = 0, reverse = false;
+let status = {}; // id -> "got" | "miss"
 
-        let currentIndex = 0;
-        let isFlipped = false;
+const $ = id => document.getElementById(id);
+const card = $("card");
 
-        function displayCard() {
-            const card = flashcards[currentIndex];
-            document.getElementById('question').textContent = card.question;
-            document.getElementById('answer').textContent = card.answer;
-            document.getElementById('counter').textContent = `${currentIndex + 1} / ${flashcards.length}`;
+function render() {
+  if (deck.length === 0) {
+    $("area").innerHTML = '<div class="done"><h2>Nothing to review 🎉</h2><button onclick="location.reload()">Start over</button></div>';
+    return;
+  }
+  const c = deck[idx];
+  card.classList.remove("flipped");
+  setTimeout(() => {
+    $("frontText").textContent = reverse ? c.def : c.term;
+    $("frontText").style.fontSize = reverse ? "1.05rem" : "";
+    $("frontText").style.fontWeight = reverse ? "400" : "";
+    $("frontText").style.lineHeight = reverse ? "1.55" : "";
+    $("backLabel").textContent = reverse ? "Term" : c.term;
+    $("backText").textContent = reverse ? c.term : c.def;
+    $("backText").style.fontSize = reverse ? "1.8rem" : "";
+    $("backText").style.fontWeight = reverse ? "700" : "";
+  }, card.classList.contains("flipped") ? 250 : 0);
+  $("count").textContent = `Card ${idx + 1} of ${deck.length}`;
+  const got = Object.values(status).filter(s => s === "got").length;
+  const miss = Object.values(status).filter(s => s === "miss").length;
+  $("score").textContent = `✓ ${got}  ·  ✗ ${miss}`;
+  $("fill").style.width = ((idx + 1) / deck.length * 100) + "%";
+}
 
-            const progress = ((currentIndex + 1) / flashcards.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
+function flip() { card.classList.toggle("flipped"); }
+function next() { idx = (idx + 1) % deck.length; render(); }
+function prev() { idx = (idx - 1 + deck.length) % deck.length; render(); }
+function grade(s) { status[deck[idx].id] = s; next(); }
 
-            document.getElementById('prevBtn').disabled = currentIndex === 0;
-            document.getElementById('nextBtn').disabled = currentIndex === flashcards.length - 1;
-
-            if (isFlipped) {
-                document.getElementById('flashcard').classList.remove('flipped');
-                isFlipped = false;
-            }
-        }
-
-        function nextCard() {
-            if (currentIndex < flashcards.length - 1) {
-                currentIndex++;
-                displayCard();
-            }
-        }
-
-        function previousCard() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                displayCard();
-            }
-        }
-
-        function shuffleCards() {
-            for (let i = flashcards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
-            }
-            currentIndex = 0;
-            displayCard();
-        }
-
-        document.getElementById('flashcard').addEventListener('click', () => {
-            document.getElementById('flashcard').classList.toggle('flipped');
-            isFlipped = !isFlipped;
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') nextCard();
-            if (e.key === 'ArrowLeft') previousCard();
-            if (e.key === ' ') {
-                e.preventDefault();
-                document.getElementById('flashcard').click();
-            }
-        });
-
-        displayCard();
-    </script>
+$("scene").onclick = flip;
+$("next").onclick = next;
+$("prev").onclick = prev;
+$("got").onclick = () => grade("got");
+$("again").onclick = () => grade("miss");
+$("shuffle").onclick = () => {
+  for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+  idx = 0; render();
+};
+$("mode").onclick = () => {
+  reverse = !reverse;
+  $("mode").textContent = reverse ? "Mode: Definition → Term" : "Mode: Term → Definition";
+  render();
+};
+$("restart").onclick = () => { deck = ALL.map((c, i) => ({ term: c[0], def: c[1], id: i })); status = {}; idx = 0; render(); };
+$("missed").onclick = () => {
+  const missed = ALL.map((c, i) => ({ term: c[0], def: c[1], id: i })).filter(c => status[c.id] === "miss");
+  if (missed.length === 0) { alert("No missed cards yet — mark some as 'Still learning' first."); return; }
+  deck = missed; idx = 0; render();
+};
+document.addEventListener("keydown", e => {
+  if (e.code === "Space") { e.preventDefault(); flip(); }
+  else if (e.key === "ArrowRight") next();
+  else if (e.key === "ArrowLeft") prev();
+  else if (e.key === "1") grade("miss");
+  else if (e.key === "2") grade("got");
+});
+render();
+</script>
 </body>
 </html>
