@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nursing Study Arcade</title>
+<style>
+:root{
+  --bg:#f4f6fb; --card:#ffffff; --ink:#1c2333; --muted:#5e6880; --line:#dfe3ee;
+  --accent:#2f6fed; --accent-soft:#e6eefe; --good:#1f9d61; --good-soft:#e3f6ec;
+  --bad:#d8434b; --bad-soft:#fde8ea; --warn:#e59a1a; --shadow:0 4px 18px rgba(20,30,60,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#11151f; --card:#1b2130; --ink:#e8ecf5; --muted:#9aa4bb; --line:#2c3446;
+    --accent:#6d9cff; --accent-soft:#22304d; --good:#3fcf8a; --good-soft:#173528;
+    --bad:#ff6b73; --bad-soft:#3b1e23; --warn:#f4b34a; --shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+header{padding:22px 16px 8px;text-align:center}
+header h1{margin:0;font-size:1.6rem}
+header p{margin:6px 0 0;color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px 16px;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font-size:.92rem;cursor:pointer}
+nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+main{max-width:820px;margin:0 auto;padding:18px 16px 60px}
+.panel{display:none}.panel.active{display:block}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.spread{justify-content:space-between}
+.btn{border:none;background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;font-size:.95rem;cursor:pointer;font-weight:600}
+.btn.ghost{background:var(--accent-soft);color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+select{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.92rem}
+.muted{color:var(--muted);font-size:.9rem}
+.pill{display:inline-block;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:600}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tile{cursor:pointer;transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+.tile h3{margin:0 0 4px}
+/* Flashcards */
+.flip{perspective:1200px;height:260px;cursor:pointer;margin:12px 0}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow)}
+.face.back{transform:rotateY(180deg);background:var(--accent-soft)}
+.face .big{font-size:1.3rem;font-weight:700}
+.face .ans{font-size:1.1rem}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0}
+.progress>div{height:100%;background:var(--accent);transition:width .3s}
+/* Quiz */
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.98rem;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.right{background:var(--good-soft);border-color:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.explain{margin-top:10px;padding:12px;border-radius:10px;background:var(--accent-soft);display:none}
+/* Memory */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:520px){.mem-grid{grid-template-columns:repeat(3,1fr)}}
+.mem{aspect-ratio:1/1;border-radius:12px;border:1px solid var(--line);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;font-size:.8rem;font-weight:600;cursor:pointer;user-select:none;transition:background .2s}
+.mem.open{background:var(--card);color:var(--ink)}
+.mem.done{background:var(--good-soft);color:var(--good);border-color:var(--good);cursor:default}
+.mem.miss{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
+/* Match */
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mi{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);margin-bottom:8px;cursor:pointer;font-size:.9rem;color:var(--ink);width:100%;text-align:left}
+.mi.sel{border-color:var(--accent);background:var(--accent-soft)}
+.mi.done{background:var(--good-soft);border-color:var(--good);color:var(--good);cursor:default}
+.mi.miss{background:var(--bad-soft);border-color:var(--bad)}
+/* Sort */
+.sort-item{font-size:1.15rem;font-weight:700;text-align:center;padding:26px 12px;border-radius:14px;background:var(--accent-soft);margin:10px 0}
+.sort-btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.sort-btns .btn{padding:14px}
+.flash-good{animation:fg .5s}.flash-bad{animation:fb .5s}
+@keyframes fg{0%{background:var(--good-soft)}100%{}}
+@keyframes fb{0%{background:var(--bad-soft)}100%{}}
+/* TF */
+.timer{font-size:2rem;font-weight:800;text-align:center}
+.tf-stmt{font-size:1.15rem;font-weight:600;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;padding:10px}
+.tf-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tf-btns .btn{padding:18px;font-size:1.1rem}
+.btn.t{background:var(--good)}.btn.f{background:var(--bad)}
+.result{text-align:center;padding:10px}
+.result .score{font-size:2.4rem;font-weight:800}
+ul.review{padding-left:18px}ul.review li{margin:6px 0}
+.kbd{font-size:.8rem;color:var(--muted);text-align:center;margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🩺 Nursing Study Arcade</h1>
+  <p>Blended competencies · Infection control (Ch. 25) · Planning · Hygiene (Ch. 32)</p>
+</header>
+<nav id="nav">
+  <button data-p="home" class="active">Home</button>
+  <button data-p="flash">Flashcards</button>
+  <button data-p="quiz">Quiz</button>
+  <button data-p="memory">Memory</button>
+  <button data-p="match">Match-Up</button>
+  <button data-p="sort">Sort It</button>
+  <button data-p="tf">Lightning T/F</button>
+</nav>
+<main>
+
+<!-- HOME -->
+<section class="panel active" id="home">
+  <div class="home-grid">
+    <div class="box tile" data-go="flash"><h3>🃏 Flashcards</h3><div class="muted">Flip cards, mark what you know, and re-study the misses.</div></div>
+    <div class="box tile" data-go="quiz"><h3>📝 NCLEX-Style Quiz</h3><div class="muted">Multiple choice with an explanation for every answer.</div></div>
+    <div class="box tile" data-go="memory"><h3>🧠 Memory Game</h3><div class="muted">Flip tiles to find each term and its match.</div></div>
+    <div class="box tile" data-go="match"><h3>🔗 Match-Up</h3><div class="muted">Tap a term, then tap its definition.</div></div>
+    <div class="box tile" data-go="sort"><h3>🗂️ Sort It</h3><div class="muted">Contact vs droplet vs airborne, outcome vs intervention, and more.</div></div>
+    <div class="box tile" data-go="tf"><h3>⚡ Lightning T/F</h3><div class="muted">60 seconds, as many as you can. Beat your best.</div></div>
+  </div>
+  <div class="box">
+    <h3 style="margin-top:0">🏆 Your best scores</h3>
+    <div id="bests" class="muted"></div>
+  </div>
+</section>
+
+<!-- FLASHCARDS -->
+<section class="panel" id="flash">
+  <div class="box">
+    <div class="row spread">
+      <select id="fTopic"></select>
+      <div class="row"><button class="btn ghost" id="fShuffle">Shuffle</button><button class="btn ghost" id="fMissed">Study misses only</button></div>
+    </div>
+    <div class="progress"><div id="fBar"></div></div>
+    <div class="row spread muted"><span id="fCount"></span><span id="fStats"></span></div>
+    <div class="flip" id="fCard"><div class="flip-inner">
+      <div class="face front"><span class="pill" id="fTag"></span><p class="big" id="fFront"></p><span class="muted">Tap to flip</span></div>
+      <div class="face back"><p class="ans" id="fBack"></p></div>
+    </div></div>
+    <div class="row" style="justify-content:center">
+      <button class="btn ghost" id="fPrev">← Back</button>
+      <button class="btn" style="background:var(--bad)" id="fNo">✗ Still learning</button>
+      <button class="btn" style="background:var(--good)" id="fYes">✓ Got it</button>
+    </div>
+    <div class="kbd">Keyboard: Space = flip · → = got it · ← = still learning</div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="panel" id="quiz">
+  <div class="box" id="qBox"></div>
+</section>
+
+<!-- MEMORY -->
+<section class="panel" id="memory">
+  <div class="box">
+    <div class="row spread"><strong>Find the matching pairs</strong><span class="muted" id="mStats"></span></div>
+    <p class="muted" style="margin:6px 0 12px">Each term has one matching answer. Flip two tiles at a time.</p>
+    <div class="mem-grid" id="mGrid"></div>
+    <div style="text-align:center;margin-top:14px"><button class="btn" id="mNew">New game</button></div>
+  </div>
+</section>
+
+<!-- MATCH -->
+<section class="panel" id="match">
+  <div class="box">
+    <div class="row spread"><strong>Tap a term, then its match</strong><span class="muted" id="xStats"></span></div>
+    <div class="match-cols" style="margin-top:12px"><div id="xLeft"></div><div id="xRight"></div></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn" id="xNew">New round</button></div>
+  </div>
+</section>
+
+<!-- SORT -->
+<section class="panel" id="sort">
+  <div class="box" id="sBox"></div>
+</section>
+
+<!-- TF -->
+<section class="panel" id="tf">
+  <div class="box" id="tBox"></div>
+</section>
+
+</main>
+<script>
+/* ================== CONTENT ================== */
+const CARDS = [
+ ["Competencies","The 4 blended competencies","Cognitive, technical, interpersonal, and ethical/legal"],
+ ["Competencies","Cognitive competency","Knowing and thinking: critical thinking, clinical reasoning, and clinical judgment"],
+ ["Competencies","Technical competency","Hands-on skills performed safely and correctly"],
+ ["Competencies","Interpersonal competency","Communication, trust, and the therapeutic relationship"],
+ ["Competencies","Ethical/legal competency","Integrity, staying within scope of practice, accountability, and protecting patient rights"],
+ ["Competencies","Clinical reasoning","Connecting the patient's cues to the likely problem and the best action"],
+ ["Competencies","Clinical judgment","The decision or action that results from clinical reasoning"],
+ ["Competencies","Ways to develop cognitive competencies","Build a knowledge base, reflect, and practice with concept maps, case studies, simulation, and NCLEX questions"],
+ ["Competencies","Intellectual humility","Knowing what you don't know, e.g., \"I'm not sure, let me look it up or ask\""],
+ ["Competencies","Reflection","Looking back at what you did and what you'd do differently next time"],
+ ["Infection","Chain of infection (6 links)","Infectious agent → reservoir → portal of exit → mode of transmission → portal of entry → susceptible host"],
+ ["Infection","#1 way to break the chain of infection","Hand hygiene"],
+ ["Infection","When must you use soap and water instead of sanitizer?","When hands are visibly soiled, and for C. diff (alcohol doesn't kill its spores)"],
+ ["Infection","Standard precautions","Used for EVERY patient, EVERY time. Treat all blood and body fluids as potentially infectious."],
+ ["Infection","Contact precautions","Gown and gloves, dedicated equipment, private room. Used for MRSA, C. diff, VRE, scabies."],
+ ["Infection","Droplet precautions","Surgical mask within 3–6 ft, private room. Used for flu, pertussis, meningitis, mumps."],
+ ["Infection","Airborne precautions","N95 respirator and a negative-pressure room with the door closed. Used for TB, measles, varicella."],
+ ["Infection","PPE donning (putting on) order","Gown → mask/N95 → goggles → gloves"],
+ ["Infection","PPE doffing (taking off) order","Gloves → goggles → gown → mask (the mask comes off LAST)"],
+ ["Infection","Transporting an airborne-precaution patient","The patient wears a surgical mask"],
+ ["Planning","4 steps of planning","Prioritize problems → set outcomes → select interventions → write and communicate the care plan"],
+ ["Planning","How to prioritize problems","ABCs (airway, breathing, circulation) and Maslow's hierarchy (physiological needs first, then safety)"],
+ ["Planning","SMART outcomes","Specific, Measurable, Achievable, Realistic, Time-bound"],
+ ["Planning","Correct subject of an outcome","The PATIENT (\"Client will…\"), never \"Nurse will…\""],
+ ["Planning","Independent intervention","The nurse can do it without an order, e.g., repositioning or teaching"],
+ ["Planning","Dependent intervention","Requires a provider order, e.g., giving medication"],
+ ["Planning","Collaborative intervention","Done with other disciplines, e.g., physical therapy or a dietitian"],
+ ["Planning","3 types of planning","Initial (at admission), ongoing (every shift), and discharge (begins at admission)"],
+ ["Hygiene","6 factors affecting hygiene","Culture, socioeconomic status, spiritual practices, developmental level, health state, personal preference"],
+ ["Hygiene","Skin turgor","Pinch the skin. If it stays tented, that suggests dehydration. In older adults, use the sternum or the area below the clavicle."],
+ ["Hygiene","Why assess bilaterally?","A difference between sides (one foot cooler, one leg swollen) is a clue to a problem"],
+ ["Hygiene","Oral cavity assessment","Look for lesions, cuts, pus, bleeding gums, and dryness. Ask about dentures."],
+ ["Hygiene","How do you decide if a patient needs help with hygiene?","Observe the patient AND ask them"],
+ ["Hygiene","Red flags that a patient needs hygiene help","Trouble getting up, limited mobility, fall risk, weakness, confusion"],
+ ["Hygiene","Self-care deficit","Nursing diagnosis: the patient needs help with ADLs (bathing, dressing, toileting, feeding)"],
+ ["Hygiene","Impaired oral mucous membranes","Nursing diagnosis for lesions, dryness, or sores in the mouth"],
+ ["Hygiene","Ineffective health maintenance","Nursing diagnosis: the patient can't manage their own health habits"],
+ ["Hygiene","Why no moisturizer between a diabetic's toes?","Moisture leads to fungus, maceration, and infection. Poor healing plus neuropathy can turn it into an ulcer."],
+ ["Hygiene","Diabetic foot care","Dry well between toes, no soaking, file nails (don't cut), inspect feet daily"],
+ ["Hygiene","Documenting hygiene findings","Use technology (the EHR) to report and record findings"]
+];
+
+const QUIZ = [
+ ["The nurse is caring for a patient with active tuberculosis. Which PPE is required when entering the room?",["N95 respirator","Surgical mask","Gown and gloves only","No PPE beyond standard precautions"],0,"TB is airborne. It requires an N95 respirator and a negative-pressure room."],
+ ["After caring for a patient with C. diff, what is the best hand hygiene?",["Alcohol-based sanitizer","Soap and water","Gloves only, no hand hygiene needed","Antiseptic wipes"],1,"Alcohol doesn't kill C. diff spores. Washing with soap and water physically removes them."],
+ ["Which is a correctly written patient outcome?",["Nurse will assist the client to ambulate","Client will ambulate 50 ft with a walker by day 3","Client will feel better","Administer pain medication every 4 hours PRN"],1,"A good outcome is patient-centered and SMART: specific, measurable, and time-bound."],
+ ["What is the FIRST step of planning?",["Write the care plan","Select interventions","Prioritize the problems","Evaluate outcomes"],2,"Planning starts by prioritizing problems with the ABCs and Maslow, then setting outcomes, choosing interventions, and documenting."],
+ ["Using Maslow and the ABCs, which nursing diagnosis is the highest priority?",["Deficient knowledge","Anxiety","Self-care deficit: bathing","Ineffective airway clearance"],3,"Airway comes first. Physiological needs outrank psychological and learning needs."],
+ ["A student nurse says, \"I'm not sure about this dose. Let me check before I give it.\" This shows:",["Lack of confidence","Intellectual humility","Poor clinical judgment","Overdependence on others"],1,"Knowing what you don't know and checking is a key critical-thinking attitude."],
+ ["Clinical judgment is BEST described as:",["Memorizing facts","The decision or action that results from clinical reasoning","Following provider orders only","Performing a skill correctly"],1,"Reasoning connects the cues; judgment is the conclusion or action you take."],
+ ["Which is an INDEPENDENT nursing intervention?",["Giving morphine","Ordering a chest X-ray","Repositioning the patient every 2 hours","Changing the IV antibiotic"],2,"Nurses can reposition without an order. Medications need a provider order (dependent)."],
+ ["A patient has influenza. Which precautions should the nurse use?",["Contact","Droplet","Airborne","Standard only"],1,"Flu spreads by large droplets, so a surgical mask is worn within 3–6 feet."],
+ ["When removing PPE, which item comes off FIRST?",["Mask","Gown","Goggles","Gloves"],3,"Doffing order: gloves → goggles → gown → mask. Gloves are the most contaminated."],
+ ["Where is the best site to check skin turgor in an older adult?",["Back of the hand","Below the clavicle or over the sternum","The earlobe","The palm"],1,"Older adults lose skin elasticity, so the hand can give a false result."],
+ ["The nurse pinches the patient's skin and it stays tented. This MOST likely indicates:",["Edema","Dehydration","Infection","Normal aging only"],1,"Poor turgor (tenting) is a classic sign of dehydration."],
+ ["What is the best way to determine whether a patient needs help with hygiene?",["Assume all older adults need help","Ask the family only","Observe the patient and ask them","Check the provider's orders"],2,"Assessment means observing ability AND asking the patient."],
+ ["Which action should the nurse AVOID during foot care for a diabetic patient?",["Inspecting the feet daily","Drying well between the toes","Applying lotion between the toes","Filing the toenails"],2,"Moisture between the toes leads to fungus, maceration, and infection."],
+ ["A patient declines a bath from a nurse of the opposite gender because of religious beliefs. Which factor affecting hygiene is this?",["Socioeconomic status","Health state","Spiritual practices","Developmental level"],2,"Religious rules about modesty and washing are spiritual practices. Respect them when planning care."],
+ ["A patient has sores and dryness in the mouth. Which nursing diagnosis fits BEST?",["Self-care deficit","Impaired oral mucous membranes","Ineffective health maintenance","Risk for falls"],1,"Problems with the oral tissues = impaired oral mucous membranes."],
+ ["Giving a patient a flu vaccine breaks which link in the chain of infection?",["Reservoir","Portal of exit","Mode of transmission","Susceptible host"],3,"Immunization makes the host less susceptible."],
+ ["When does discharge planning begin?",["The day of discharge","At admission","After the provider writes the order","When the patient asks"],1,"Discharge planning starts at admission so the patient is ready to go home safely."],
+ ["A patient who can't get out of bed without help and is a fall risk most likely has which diagnosis?",["Impaired oral mucous membranes","Self-care deficit","Deficient knowledge","Ineffective health maintenance"],1,"Needing help with ADLs because of mobility limits is self-care deficit."],
+ ["Which item is part of the TECHNICAL competency?",["Explaining a procedure to a patient","Protecting patient privacy","Inserting a urinary catheter correctly","Reflecting on a clinical day"],2,"Technical competency is hands-on skill. The others are interpersonal, ethical, and cognitive."]
+];
+
+const TF = [
+ ["Standard precautions are used only for patients with a known infection.",false],
+ ["Alcohol sanitizer kills C. diff spores.",false],
+ ["Measles requires airborne precautions.",true],
+ ["\"Nurse will teach the client about insulin\" is a correctly written outcome.",false],
+ ["Discharge planning begins at admission.",true],
+ ["The mask or N95 is removed last when taking off PPE.",true],
+ ["Administering medication is an independent nursing intervention.",false],
+ ["Skin that stays tented after a pinch may indicate dehydration.",true],
+ ["You should apply moisturizer between a diabetic patient's toes.",false],
+ ["Comparing findings on both sides of the body helps detect abnormalities.",true],
+ ["Hand hygiene is the most effective way to prevent the spread of infection.",true],
+ ["Socioeconomic status can affect a patient's hygiene.",true],
+ ["Clinical judgment comes before clinical reasoning.",false],
+ ["Diabetic patients should soak their feet daily.",false],
+ ["Droplet precautions require a negative-pressure room.",false],
+ ["Self-care deficit means the patient needs help with ADLs.",true],
+ ["SMART stands for Specific, Measurable, Achievable, Realistic, Time-bound.",true],
+ ["Physiological needs are prioritized before safety needs in Maslow's hierarchy.",true],
+ ["Gloves are put on first when donning PPE.",false],
+ ["MRSA requires contact precautions.",true],
+ ["Spiritual practices can affect how a patient prefers to bathe.",true],
+ ["The back of the hand is the best site to check turgor in an older adult.",false],
+ ["A patient with TB should wear a surgical mask when transported.",true],
+ ["Collaborative interventions are done with other disciplines like PT or a dietitian.",true]
+];
+
+const PAIRS = [
+ ["TB","N95 + negative pressure"],["MRSA","Gown + gloves"],["Influenza","Surgical mask"],["C. diff","Soap & water"],
+ ["Tented skin","Dehydration"],["Giving meds","Dependent"],["Repositioning","Independent"],["PT referral","Collaborative"],
+ ["Diabetic toes","Keep dry"],["Prioritize","ABCs + Maslow"],["Last PPE off","Mask"],["First PPE off","Gloves"],
+ ["Needs help w/ ADLs","Self-care deficit"],["Mouth sores","Impaired oral mucous membranes"],["Discharge planning","Starts at admission"],
+ ["Outcome subject","The patient"],["#1 infection control","Hand hygiene"],["Clinical judgment","Decision / action"]
+];
+
+const SORTS = {
+ "Which precaution?":{cats:["Contact","Droplet","Airborne"],items:[["MRSA","Contact"],["C. diff","Contact"],["Scabies","Contact"],["VRE","Contact"],["Influenza","Droplet"],["Pertussis","Droplet"],["Meningitis","Droplet"],["Mumps","Droplet"],["Tuberculosis","Airborne"],["Measles","Airborne"],["Chickenpox (varicella)","Airborne"]]},
+ "Outcome or intervention?":{cats:["Outcome","Intervention"],items:[["Client will report pain ≤3/10 within 1 hour","Outcome"],["Client will ambulate 50 ft with walker by day 3","Outcome"],["Client will demonstrate insulin self-injection before discharge","Outcome"],["Client will remain free of infection during stay","Outcome"],["Reposition client every 2 hours","Intervention"],["Administer acetaminophen as ordered","Intervention"],["Teach client about diabetic foot care","Intervention"],["Provide oral care twice daily","Intervention"],["Assist client with bathing each morning","Intervention"]]},
+ "Type of intervention?":{cats:["Independent","Dependent","Collaborative"],items:[["Repositioning every 2 hours","Independent"],["Patient teaching","Independent"],["Providing oral care","Independent"],["Giving IV antibiotics","Dependent"],["Inserting a urinary catheter per order","Dependent"],["Giving PRN morphine","Dependent"],["Gait training with physical therapy","Collaborative"],["Meal plan with the dietitian","Collaborative"],["Care conference with the social worker","Collaborative"]]},
+ "Which hygiene factor?":{cats:["Culture","Socioeconomic","Spiritual","Developmental","Health state","Preference"],items:[["Can't afford soap or deodorant","Socioeconomic"],["Religion requires washing before prayer","Spiritual"],["A 3-year-old needs help brushing teeth","Developmental"],["Too weak after surgery to bathe","Health state"],["Prefers showering at night","Preference"],["Family tradition of daily hair oiling","Culture"],["No washer or running water at home","Socioeconomic"],["Confusion from dementia limits self-care","Health state"],["Wants a specific brand of shampoo","Preference"],["Older adult needs fewer full baths due to dry, thin skin","Developmental"]]},
+ "Competency type?":{cats:["Cognitive","Technical","Interpersonal","Ethical/Legal"],items:[["Recognizing a pattern of infection signs","Cognitive"],["Prioritizing which patient to see first","Cognitive"],["Inserting a urinary catheter correctly","Technical"],["Taking accurate vital signs","Technical"],["Building trust with an anxious patient","Interpersonal"],["Explaining a procedure in plain language","Interpersonal"],["Protecting patient privacy","Ethical/Legal"],["Staying within scope of practice","Ethical/Legal"]]}
+};
+
+/* ================== HELPERS ================== */
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+let BEST={};try{BEST=JSON.parse(localStorage.getItem("nsgBest")||"{}")}catch(e){}
+function setBest(k,v,lowerBetter){const cur=BEST[k];if(cur===undefined||(lowerBetter?v<cur:v>cur)){BEST[k]=v;try{localStorage.setItem("nsgBest",JSON.stringify(BEST))}catch(e){}renderBests();return true}return false}
+function renderBests(){const L={quiz:"Quiz (%)",tf:"Lightning T/F (correct)",memory:"Memory (fewest moves)",sort:"Sort It (%)"};
+ const parts=Object.keys(L).map(k=>`${L[k]}: <b>${BEST[k]??"—"}</b>`);$("#bests").innerHTML=parts.join(" &nbsp;·&nbsp; ")}
+renderBests();
+
+/* NAV */
+function go(p){document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===p));
+ document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.p===p));
+ if(p!=="tf")stopTF(); window.scrollTo({top:0});
+ if(p==="memory"&&!mInit)newMemory(); if(p==="match"&&!xInit)newMatch(); if(p==="quiz"&&!qInit)startQuiz(); if(p==="sort"&&!sInit)sortMenu(); if(p==="tf"&&!tInit)tfMenu();}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.p));
+document.querySelectorAll("[data-go]").forEach(t=>t.onclick=()=>go(t.dataset.go));
+
+/* ================== FLASHCARDS ================== */
+let fDeck=[],fi=0,fKnown=new Set(),fMiss=new Set();
+const topics=["All topics",...new Set(CARDS.map(c=>c[0]))];
+$("#fTopic").innerHTML=topics.map(t=>`<option>${t}</option>`).join("");
+function buildDeck(onlyMiss){const t=$("#fTopic").value;
+ fDeck=CARDS.map((c,i)=>({c,i})).filter(o=>t==="All topics"||o.c[0]===t);
+ if(onlyMiss){fDeck=fDeck.filter(o=>fMiss.has(o.i));if(!fDeck.length){alert("No missed cards in this topic yet. Nice work!");return buildDeck(false)}}
+ fi=0;showCard()}
+function showCard(){const o=fDeck[fi];$("#fCard").classList.remove("flipped");
+ setTimeout(()=>{$("#fTag").textContent=o.c[0];$("#fFront").textContent=o.c[1];$("#fBack").textContent=o.c[2]},150);
+ $("#fCount").textContent=`Card ${fi+1} of ${fDeck.length}`;$("#fBar").style.width=((fi+1)/fDeck.length*100)+"%";
+ $("#fStats").textContent=`✓ ${fKnown.size} known · ✗ ${fMiss.size} to review`}
+function nextCard(){if(fi<fDeck.length-1){fi++;showCard()}else{alert(`Deck done! ✓ ${fKnown.size} known, ✗ ${fMiss.size} to review. Tap "Study misses only" to drill the hard ones.`);fi=0;showCard()}}
+$("#fCard").onclick=()=>$("#fCard").classList.toggle("flipped");
+$("#fYes").onclick=()=>{const i=fDeck[fi].i;fKnown.add(i);fMiss.delete(i);nextCard()};
+$("#fNo").onclick=()=>{const i=fDeck[fi].i;fMiss.add(i);fKnown.delete(i);nextCard()};
+$("#fPrev").onclick=()=>{if(fi>0){fi--;showCard()}};
+$("#fShuffle").onclick=()=>{fDeck=shuffle(fDeck);fi=0;showCard()};
+$("#fMissed").onclick=()=>buildDeck(true);
+$("#fTopic").onchange=()=>buildDeck(false);
+document.addEventListener("keydown",e=>{if(!$("#flash").classList.contains("active"))return;
+ if(e.code==="Space"){e.preventDefault();$("#fCard").classList.toggle("flipped")}
+ if(e.key==="ArrowRight")$("#fYes").click(); if(e.key==="ArrowLeft")$("#fNo").click()});
+buildDeck(false);
+
+/* ================== QUIZ ================== */
+let qInit=false,qs=[],qi=0,qScore=0,qWrong=[];
+function startQuiz(){qInit=true;qs=shuffle(QUIZ).map(q=>{const order=shuffle(q[1].map((t,i)=>i));return{q:q[0],opts:order.map(i=>q[1][i]),ans:order.indexOf(q[2]),ex:q[3]}});qi=0;qScore=0;qWrong=[];showQ()}
+function showQ(){const q=qs[qi];
+ $("#qBox").innerHTML=`<div class="row spread"><span class="pill">Question ${qi+1} / ${qs.length}</span><span class="muted">Score: ${qScore}</span></div>
+ <div class="progress"><div style="width:${qi/qs.length*100}%"></div></div>
+ <h3>${esc(q.q)}</h3>${q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join("")}
+ <div class="explain" id="qEx"></div><div style="text-align:right;margin-top:12px"><button class="btn" id="qNext" style="display:none">Next →</button></div>`;
+ document.querySelectorAll("#qBox .opt").forEach(b=>b.onclick=()=>{
+  const pick=+b.dataset.i;document.querySelectorAll("#qBox .opt").forEach(x=>{x.disabled=true;if(+x.dataset.i===q.ans)x.classList.add("right")});
+  if(pick===q.ans){qScore++}else{b.classList.add("wrong");qWrong.push(q)}
+  const ex=$("#qEx");ex.style.display="block";ex.innerHTML=(pick===q.ans?"✅ <b>Correct!</b> ":"❌ <b>Not quite.</b> ")+esc(q.ex);
+  $("#qNext").style.display="inline-block"});
+ $("#qNext").onclick=()=>{qi++;qi<qs.length?showQ():endQuiz()}}
+function endQuiz(){const pct=Math.round(qScore/qs.length*100);const nb=setBest("quiz",pct);
+ $("#qBox").innerHTML=`<div class="result"><div class="score">${pct}%</div><p>${qScore} of ${qs.length} correct ${nb?"· 🏆 New best!":""}</p></div>
+ ${qWrong.length?`<h3>Review these:</h3><ul class="review">${qWrong.map(q=>`<li><b>${esc(q.q)}</b><br><span class="muted">Answer: ${esc(q.opts[q.ans])}. ${esc(q.ex)}</span></li>`).join("")}</ul>`:"<p style='text-align:center'>Perfect score! 🎉</p>"}
+ <div style="text-align:center;margin-top:12px"><button class="btn" onclick="startQuiz()">Try again</button></div>`}
+
+/* ================== MEMORY ================== */
+let mInit=false,mOpen=[],mMoves=0,mFound=0,mLock=false,mN=6;
+function newMemory(){mInit=true;mMoves=0;mFound=0;mOpen=[];mLock=false;
+ const pick=shuffle(PAIRS).slice(0,mN);const tiles=shuffle(pick.flatMap((p,i)=>[{t:p[0],id:i},{t:p[1],id:i}]));
+ $("#mGrid").innerHTML=tiles.map((x,k)=>`<div class="mem" data-id="${x.id}" data-k="${k}" data-t="${esc(x.t)}">?</div>`).join("");
+ document.querySelectorAll(".mem").forEach(el=>el.onclick=()=>flipMem(el));memStats()}
+function memStats(){$("#mStats").textContent=`Pairs: ${mFound}/${mN} · Moves: ${mMoves}`}
+function flipMem(el){if(mLock||el.classList.contains("open")||el.classList.contains("done"))return;
+ el.classList.add("open");el.textContent=el.dataset.t;mOpen.push(el);
+ if(mOpen.length===2){mMoves++;const[a,b]=mOpen;
+  if(a.dataset.id===b.dataset.id){a.classList.add("done");b.classList.add("done");mOpen=[];mFound++;memStats();
+   if(mFound===mN){const nb=setBest("memory",mMoves,true);setTimeout(()=>alert(`🎉 All pairs found in ${mMoves} moves!${nb?" New best!":""}`),300)}}
+  else{mLock=true;a.classList.add("miss");b.classList.add("miss");memStats();
+   setTimeout(()=>{[a,b].forEach(x=>{x.classList.remove("open","miss");x.textContent="?"});mOpen=[];mLock=false},1000)}}
+ else memStats()}
+$("#mNew").onclick=newMemory;
+
+/* ================== MATCH-UP ================== */
+let xInit=false,xSel=null,xDone=0,xMiss=0,xN=6;
+function newMatch(){xInit=true;xSel=null;xDone=0;xMiss=0;
+ const pool=shuffle(CARDS).slice(0,xN).map((c,i)=>({l:c[1],r:c[2],id:i}));
+ $("#xLeft").innerHTML=pool.map(p=>`<button class="mi" data-side="l" data-id="${p.id}">${esc(p.l)}</button>`).join("");
+ $("#xRight").innerHTML=shuffle(pool).map(p=>`<button class="mi" data-side="r" data-id="${p.id}">${esc(p.r)}</button>`).join("");
+ document.querySelectorAll(".mi").forEach(b=>b.onclick=()=>pickMatch(b));xStat()}
+function xStat(){$("#xStats").textContent=`Matched ${xDone}/${xN} · Misses ${xMiss}`}
+function pickMatch(b){if(b.classList.contains("done"))return;
+ if(!xSel||xSel.dataset.side===b.dataset.side){if(xSel)xSel.classList.remove("sel");xSel=b;b.classList.add("sel");return}
+ if(xSel.dataset.id===b.dataset.id){[xSel,b].forEach(x=>{x.classList.remove("sel");x.classList.add("done")});xDone++;xSel=null;xStat();
+  if(xDone===xN)setTimeout(()=>alert(`🔗 Round complete with ${xMiss} miss${xMiss===1?"":"es"}!`),200)}
+ else{const a=xSel;[a,b].forEach(x=>x.classList.add("miss"));xMiss++;xStat();xSel=null;a.classList.remove("sel");
+  setTimeout(()=>[a,b].forEach(x=>x.classList.remove("miss")),600)}}
+$("#xNew").onclick=newMatch;
+
+/* ================== SORT IT ================== */
+let sInit=false,sItems=[],si=0,sScore=0,sCats=[],sWrong=[],sName="";
+function sortMenu(){sInit=true;
+ $("#sBox").innerHTML=`<h3 style="margin-top:0">Pick a sorting round</h3><div class="sort-btns">${Object.keys(SORTS).map(k=>`<button class="btn ghost" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div>`;
+ document.querySelectorAll("#sBox [data-k]").forEach(b=>b.onclick=()=>startSort(b.dataset.k))}
+function startSort(k){sName=k;sCats=SORTS[k].cats;sItems=shuffle(SORTS[k].items);si=0;sScore=0;sWrong=[];showSort()}
+function showSort(){const it=sItems[si];
+ $("#sBox").innerHTML=`<div class="row spread"><span class="pill">${esc(sName)}</span><span class="muted">${si+1} / ${sItems.length} · Score ${sScore}</span></div>
+ <div class="progress"><div style="width:${si/sItems.length*100}%"></div></div>
+ <div class="sort-item" id="sItem">${esc(it[0])}</div><div class="sort-btns">${sCats.map(c=>`<button class="btn" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+ <p class="muted" id="sFb" style="text-align:center;min-height:1.4em"></p>`;
+ document.querySelectorAll("#sBox [data-c]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#sBox [data-c]").forEach(x=>x.disabled=true);
+  const ok=b.dataset.c===it[1];const box=$("#sItem");
+  if(ok){sScore++;box.classList.add("flash-good");$("#sFb").innerHTML="✅ Correct!"}
+  else{sWrong.push(it);box.classList.add("flash-bad");$("#sFb").innerHTML=`❌ It's <b>${esc(it[1])}</b>`}
+  setTimeout(()=>{si++;si<sItems.length?showSort():endSort()},ok?600:1300)})}
+function endSort(){const pct=Math.round(sScore/sItems.length*100);const nb=setBest("sort",pct);
+ $("#sBox").innerHTML=`<div class="result"><div class="score">${pct}%</div><p>${sScore} of ${sItems.length} sorted correctly ${nb?"· 🏆 New best!":""}</p></div>
+ ${sWrong.length?`<h3>Missed:</h3><ul class="review">${sWrong.map(w=>`<li>${esc(w[0])} → <b>${esc(w[1])}</b></li>`).join("")}</ul>`:""}
+ <div class="row" style="justify-content:center;margin-top:10px"><button class="btn" id="sAgain">Play again</button><button class="btn ghost" id="sMenu">Other rounds</button></div>`;
+ $("#sAgain").onclick=()=>startSort(sName);$("#sMenu").onclick=sortMenu}
+
+/* ================== LIGHTNING T/F ================== */
+let tInit=false,tTimer=null,tLeft=60,tItems=[],ti=0,tRight=0,tWrongL=[];
+function tfMenu(){tInit=true;
+ $("#tBox").innerHTML=`<div class="result"><h3>⚡ Lightning True / False</h3><p class="muted">You have 60 seconds. Answer as many as you can.<br>Keyboard: T or ← = True · F or → = False</p>
+ <button class="btn" id="tStart">Start</button></div>`;$("#tStart").onclick=startTF}
+function startTF(){tLeft=60;tItems=shuffle(TF);ti=0;tRight=0;tWrongL=[];
+ $("#tBox").innerHTML=`<div class="row spread"><span class="muted" id="tSc">Correct: 0</span><span class="timer" id="tTime">60</span></div>
+ <div class="tf-stmt" id="tSt"></div><div class="tf-btns"><button class="btn t" id="tT">TRUE</button><button class="btn f" id="tF">FALSE</button></div>`;
+ $("#tT").onclick=()=>ansTF(true);$("#tF").onclick=()=>ansTF(false);showTF();
+ tTimer=setInterval(()=>{tLeft--;$("#tTime").textContent=tLeft;if(tLeft<=10)$("#tTime").style.color="var(--bad)";if(tLeft<=0)endTF()},1000)}
+function showTF(){if(ti>=tItems.length){tItems=tItems.concat(shuffle(TF))}$("#tSt").textContent=tItems[ti][0]}
+function ansTF(v){const it=tItems[ti];const box=$("#tSt");box.classList.remove("flash-good","flash-bad");void box.offsetWidth;
+ if(v===it[1]){tRight++;box.classList.add("flash-good")}else{tWrongL.push(it);box.classList.add("flash-bad")}
+ $("#tSc").textContent="Correct: "+tRight;ti++;showTF()}
+function stopTF(){if(tTimer){clearInterval(tTimer);tTimer=null}}
+function endTF(){stopTF();const nb=setBest("tf",tRight);
+ const uniq=[...new Map(tWrongL.map(w=>[w[0],w])).values()];
+ $("#tBox").innerHTML=`<div class="result"><div class="score">${tRight}</div><p>correct in 60 seconds ${nb?"· 🏆 New best!":""}</p></div>
+ ${uniq.length?`<h3>Review:</h3><ul class="review">${uniq.map(w=>`<li>${esc(w[0])} → <b>${w[1]?"TRUE":"FALSE"}</b></li>`).join("")}</ul>`:""}
+ <div style="text-align:center"><button class="btn" id="tAgain">Play again</button></div>`;$("#tAgain").onclick=startTF}
+document.addEventListener("keydown",e=>{if(!tTimer)return;const k=e.key.toLowerCase();
+ if(k==="t"||e.key==="ArrowLeft")ansTF(true); if(k==="f"||e.key==="ArrowRight")ansTF(false)});
+</script>
+</body>
+</html>
