@@ -86,12 +86,19 @@ select{padding:8px 10px;border-radius:10px;border:1px solid var(--line);backgrou
 .result .score{font-size:2.4rem;font-weight:800}
 ul.review{padding-left:18px}ul.review li{margin:6px 0}
 .kbd{font-size:.8rem;color:var(--muted);text-align:center;margin-top:6px}
+/* Order */
+.ord-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);margin-bottom:8px}
+.ord-item .txt{flex:1}
+.ord-item .num{font-weight:800;color:var(--accent);min-width:1.4em}
+.ord-item button{border:1px solid var(--line);background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem}
+.ord-item.right{background:var(--good-soft);border-color:var(--good)}
+.ord-item.wrong{background:var(--bad-soft);border-color:var(--bad)}
 </style>
 </head>
 <body>
 <header>
   <h1>🩺 Nursing Study Arcade</h1>
-  <p>Blended competencies · Infection control (Ch. 25) · Planning · Hygiene (Ch. 32)</p>
+  <p>Blended competencies · Infection control (Ch. 25) · Planning · Hygiene (Ch. 32) · Safety &amp; Emergency Preparedness (Ch. 28)</p>
 </header>
 <nav id="nav">
   <button data-p="home" class="active">Home</button>
@@ -101,6 +108,7 @@ ul.review{padding-left:18px}ul.review li{margin:6px 0}
   <button data-p="match">Match-Up</button>
   <button data-p="sort">Sort It</button>
   <button data-p="tf">Lightning T/F</button>
+  <button data-p="order">Order It</button>
 </nav>
 <main>
 
@@ -113,6 +121,11 @@ ul.review{padding-left:18px}ul.review li{margin:6px 0}
     <div class="box tile" data-go="match"><h3>🔗 Match-Up</h3><div class="muted">Tap a term, then tap its definition.</div></div>
     <div class="box tile" data-go="sort"><h3>🗂️ Sort It</h3><div class="muted">Contact vs droplet vs airborne, outcome vs intervention, and more.</div></div>
     <div class="box tile" data-go="tf"><h3>⚡ Lightning T/F</h3><div class="muted">60 seconds, as many as you can. Beat your best.</div></div>
+    <div class="box tile" data-go="order"><h3>🔢 Order It</h3><div class="muted">Put steps in order: RACE, restraint care, PPE, chain of infection.</div></div>
+  </div>
+  <div class="box">
+    <h3 style="margin-top:0">🎯 Ch. 28 focus: what's on the test</h3>
+    <div class="muted">Nursing interventions to prevent falls · Restraint rules (Box 27-7) · Side rails · RACE · Safety event reports · Developmental hazards · Safe driving</div>
   </div>
   <div class="box">
     <h3 style="margin-top:0">🏆 Your best scores</h3>
@@ -176,6 +189,11 @@ ul.review{padding-left:18px}ul.review li{margin:6px 0}
   <div class="box" id="tBox"></div>
 </section>
 
+<!-- ORDER -->
+<section class="panel" id="order">
+  <div class="box" id="oBox"></div>
+</section>
+
 </main>
 <script>
 /* ================== CONTENT ================== */
@@ -219,7 +237,43 @@ const CARDS = [
  ["Hygiene","Ineffective health maintenance","Nursing diagnosis: the patient can't manage their own health habits"],
  ["Hygiene","Why no moisturizer between a diabetic's toes?","Moisture leads to fungus, maceration, and infection. Poor healing plus neuropathy can turn it into an ulcer."],
  ["Hygiene","Diabetic foot care","Dry well between toes, no soaking, file nails (don't cut), inspect feet daily"],
- ["Hygiene","Documenting hygiene findings","Use technology (the EHR) to report and record findings"]
+ ["Hygiene","Documenting hygiene findings","Use technology (the EHR) to report and record findings"],
+ ["Safety","Where does safety fall on Maslow's hierarchy?","A lower-level (basic) need, right after physiological needs. It must be met before higher needs."],
+ ["Safety","Fetal safety risks","Maternal substance use (birth defects, learning disabilities) and poor nutrition, e.g., from poverty"],
+ ["Safety","Neonate and infant hazards","Falls, choking, suffocation (safe sleep), hot liquids, poisoning, improper car seats"],
+ ["Safety","Toddler and preschooler hazards","Poisoning, asphyxiation, drowning, environmental hazards, child abuse"],
+ ["Safety","School-age hazards","Accidents with brain injury (TBI, concussion), child abduction, bullying (especially kids with developmental delays or obesity)"],
+ ["Safety","Adolescent hazards","Driving, substance use, piercings and tattoos, firearms, internet and social media, sex trafficking"],
+ ["Safety","Adult hazards","Drug use and poisoning, intimate partner violence, workplace injuries, stress-related habits"],
+ ["Safety","Older adult hazards","Falls, motor vehicle accidents, fire (from cognitive decline), polypharmacy poisoning, elder abuse"],
+ ["Safety","Concussion","A brain injury that temporarily disrupts normal brain function"],
+ ["Safety","Mandated reporter","A nurse MUST report suspected abuse (e.g., call CPS for a child)"],
+ ["Safety","Safety teaching for adults","Effects of stress, defensive driving course, unsafe habits (drugs and alcohol), workplace safety, domestic violence counseling"],
+ ["Safety","Safety teaching for older adults","Remove or modify environmental hazards, driving courses, regular vision and hearing tests, working glasses and hearing aids, smoke detectors, report neglect or abuse"],
+ ["Safety","Safe driving teaching (on test)","No texting while driving, use caution driving at night, limit the number of passengers"],
+ ["Safety","Leading cause of injury death in older adults","FALLS (not fires)"],
+ ["Safety","Is a fall always the nurse's fault?","No. If the nurse acted as a reasonable, prudent nurse would, they're unlikely to be liable. You must still recognize risk and use interventions."],
+ ["Safety","Assessing fall risk in an older adult","History of falls, assistive devices, drug or alcohol history, family support, and the home environment"],
+ ["Safety","Morse Fall Scale","A 6-item tool used to identify fall risk factors and plan care around them"],
+ ["Safety","Fall risk factors","Previous falls, poor gait and balance, weakness, vision problems, ORTHOSTATIC (postural) HYPOTENSION, foot problems, vitamin D deficiency"],
+ ["Safety","Fall prevention interventions (ON TEST)","Orient the patient, bed low with wheels locked, call bell and items in reach, answer call bells promptly, night light, nonskid footwear, assistive devices nearby, bed or chair alarms"],
+ ["Safety","Restraint (definition)","A physical or chemical measure used to control physical or behavioral activity"],
+ ["Safety","Physical restraint examples","Side rails, trays attached to chairs, wrist restraints, mitts"],
+ ["Safety","Chemical restraint","A medication NOT in the patient's normal regimen, given to sedate or control behavior"],
+ ["Safety","Hazards of restraints","Falls with serious injury, skin breakdown, contractures, incontinence, depression, delirium, anxiety, aspiration and breathing problems, death"],
+ ["Safety","Before applying a restraint","Use only as a LAST RESORT. Try alternatives, assess behavior and understanding, check baseline skin and circulation, GET AN ORDER, and educate the patient and family."],
+ ["Safety","After applying a restraint","Two fingers fit under it, quick-release knot tied to the BED FRAME, assess every 1 hr, remove every 2 hrs, call bell in reach"],
+ ["Safety","Every 2 hours when a restraint is removed","Toileting, food and fluids, change position, check skin, range of motion. Reapply only if still needed and the order is valid."],
+ ["Safety","Side rail raised because the patient asks","NOT a restraint. A side rail used to keep a patient in bed against their will IS a restraint."],
+ ["Safety","Alternatives to restraints","Bed or chair alarms, frequent checks, moving the patient near the nurses' station, diversion activities, marking their door with a picture, family at the bedside"],
+ ["Safety","RACE","Rescue, Activate the alarm, Confine the fire (CLOSE doors and windows), Evacuate"],
+ ["Safety","Nurse's FIRST action when a fire starts in a patient's room","RESCUE the patient in immediate danger"],
+ ["Safety","Procedure-related accidents","Medication and IV errors, patient transfers, dressing changes, applying external heat"],
+ ["Safety","Safety event (incident) report","Filed by the nurse who finds the event, right away. Describes what happened and the patient's response. NOT part of the medical record and never mentioned in the chart."],
+ ["Safety","Facility safety areas","Fire safety, alarm management, equipment accidents, procedure accidents, safety event reports"],
+ ["Safety","Functional abilities that affect safety","Mobility, sensory perception, ability to communicate, knowledge, plus physical and psychosocial health"],
+ ["Safety","Emergency preparedness threats","Biologic, chemical, radiation, cyberterror, mass trauma, pandemics. Also plan for disaster resources and psychological effects."],
+ ["Safety","Domestic abuse safety planning","Safety while living with the abuser, planning with children, planning for pets, planning during an emergency, and leaving the relationship"]
 ];
 
 const QUIZ = [
@@ -242,7 +296,27 @@ const QUIZ = [
  ["Giving a patient a flu vaccine breaks which link in the chain of infection?",["Reservoir","Portal of exit","Mode of transmission","Susceptible host"],3,"Immunization makes the host less susceptible."],
  ["When does discharge planning begin?",["The day of discharge","At admission","After the provider writes the order","When the patient asks"],1,"Discharge planning starts at admission so the patient is ready to go home safely."],
  ["A patient who can't get out of bed without help and is a fall risk most likely has which diagnosis?",["Impaired oral mucous membranes","Self-care deficit","Deficient knowledge","Ineffective health maintenance"],1,"Needing help with ADLs because of mobility limits is self-care deficit."],
- ["Which item is part of the TECHNICAL competency?",["Explaining a procedure to a patient","Protecting patient privacy","Inserting a urinary catheter correctly","Reflecting on a clinical day"],2,"Technical competency is hands-on skill. The others are interpersonal, ethical, and cognitive."]
+ ["Which item is part of the TECHNICAL competency?",["Explaining a procedure to a patient","Protecting patient privacy","Inserting a urinary catheter correctly","Reflecting on a clinical day"],2,"Technical competency is hands-on skill. The others are interpersonal, ethical, and cognitive."],
+ ["A fire starts in a patient's room. What is the nurse's PRIORITY action?",["Extinguish the fire","Sound the alarm","Rescue the patient","Run for help"],2,"RACE: R = Rescue anyone in immediate danger comes first."],
+ ["Which action is part of the RACE fire-safety guide?",["Run to the nearest fire alarm","Act calmly to prevent panic","Confine the fire by opening doors and windows","Evacuate patients and others to a safe area"],3,"E = Evacuate. Confining means CLOSING doors and windows, not opening them."],
+ ["Which child is at GREATEST risk for choking or suffocation?",["A toddler playing with his 9-year-old brother's construction set","A 4-year-old eating yogurt","An infant asleep in a crib with a small blanket","A 3-year-old drinking juice"],0,"Small parts from an older child's toy are a classic choking hazard for toddlers, who put everything in their mouths."],
+ ["What is the nurse's priority for preventing trauma in older adults in a nursing home?",["Check that fire alarms work","Prevent exposure to temperature extremes","Screen for elder abuse","Keep patient rooms decluttered"],3,"Falls are the leading cause of trauma in older adults. Decluttering removes trip hazards."],
+ ["A disoriented resident likes to wander. Which is the BEST alternative to restraints?",["Seat him in a geri-chair by the nurses' station","Tuck sheets snugly to secure him in bed","Keep the bed in the high position","Mark his door with his picture and a balloon"],3,"Visual cues help him find his room. A geri-chair or tight sheets are restraints, and a high bed raises fall risk."],
+ ["Which patient has the HIGHEST fall risk?",["A 52-year-old taking antibiotics","A patient with orthostatic (postural) hypotension","A patient admitted for a rash","A patient who walks independently"],1,"Orthostatic hypotension (BP drops on standing) is a major fall risk factor. Previous falls are another."],
+ ["The patient asks for side rails up to help get in and out of bed. The side rails are:",["A restraint, so an order is needed","Not a restraint, because the patient requested them","A chemical restraint","Never allowed"],1,"Side rails are only a restraint when used to keep a patient in bed against their will."],
+ ["When securing a wrist restraint, the nurse ties it:",["To the side rail with a square knot","To the bed frame with a quick-release knot","To the side rail with a quick-release knot","To the mattress"],1,"Tie it to the BED FRAME with a quick-release knot. If a side rail is lowered, a restraint tied there can injure the patient."],
+ ["How often should a restrained patient be assessed, and the restraint removed?",["Assess every 4 hrs, remove every 8 hrs","Assess every 1 hr, remove every 2 hrs","Assess every 2 hrs, remove every 4 hrs","Assess once per shift"],1,"Assess every hour and remove every 2 hours (or per agency policy) for toileting, fluids, repositioning, skin checks, and ROM."],
+ ["How much space should be left between a restraint and the patient's skin?",["None. It should be snug.","Room for 2 fingers","Room for a whole hand","About 4 inches"],1,"Two fingers keeps circulation open without letting the patient slip out."],
+ ["Which is a CHEMICAL restraint?",["A wrist restraint","A sedative not in the patient's usual regimen, given to control behavior","The patient's daily blood pressure medication","A bed alarm"],1,"A chemical restraint is a drug given to control behavior that isn't part of the normal treatment."],
+ ["A patient falls. Which statement about the safety event report is CORRECT?",["Write \"incident report filed\" in the chart","It becomes part of the medical record","The nurse who discovered the event completes it promptly","Only the charge nurse can file it"],2,"It's filed right away by whoever finds the event, and it's NEVER mentioned in the chart."],
+ ["What is the leading cause of injury death in older adults?",["Fires","Falls","Motor vehicle accidents","Poisoning"],1,"Falls. This was a slide question (\"fires are the leading cause\" = FALSE)."],
+ ["A nurse acted the way a reasonable, prudent nurse would, but the patient still fell. The nurse is:",["Automatically liable","Unlikely to be found liable","Always fired","Required to pay damages"],1,"The standard is reasonable and prudent care. A fall isn't automatically the nurse's fault."],
+ ["Which is a fall prevention intervention in a health care facility?",["Keep the bed in the high position","Keep the room completely dark at night","Use nonskid footwear and keep the call bell within reach","Restrain all high-risk patients"],2,"Also: bed low with wheels locked, night light on, answer call bells promptly, and orient the patient to the room."],
+ ["Which tool is used to assess fall risk?",["Braden Scale","Morse Fall Scale","FLACC","Glasgow Coma Scale"],1,"Morse = falls (6 items). Braden = pressure injuries. FLACC = pain in infants."],
+ ["What must the nurse do BEFORE applying a restraint?",["Apply it, then call for an order","Try alternatives, assess, and obtain a provider order","Ask the family to sign a consent","Give a sedative"],1,"Restraints are a last resort. Try alternatives first, then get an order and educate the patient and family."],
+ ["Which teaching point is MOST important for an adolescent?",["Safe sleep position","Car seat installation","Not texting while driving","Preventing falls in the bathtub"],2,"Driving, substance use, firearms, and social media are the top adolescent risks."],
+ ["Which is the BEST safety teaching for an older adult living at home?",["Stop driving completely at age 65","Get regular vision and hearing tests and keep smoke detectors working","Keep throw rugs in hallways","Store all medications in one unlabeled container"],1,"Also: remove hazards, take a driving course for older adults, and make sure glasses and hearing aids work."],
+ ["A nurse suspects a child is being abused. What should the nurse do?",["Wait until there is proof","Confront the parents","Report it, because nurses are mandated reporters","Document it only"],2,"Mandated reporters must report suspected abuse (call CPS). Proof isn't required."]
 ];
 
 const TF = [
@@ -269,7 +343,31 @@ const TF = [
  ["Spiritual practices can affect how a patient prefers to bathe.",true],
  ["The back of the hand is the best site to check turgor in an older adult.",false],
  ["A patient with TB should wear a surgical mask when transported.",true],
- ["Collaborative interventions are done with other disciplines like PT or a dietitian.",true]
+ ["Collaborative interventions are done with other disciplines like PT or a dietitian.",true],
+ ["Among older adults, fires are the leading cause of injury death.",false],
+ ["A nurse who acts reasonably and prudently is still likely to be liable if a patient falls.",false],
+ ["A side rail is a restraint even if the patient asks for it to help get in and out of bed.",false],
+ ["In RACE, the C means confine the fire by closing doors and windows.",true],
+ ["The first step of RACE is to activate the alarm.",false],
+ ["Restraints should be tied to the side rail.",false],
+ ["A restraint should be removed every 2 hours.",true],
+ ["A restrained patient should be assessed every hour.",true],
+ ["You should be able to fit 2 fingers between a restraint and the skin.",true],
+ ["A provider order is needed to apply restraints.",true],
+ ["Safety event reports are documented in the patient's medical record.",false],
+ ["The nurse who discovers an incident files the safety event report.",true],
+ ["Orthostatic hypotension is a major fall risk factor.",true],
+ ["The Morse Fall Scale assesses pressure injury risk.",false],
+ ["Leaving a night light on helps prevent falls.",true],
+ ["Delirium and skin breakdown are hazards of restraints.",true],
+ ["A chemical restraint is a medication in the patient's normal regimen.",false],
+ ["Nurses are mandated reporters of suspected child abuse.",true],
+ ["Safety is a higher-level need on Maslow's hierarchy.",false],
+ ["Bullying is a key safety risk for school-age children.",true],
+ ["Texting while driving is a key safety topic for adolescents.",true],
+ ["Polypharmacy increases poisoning risk in older adults.",true],
+ ["Restraints should be the first choice for a confused patient who wanders.",false],
+ ["Bed and chair alarms are alternatives to restraints.",true]
 ];
 
 const PAIRS = [
@@ -277,7 +375,12 @@ const PAIRS = [
  ["Tented skin","Dehydration"],["Giving meds","Dependent"],["Repositioning","Independent"],["PT referral","Collaborative"],
  ["Diabetic toes","Keep dry"],["Prioritize","ABCs + Maslow"],["Last PPE off","Mask"],["First PPE off","Gloves"],
  ["Needs help w/ ADLs","Self-care deficit"],["Mouth sores","Impaired oral mucous membranes"],["Discharge planning","Starts at admission"],
- ["Outcome subject","The patient"],["#1 infection control","Hand hygiene"],["Clinical judgment","Decision / action"]
+ ["Outcome subject","The patient"],["#1 infection control","Hand hygiene"],["Clinical judgment","Decision / action"],
+ ["RACE: R","Rescue"],["RACE: C","Close doors (confine)"],["Morse scale","Fall risk"],["Restraint assess","Every 1 hour"],
+ ["Restraint removal","Every 2 hours"],["Restraint knot","Quick-release to bed frame"],["Incident report","Not in the chart"],
+ ["#1 older-adult injury death","Falls"],["Chemical restraint","Sedating drug not in regimen"],["Suspected abuse","Report (mandated)"],
+ ["Adolescent risk","Texting & driving"],["Infant risk","Suffocation (safe sleep)"],["Most common fall factor","Orthostatic hypotension"],
+ ["Under restraint","2 fingers of space"]
 ];
 
 const SORTS = {
@@ -285,7 +388,21 @@ const SORTS = {
  "Outcome or intervention?":{cats:["Outcome","Intervention"],items:[["Client will report pain ≤3/10 within 1 hour","Outcome"],["Client will ambulate 50 ft with walker by day 3","Outcome"],["Client will demonstrate insulin self-injection before discharge","Outcome"],["Client will remain free of infection during stay","Outcome"],["Reposition client every 2 hours","Intervention"],["Administer acetaminophen as ordered","Intervention"],["Teach client about diabetic foot care","Intervention"],["Provide oral care twice daily","Intervention"],["Assist client with bathing each morning","Intervention"]]},
  "Type of intervention?":{cats:["Independent","Dependent","Collaborative"],items:[["Repositioning every 2 hours","Independent"],["Patient teaching","Independent"],["Providing oral care","Independent"],["Giving IV antibiotics","Dependent"],["Inserting a urinary catheter per order","Dependent"],["Giving PRN morphine","Dependent"],["Gait training with physical therapy","Collaborative"],["Meal plan with the dietitian","Collaborative"],["Care conference with the social worker","Collaborative"]]},
  "Which hygiene factor?":{cats:["Culture","Socioeconomic","Spiritual","Developmental","Health state","Preference"],items:[["Can't afford soap or deodorant","Socioeconomic"],["Religion requires washing before prayer","Spiritual"],["A 3-year-old needs help brushing teeth","Developmental"],["Too weak after surgery to bathe","Health state"],["Prefers showering at night","Preference"],["Family tradition of daily hair oiling","Culture"],["No washer or running water at home","Socioeconomic"],["Confusion from dementia limits self-care","Health state"],["Wants a specific brand of shampoo","Preference"],["Older adult needs fewer full baths due to dry, thin skin","Developmental"]]},
- "Competency type?":{cats:["Cognitive","Technical","Interpersonal","Ethical/Legal"],items:[["Recognizing a pattern of infection signs","Cognitive"],["Prioritizing which patient to see first","Cognitive"],["Inserting a urinary catheter correctly","Technical"],["Taking accurate vital signs","Technical"],["Building trust with an anxious patient","Interpersonal"],["Explaining a procedure in plain language","Interpersonal"],["Protecting patient privacy","Ethical/Legal"],["Staying within scope of practice","Ethical/Legal"]]}
+ "Competency type?":{cats:["Cognitive","Technical","Interpersonal","Ethical/Legal"],items:[["Recognizing a pattern of infection signs","Cognitive"],["Prioritizing which patient to see first","Cognitive"],["Inserting a urinary catheter correctly","Technical"],["Taking accurate vital signs","Technical"],["Building trust with an anxious patient","Interpersonal"],["Explaining a procedure in plain language","Interpersonal"],["Protecting patient privacy","Ethical/Legal"],["Staying within scope of practice","Ethical/Legal"]]},
+ "Ch. 28: Which age group's hazard?":{cats:["Infant","Toddler/Preschool","School age","Adolescent","Adult","Older adult"],items:[["Suffocation during sleep","Infant"],["Improper car seat","Infant"],["Swallowing cleaning products","Toddler/Preschool"],["Choking on small toy parts","Toddler/Preschool"],["Concussion from sports","School age"],["Bullying","School age"],["Child abduction","School age"],["Texting while driving","Adolescent"],["Sex trafficking via social media","Adolescent"],["Firearms","Adolescent"],["Intimate partner violence","Adult"],["Workplace injury","Adult"],["Falls","Older adult"],["Polypharmacy poisoning","Older adult"],["Fire from cognitive decline","Older adult"],["Elder abuse","Older adult"]]},
+ "Ch. 28: Restraint or not?":{cats:["Restraint","Not a restraint"],items:[["Wrist restraints","Restraint"],["Tray attached to a geri-chair","Restraint"],["Mitts on the hands","Restraint"],["Sheets tucked tightly so the patient can't get up","Restraint"],["Sedative given only to control behavior","Restraint"],["Side rails up against the patient's wishes","Restraint"],["Side rails up because the patient asked","Not a restraint"],["Bed alarm","Not a restraint"],["Patient's usual scheduled medication","Not a restraint"],["Picture and balloon on the patient's door","Not a restraint"],["Moving the patient's room closer to the nurses' station","Not a restraint"]]},
+ "Ch. 28: Fall prevention, do or don't?":{cats:["Do","Don't"],items:[["Keep the bed in the low position","Do"],["Lock the bed wheels","Do"],["Keep the call bell within reach","Do"],["Answer call bells promptly","Do"],["Leave a night light on","Do"],["Use nonskid footwear","Do"],["Orient the patient to the room","Do"],["Use the Morse Fall Scale","Do"],["Keep the bed in the high position","Don't"],["Leave clutter and throw rugs on the floor","Don't"],["Keep the room fully dark at night","Don't"],["Restrain every high-risk patient","Don't"],["Put the walker across the room","Don't"]]}
+};
+
+const ORDERS = {
+ "RACE (fire)":["Rescue anyone in immediate danger","Activate the alarm / fire code","Confine the fire (close doors and windows)","Evacuate patients to a safe area"],
+ "Applying a restraint":["Try alternatives first (last resort)","Assess behavior, baseline skin, and circulation","Obtain a provider order","Educate the patient and family","Apply with 2-finger space, quick-release knot to bed frame","Assess every 1 hr and remove every 2 hrs"],
+ "PPE: putting on":["Gown","Mask or N95","Goggles / face shield","Gloves"],
+ "PPE: taking off":["Gloves","Goggles / face shield","Gown","Mask or N95"],
+ "Chain of infection":["Infectious agent","Reservoir","Portal of exit","Mode of transmission","Portal of entry","Susceptible host"],
+ "Nursing process (ADPIE)":["Assess","Diagnose","Plan","Implement","Evaluate"],
+ "Steps of planning":["Prioritize problems (ABCs, Maslow)","Set SMART patient outcomes","Select nursing interventions","Write and communicate the care plan"],
+ "Ages: youngest to oldest":["Neonate / infant","Toddler / preschooler","School age","Adolescent","Adult","Older adult"]
 };
 
 /* ================== HELPERS ================== */
@@ -302,7 +419,7 @@ renderBests();
 function go(p){document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===p));
  document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.p===p));
  if(p!=="tf")stopTF(); window.scrollTo({top:0});
- if(p==="memory"&&!mInit)newMemory(); if(p==="match"&&!xInit)newMatch(); if(p==="quiz"&&!qInit)startQuiz(); if(p==="sort"&&!sInit)sortMenu(); if(p==="tf"&&!tInit)tfMenu();}
+ if(p==="memory"&&!mInit)newMemory(); if(p==="match"&&!xInit)newMatch(); if(p==="quiz"&&!qInit)startQuiz(); if(p==="sort"&&!sInit)sortMenu(); if(p==="tf"&&!tInit)tfMenu(); if(p==="order"&&!oInit)orderMenu();}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.p));
 document.querySelectorAll("[data-go]").forEach(t=>t.onclick=()=>go(t.dataset.go));
 
@@ -333,7 +450,12 @@ buildDeck(false);
 
 /* ================== QUIZ ================== */
 let qInit=false,qs=[],qi=0,qScore=0,qWrong=[];
-function startQuiz(){qInit=true;qs=shuffle(QUIZ).map(q=>{const order=shuffle(q[1].map((t,i)=>i));return{q:q[0],opts:order.map(i=>q[1][i]),ans:order.indexOf(q[2]),ex:q[3]}});qi=0;qScore=0;qWrong=[];showQ()}
+function startQuiz(){qInit=true;
+ $("#qBox").innerHTML=`<h3 style="margin-top:0">📝 Choose your quiz</h3><div class="sort-btns">
+ <button class="btn" data-r="28">Ch. 28 Safety only (20)</button><button class="btn ghost" data-r="old">Earlier topics (20)</button><button class="btn ghost" data-r="all">Everything (40)</button></div>`;
+ document.querySelectorAll("#qBox [data-r]").forEach(b=>b.onclick=()=>runQuiz(b.dataset.r))}
+function runQuiz(r){const pool=r==="28"?QUIZ.slice(20):r==="old"?QUIZ.slice(0,20):QUIZ;
+ qs=shuffle(pool).map(q=>{const order=shuffle(q[1].map((t,i)=>i));return{q:q[0],opts:order.map(i=>q[1][i]),ans:order.indexOf(q[2]),ex:q[3]}});qi=0;qScore=0;qWrong=[];showQ()}
 function showQ(){const q=qs[qi];
  $("#qBox").innerHTML=`<div class="row spread"><span class="pill">Question ${qi+1} / ${qs.length}</span><span class="muted">Score: ${qScore}</span></div>
  <div class="progress"><div style="width:${qi/qs.length*100}%"></div></div>
@@ -428,6 +550,24 @@ function endTF(){stopTF();const nb=setBest("tf",tRight);
  <div style="text-align:center"><button class="btn" id="tAgain">Play again</button></div>`;$("#tAgain").onclick=startTF}
 document.addEventListener("keydown",e=>{if(!tTimer)return;const k=e.key.toLowerCase();
  if(k==="t"||e.key==="ArrowLeft")ansTF(true); if(k==="f"||e.key==="ArrowRight")ansTF(false)});
+
+/* ================== ORDER IT ================== */
+let oInit=false,oName="",oCur=[],oChecked=false;
+function orderMenu(){oInit=true;
+ $("#oBox").innerHTML=`<h3 style="margin-top:0">🔢 Put the steps in the right order</h3><p class="muted">Pick a sequence, then use ▲ ▼ to arrange the steps.</p><div class="sort-btns">${Object.keys(ORDERS).map(k=>`<button class="btn ghost" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div>`;
+ document.querySelectorAll("#oBox [data-k]").forEach(b=>b.onclick=()=>startOrder(b.dataset.k))}
+function startOrder(k){oName=k;const right=ORDERS[k];do{oCur=shuffle(right)}while(oCur.every((x,i)=>x===right[i]));oChecked=false;drawOrder()}
+function drawOrder(){const right=ORDERS[oName];
+ $("#oBox").innerHTML=`<div class="row spread"><span class="pill">${esc(oName)}</span><span class="muted">${right.length} steps</span></div><div style="margin-top:12px">
+ ${oCur.map((t,i)=>`<div class="ord-item ${oChecked?(t===right[i]?"right":"wrong"):""}"><span class="num">${i+1}</span><span class="txt">${esc(t)}</span><button data-u="${i}" ${i===0?"disabled":""}>▲</button><button data-d="${i}" ${i===oCur.length-1?"disabled":""}>▼</button></div>`).join("")}</div>
+ <p id="oFb" class="muted" style="text-align:center;min-height:1.4em"></p>
+ <div class="row" style="justify-content:center"><button class="btn" id="oCheck">Check order</button><button class="btn ghost" id="oShow">Show answer</button><button class="btn ghost" id="oBack">Other sequences</button></div>`;
+ document.querySelectorAll("#oBox [data-u]").forEach(b=>b.onclick=()=>{const i=+b.dataset.u;[oCur[i-1],oCur[i]]=[oCur[i],oCur[i-1]];oChecked=false;drawOrder()});
+ document.querySelectorAll("#oBox [data-d]").forEach(b=>b.onclick=()=>{const i=+b.dataset.d;[oCur[i+1],oCur[i]]=[oCur[i],oCur[i+1]];oChecked=false;drawOrder()});
+ $("#oCheck").onclick=()=>{oChecked=true;const n=oCur.filter((t,i)=>t===right[i]).length;drawOrder();
+  $("#oFb").innerHTML=n===right.length?"✅ <b>Perfect order!</b>":`${n} of ${right.length} in the right spot. Red ones need to move.`};
+ $("#oShow").onclick=()=>{oCur=[...right];oChecked=true;drawOrder();$("#oFb").textContent="Here's the correct order. Study it, then try another round."};
+ $("#oBack").onclick=orderMenu}
 </script>
 </body>
 </html>
