@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 36 GI Practice</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#5b6475;--accent:#2f6fde;--ok:#1f9d55;--okbg:#e6f6ed;--bad:#d64545;--badbg:#fdeaea;--border:#dde1ea}
+@media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--text:#e8ebf2;--muted:#9aa3b5;--accent:#6c9cff;--ok:#4ade80;--okbg:#14301f;--bad:#f87171;--badbg:#3a1a1a;--border:#2c3340}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+header h1{margin:0;font-size:1.5rem}
+header p{margin:4px 0 0;color:var(--muted)}
+.score{position:sticky;top:0;background:var(--bg);padding:12px 0;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;z-index:2;border-bottom:1px solid var(--border)}
+.score b{color:var(--accent)}
+button.reset{background:transparent;border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:8px;cursor:pointer}
+.q{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;margin:16px 0}
+.q h2{font-size:1rem;margin:0 0 12px;font-weight:600}
+.q h2 span{color:var(--accent);margin-right:6px}
+.opt{display:block;width:100%;text-align:left;background:transparent;border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;margin:6px 0;cursor:pointer;font-size:.95rem}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.correct{background:var(--okbg);border-color:var(--ok)}
+.opt.wrong{background:var(--badbg);border-color:var(--bad)}
+.why{display:none;margin-top:10px;padding:10px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:4px;font-size:.92rem}
+.why.show{display:block}
+.obj{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin:18px 0}
+.obj summary{font-weight:600;cursor:pointer;color:var(--accent)}
+.obj .lead{margin:10px 0 6px;color:var(--muted)}
+.obj ul{list-style:none;padding:0;margin:0}
+.obj li{margin:6px 0}
+.obj label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.obj input{margin-top:5px;accent-color:var(--accent)}
+.obj input:checked+span{color:var(--muted);text-decoration:line-through}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Chapter 36 Practice Questions</h1>
+<p>NCLEX Pathophysiology – GI System</p>
+</header>
+<details class="obj" open>
+<summary>Weekly Objectives – Week 8</summary>
+<p class="lead">By the end of this week, you should be able to:</p>
+<ul id="objs"></ul>
+</details>
+<div class="score"><div>Score: <b id="score">0</b> / <span id="answered">0</span> answered (of 10)</div><button class="reset" onclick="reset()">Reset</button></div>
+<div id="quiz"></div>
+</div>
+<script>
+const Q=[
+{q:"Which statement best describes the primary function of the gastrointestinal (GI) system?",o:["To regulate blood glucose through insulin secretion","To provide mechanical and chemical breakdown of food for nutrient absorption","To produce red blood cells and immune mediators","To regulate electrolyte balance and acid–base status"],a:1,w:"The GI system's core job is digestion (mechanical + chemical breakdown) and absorption of nutrients. Insulin is endocrine pancreas; RBCs come from bone marrow; acid–base is mainly kidneys and lungs."},
+{q:"A patient experiences delayed gastric emptying due to diabetic neuropathy. Which type of control is most directly impaired?",o:["Hormonal","Neural (enteric nervous system)","Mechanical","Circulatory"],a:1,w:"Diabetic neuropathy damages nerves, including the vagus and enteric nervous system that coordinate motility — causing gastroparesis."},
+{q:"Which hormone stimulates secretion of gastric acid by the parietal cells of the stomach?",o:["Secretin","Gastrin","Cholecystokinin (CCK)","Ghrelin"],a:1,w:"Gastrin (from G cells) stimulates parietal cells to secrete HCl. Secretin and CCK act mainly on the pancreas/gallbladder; ghrelin stimulates hunger."},
+{q:"A nurse is caring for a patient with Zollinger–Ellison syndrome (gastrinoma). Which physiologic change should the nurse expect?",o:["Decreased gastric motility","Increased gastric acid secretion","Reduced secretion of pancreatic enzymes","Decreased gastric emptying due to CCK suppression"],a:1,w:"A gastrinoma secretes excess gastrin → excessive gastric acid → severe, recurrent peptic ulcers."},
+{q:"Secretin plays an important role in digestion by:",o:["Stimulating bile release from the gallbladder","Stimulating bicarbonate secretion from the pancreas","Stimulating gastric acid secretion","Inhibiting pancreatic enzyme release"],a:1,w:"Acid entering the duodenum triggers secretin, which stimulates pancreatic bicarbonate to neutralize chyme. CCK is the one that triggers gallbladder contraction."},
+{q:"Carbohydrate digestion begins in the:",o:["Stomach, by pepsin","Mouth, by salivary amylase","Duodenum, by lipase","Jejunum, by lactase"],a:1,w:"Salivary amylase starts starch breakdown in the mouth. Pepsin digests protein; lipase digests fat."},
+{q:"Which enzyme is necessary for protein digestion in the stomach?",o:["Trypsin","Pepsin","Amylase","Lipase"],a:1,w:"Pepsin (activated from pepsinogen by stomach acid) begins protein digestion in the stomach. Trypsin works in the small intestine."},
+{q:"A nurse is teaching a student about fat digestion. Which statement is correct?",o:["Bile salts emulsify fats for absorption","Pancreatic amylase breaks down triglycerides","Fat digestion begins in the stomach","Micelles are absorbed into the blood directly"],a:0,w:"Bile salts emulsify fat into small droplets so pancreatic lipase can act. Amylase digests carbs; micelle contents are reassembled into chylomicrons and enter the lymph (lacteals), not blood directly."},
+{q:"Which statement best describes the role of the parasympathetic nervous system in GI function?",o:["Inhibits peristalsis and secretions","Stimulates motility and secretions via the vagus nerve","Contracts the internal anal sphincter","Decreases blood flow to the GI tract"],a:1,w:"\"Rest and digest\": parasympathetic (vagus) input increases motility and secretions. The other options describe sympathetic effects."},
+{q:"A patient has chronic pancreatitis. Which deficiency would the nurse most likely expect?",o:["Vitamin B12 deficiency","Vitamin A, D, E, K deficiencies","Iron deficiency anemia","Folate deficiency"],a:1,w:"Loss of pancreatic lipase → fat malabsorption (steatorrhea) → deficiency of the fat-soluble vitamins A, D, E, K."}
+];
+const L="ABCD";let score=0,answered=0;
+function render(){const quiz=document.getElementById('quiz');quiz.innerHTML='';
+Q.forEach((it,i)=>{const d=document.createElement('div');d.className='q';
+d.innerHTML=`<h2><span>${i+1}.</span>${it.q}</h2>`+it.o.map((t,j)=>`<button class="opt" data-j="${j}">${L[j]}. ${t}</button>`).join('')+`<div class="why"><b>Answer: ${L[it.a]}</b> — ${it.w}</div>`;
+d.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(d,it,+b.dataset.j));quiz.appendChild(d);});upd();}
+function pick(d,it,j){const bs=d.querySelectorAll('.opt');bs.forEach(b=>b.disabled=true);
+bs[it.a].classList.add('correct');if(j!==it.a)bs[j].classList.add('wrong');else score++;answered++;
+d.querySelector('.why').classList.add('show');upd();}
+function upd(){document.getElementById('score').textContent=score;document.getElementById('answered').textContent=answered;}
+function reset(){score=0;answered=0;render();window.scrollTo(0,0);}
+const OBJ=["describe the major structures and functions of the gastrointestinal (GI) system","describe the structure and function of the peritoneum","explain the digestion and absorption of carbohydrates, fats, and proteins","describe the role of the GI system in immune defense","explain the mechanisms associated with anorexia, nausea, and vomiting","describe the causes and manifestations of dysphagia and achalasia","describe the pathophysiology and manifestations of gastroesophageal reflux disease (GERD)","differentiate between acute and chronic gastritis","explain the role of Helicobacter pylori (H. pylori) in chronic gastritis and peptic ulcer disease","compare the pathophysiology and manifestations of Crohn disease and ulcerative colitis","describe the pathophysiology and manifestations of appendicitis","describe the major functions of the liver and the consequences of impaired liver function","explain the mechanisms and manifestations associated with jaundice and portal hypertension","describe the pathophysiology and manifestations of cirrhosis","describe the mechanisms and manifestations of gallbladder and biliary tract disorders","differentiate between acute and chronic pancreatitis"];
+document.getElementById('objs').innerHTML=OBJ.map(o=>`<li><label><input type="checkbox"><span>${o}</span></label></li>`).join('');
+render();
+</script>
+</body>
+</html>
