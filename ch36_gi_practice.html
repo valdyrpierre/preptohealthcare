@@ -32,6 +32,19 @@ button.reset{background:transparent;border:1px solid var(--border);color:var(--t
 .obj li{margin:6px 0}
 .obj label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .obj input{margin-top:5px;accent-color:var(--accent)}
+.tabs{display:flex;gap:6px;margin:8px 0 4px}
+.tab{flex:1;padding:10px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;cursor:pointer;font-weight:600}
+.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fc-meta,.fc-nav{display:flex;justify-content:space-between;align-items:center;margin:14px 0}
+.flip{perspective:1200px;cursor:pointer;min-height:300px}
+.inner{position:relative;width:100%;min-height:300px;transition:transform .5s;transform-style:preserve-3d}
+.flip.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;overflow:auto}
+.back{transform:rotateY(180deg);border-color:var(--ok)}
+.face .ans{color:var(--ok);font-weight:700;font-size:1.1rem;margin-bottom:10px}
+.face .ft{font-size:.95rem}
+.face ol{margin:10px 0 0;padding-left:0;list-style:none;font-size:.9rem;color:var(--muted)}
+.hint{text-align:center;color:var(--muted);font-size:.85rem;margin:8px 0 0}
 .obj input:checked+span{color:var(--muted);text-decoration:line-through}
 </style>
 </head>
@@ -46,8 +59,19 @@ button.reset{background:transparent;border:1px solid var(--border);color:var(--t
 <p class="lead">By the end of this week, you should be able to:</p>
 <ul id="objs"></ul>
 </details>
+<div class="tabs"><button id="tQuiz" class="tab on" onclick="mode('quiz')">Quiz</button><button id="tCards" class="tab" onclick="mode('cards')">Flashcards</button></div>
+<section id="cardsView" hidden>
+<div class="fc-meta"><span id="fcPos"></span><button class="reset" onclick="shuffle()">Shuffle</button></div>
+<div class="flip" id="flip" onclick="this.classList.toggle('flipped')">
+<div class="inner"><div class="face front" id="fcFront"></div><div class="face back" id="fcBack"></div></div>
+</div>
+<p class="hint">Tap the card to flip it</p>
+<div class="fc-nav"><button class="reset" onclick="go(-1)">← Prev</button><button class="reset" onclick="go(1)">Next →</button></div>
+</section>
+<section id="quizView">
 <div class="score"><div>Score: <b id="score">0</b> / <span id="answered">0</span> answered (of 10)</div><button class="reset" onclick="reset()">Reset</button></div>
 <div id="quiz"></div>
+</section>
 </div>
 <script>
 const Q=[
@@ -74,7 +98,19 @@ function upd(){document.getElementById('score').textContent=score;document.getEl
 function reset(){score=0;answered=0;render();window.scrollTo(0,0);}
 const OBJ=["describe the major structures and functions of the gastrointestinal (GI) system","describe the structure and function of the peritoneum","explain the digestion and absorption of carbohydrates, fats, and proteins","describe the role of the GI system in immune defense","explain the mechanisms associated with anorexia, nausea, and vomiting","describe the causes and manifestations of dysphagia and achalasia","describe the pathophysiology and manifestations of gastroesophageal reflux disease (GERD)","differentiate between acute and chronic gastritis","explain the role of Helicobacter pylori (H. pylori) in chronic gastritis and peptic ulcer disease","compare the pathophysiology and manifestations of Crohn disease and ulcerative colitis","describe the pathophysiology and manifestations of appendicitis","describe the major functions of the liver and the consequences of impaired liver function","explain the mechanisms and manifestations associated with jaundice and portal hypertension","describe the pathophysiology and manifestations of cirrhosis","describe the mechanisms and manifestations of gallbladder and biliary tract disorders","differentiate between acute and chronic pancreatitis"];
 document.getElementById('objs').innerHTML=OBJ.map(o=>`<li><label><input type="checkbox"><span>${o}</span></label></li>`).join('');
-render();
+let order=Q.map((_,i)=>i),pos=0;
+function showCard(){const it=Q[order[pos]],n=order[pos]+1;
+document.getElementById('flip').classList.remove('flipped');
+document.getElementById('fcPos').textContent=`Card ${pos+1} of ${Q.length}`;
+document.getElementById('fcFront').innerHTML=`<div class="ft"><b>Q${n}.</b> ${it.q}</div><ol>${it.o.map((t,j)=>`<li>${L[j]}. ${t}</li>`).join('')}</ol>`;
+document.getElementById('fcBack').innerHTML=`<div class="ans">${L[it.a]}. ${it.o[it.a]}</div><div class="ft">${it.w}</div>`;}
+function go(d){pos=(pos+d+Q.length)%Q.length;showCard();}
+function shuffle(){for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}pos=0;showCard();}
+function mode(m){const c=m==='cards';document.getElementById('cardsView').hidden=!c;document.getElementById('quizView').hidden=c;
+document.getElementById('tCards').classList.toggle('on',c);document.getElementById('tQuiz').classList.toggle('on',!c);}
+document.addEventListener('keydown',e=>{if(document.getElementById('cardsView').hidden)return;
+if(e.key==='ArrowRight')go(1);else if(e.key==='ArrowLeft')go(-1);else if(e.key===' '){e.preventDefault();document.getElementById('flip').classList.toggle('flipped');}});
+render();showCard();
 </script>
 </body>
 </html>
